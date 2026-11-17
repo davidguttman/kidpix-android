@@ -27,7 +27,7 @@ Some tablets bind pen side buttons to system shortcuts (notes, screenshots). If 
 
 - Fullscreen landscape: tools on the left, tool options on the right, the canvas fills the rest
 - **Save** puts a PNG in `Pictures/Kid Pix`; the **folder** button under it shows saved pictures as thumbnails, and tapping one opens it (undo brings back what you had). The picker only shows pictures saved by Kid Pix itself. Clearing the app's storage or reinstalling hides older ones from it (they stay in the Gallery), because Android only lets an app see its own pictures without a photo permission.
-- Your drawing is still there when you come back to the app
+- The **door** button at the bottom of the tools leaves the app; your drawing is still there when you come back
 - Links to outside websites are blocked, so kids stay in the app
 - If the browser engine crashes, the app reloads with the drawing intact instead of closing
 

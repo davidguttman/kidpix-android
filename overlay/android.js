@@ -462,6 +462,21 @@
         });
     }
 
+    // Exit: keep the drawing, then close the app (back to the launcher / ES-DE).
+    function installExitButton() {
+        var btn = document.getElementById('exit');
+        if (!btn) return;
+        if (!bridge || !bridge.exit) {
+            btn.style.display = 'none';
+            return;
+        }
+        btn.addEventListener('click', function() {
+            KiddoPaint.Sounds.mainmenu();
+            KiddoPaint.Display.saveToLocalStorage();
+            bridge.exit();
+        });
+    }
+
     function installOpenButton() {
         var btn = document.getElementById('open');
         if (!btn) return;
@@ -478,6 +493,7 @@
         init_kiddo_paint();
         guardToolbarFromPalms();
         installOpenButton();
+        installExitButton();
     };
 
     // test hook: lets instrumentation read state without poking internals

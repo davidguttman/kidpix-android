@@ -137,6 +137,11 @@ class MainActivity : Activity() {
 
     inner class Bridge {
         @JavascriptInterface
+        fun exit() {
+            runOnUiThread { finish() }
+        }
+
+        @JavascriptInterface
         fun savePng(base64: String) {
             val ok = try {
                 val bytes = Base64.decode(base64, Base64.DEFAULT)
