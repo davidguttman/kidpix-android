@@ -24,6 +24,7 @@ cp "$ROOT/overlay/android.js" "$OUT/js/android.js"
 cp "$ROOT/overlay/android.css" "$OUT/css/android.css"
 mkdir -p "$OUT/android"
 cp "$ROOT/overlay/opening.png" "$OUT/android/opening.png"
+cp "$ROOT/overlay/img/open.png" "$OUT/android/open.png"
 rm -f "$OUT/static/splash.png"
 
 # Inject overlay after app.js / kidpix.css, swap the boot hook, lock the viewport.
@@ -45,6 +46,9 @@ sub('<meta name="viewport" content="width=device-width, initial-scale=1.0">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">')
 sub('<body onload="init_kiddo_paint();">', '<body onload="kidpix_android_boot();">')
 sub('<title>JSKIDPIX v1.0.2021</title>', '<title>Kid Pix</title>')
+# Open-a-picture button right under Save
+save_btn = next(l for l in html.splitlines() if 'id="save"' in l)
+sub(save_btn, save_btn + '\n      <button class="tool" id="open" title="Open"><img src="android/open.png" class="pixelated" width="48" height="48"></button>')
 open(dst, "w", encoding="utf-8").write(html)
 PY
 

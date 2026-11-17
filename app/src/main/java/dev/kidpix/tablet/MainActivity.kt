@@ -34,6 +34,7 @@ class MainActivity : Activity() {
 
         val assetLoader = WebViewAssetLoader.Builder()
             .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .addPathHandler("/pictures/", PicturesHandler(this))
             .build()
 
         webView = WebView(this).apply {
@@ -142,7 +143,7 @@ class MainActivity : Activity() {
                 val values = ContentValues().apply {
                     put(MediaStore.Images.Media.DISPLAY_NAME, "kidpix-${System.currentTimeMillis()}.png")
                     put(MediaStore.Images.Media.MIME_TYPE, "image/png")
-                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Kid Pix")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, PicturesHandler.SAVE_DIR)
                     put(MediaStore.Images.Media.IS_PENDING, 1)
                 }
                 val resolver = contentResolver

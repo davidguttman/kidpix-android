@@ -66,3 +66,70 @@ html.kidpix-android .colornav:has(a) {
 html.kidpix-android canvas {
     touch-action: none;
 }
+
+/* open-a-picture picker */
+#kp-picker {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #fff;
+    overflow-y: auto;
+    touch-action: pan-y;
+    padding: 24px 96px 24px 24px;
+    box-sizing: border-box;
+}
+
+#kp-picker .kp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+#kp-picker .kp-thumb {
+    padding: 0;
+    border: 4px solid #000;
+    background: #fff;
+    aspect-ratio: 4 / 3;
+    box-shadow: 6px 6px 0 #888;
+    cursor: pointer;
+}
+
+#kp-picker .kp-thumb:active {
+    transform: translate(3px, 3px);
+    box-shadow: 3px 3px 0 #888;
+}
+
+#kp-picker .kp-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+#kp-picker .kp-close {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 64px;
+    height: 64px;
+    font-size: 40px;
+    line-height: 1;
+    color: #fff;
+    background: #e00;
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0 #888;
+}
+
+#kp-picker.kp-empty .kp-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#kp-picker .kp-empty-icon {
+    width: 198px;
+    height: 198px;
+    opacity: 0.35;
+    image-rendering: pixelated;
+}

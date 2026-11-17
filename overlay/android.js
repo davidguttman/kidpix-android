@@ -362,7 +362,15 @@
         if (!bridge || !bridge.savePng) return upstreamSave();
         var canvasToSave = KiddoPaint.Current.modifiedAlt ?
             trimAndFlattenCanvas(KiddoPaint.Display.main_canvas) : KiddoPaint.Display.main_canvas;
-        var url = canvasToSave.toDataURL('image/png');
+        // white paper behind the drawing, so it looks right in the gallery and the picker
+        var flat = document.createElement('canvas');
+        flat.width = canvasToSave.width;
+        flat.height = canvasToSave.height;
+        var fctx = flat.getContext('2d');
+        fctx.fillStyle = '#fff';
+        fctx.fillRect(0, 0, flat.width, flat.height);
+        fctx.drawImage(canvasToSave, 0, 0);
+        var url = flat.toDataURL('image/png');
         bridge.savePng(url.substring(url.indexOf(',') + 1));
     };
 
@@ -373,17 +381,110 @@
         }
     });
 
+
+    // ---------- open a saved picture ----------
+    // The app serves Pictures/Kid Pix at /pictures/ (see Pictures.kt). Wordless picker:
+    // a grid of thumbnails, tap one to open it, X to close. Opening is undoable.
+    function loadPicture(id) {
+        var img = new Image();
+        img.onload = function() {
+            var c = KiddoPaint.Display.main_canvas;
+            var ctx = KiddoPaint.Display.main_context;
+            KiddoPaint.Display.saveUndo();
+            KiddoPaint.Display.clearMain();
+            if (img.width === c.width && img.height === c.height) {
+                ctx.drawImage(img, 0, 0);
+            } else {
+                var s = Math.min(c.width / img.width, c.height / img.height);
+                var w = img.width * s,
+                    h = img.height * s;
+                ctx.imageSmoothingEnabled = true;
+                ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
+                ctx.imageSmoothingEnabled = false;
+            }
+            KiddoPaint.Display.saveToLocalStorage();
+            KiddoPaint.Sounds.stamp();
+        };
+        img.src = '/pictures/full/' + id + '?t=' + Date.now();
+    }
+
+    function closePicker() {
+        var p = document.getElementById('kp-picker');
+        if (p) p.parentNode.removeChild(p);
+    }
+
+    function openPicker() {
+        closePicker();
+        var p = document.createElement('div');
+        p.id = 'kp-picker';
+        var close = document.createElement('button');
+        close.className = 'kp-close';
+        close.textContent = '✕';
+        close.addEventListener('click', function() {
+            KiddoPaint.Sounds.submenuoption();
+            closePicker();
+        });
+        p.appendChild(close);
+        var grid = document.createElement('div');
+        grid.className = 'kp-grid';
+        p.appendChild(grid);
+        document.body.appendChild(p);
+
+        fetch('/pictures/list', {
+            cache: 'no-store'
+        }).then(function(r) {
+            return r.json();
+        }).then(function(list) {
+            if (!list.length) {
+                p.classList.add('kp-empty');
+                var e = document.createElement('img');
+                e.src = 'android/open.png';
+                e.className = 'kp-empty-icon pixelated';
+                grid.appendChild(e);
+                return;
+            }
+            list.forEach(function(pic) {
+                var b = document.createElement('button');
+                b.className = 'kp-thumb';
+                b.dataset.id = pic.id;
+                var im = document.createElement('img');
+                im.src = '/pictures/thumb/' + pic.id;
+                im.setAttribute('draggable', 'false');
+                b.appendChild(im);
+                b.addEventListener('click', function() {
+                    closePicker();
+                    loadPicture(pic.id);
+                });
+                grid.appendChild(b);
+            });
+        }).catch(function() {
+            p.classList.add('kp-empty');
+        });
+    }
+
+    function installOpenButton() {
+        var btn = document.getElementById('open');
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+            KiddoPaint.Sounds.mainmenu();
+            openPicker();
+        });
+    }
+
     window.kidpix_android_boot = function() {
         document.documentElement.classList.add('kidpix-android');
         sizeCanvasToScreen();
         patchSplash();
         init_kiddo_paint();
         guardToolbarFromPalms();
+        installOpenButton();
     };
 
     // test hook: lets instrumentation read state without poking internals
     window.__kidpixAndroid = {
         state: state,
+        openPicker: openPicker,
+        loadPicture: loadPicture,
         toolName: function() {
             return toolName(KiddoPaint.Current.tool);
         }
