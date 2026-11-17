@@ -1,0 +1,68 @@
+/* Android tablet layout: tools left, drawing fills the screen, tool options right. */
+html.kidpix-android,
+html.kidpix-android body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html.kidpix-android #container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+html.kidpix-android #toolbar {
+    flex: 0 0 100px;
+    width: 100px;
+    float: none;
+    align-content: flex-start;
+}
+
+html.kidpix-android #hcontainer {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    min-width: 0;
+    height: 100vh;
+}
+
+html.kidpix-android #paint {
+    flex: 1 1 auto;
+    min-width: 0;
+    order: 1;
+    align-self: flex-start;
+}
+
+html.kidpix-android #subtoolbars {
+    order: 2;
+    flex: 0 0 104px;
+    width: 104px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: pan-y;
+    align-content: flex-start;
+}
+
+html.kidpix-android #subtoolbars > div {
+    width: 104px;
+    align-content: flex-start;
+}
+
+html.kidpix-android #subtoolbars .tool {
+    width: 52px;
+    height: 52px;
+}
+
+/* external links would take a kid out of the app */
+html.kidpix-android .colornav a,
+html.kidpix-android .colornav:has(a) {
+    display: none;
+}
+
+html.kidpix-android canvas {
+    touch-action: none;
+}
