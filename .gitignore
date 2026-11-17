@@ -6,3 +6,4 @@ app/src/main/assets/kidpix/
 *.apk
 *.zip
 .local/
+dist/
