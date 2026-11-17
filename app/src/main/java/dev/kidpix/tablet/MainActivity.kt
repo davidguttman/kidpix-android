@@ -68,6 +68,17 @@ class MainActivity : Activity() {
                     request: WebResourceRequest,
                 ): WebResourceResponse? = assetLoader.shouldInterceptRequest(request.url)
 
+                // A runaway tool can take the renderer down; reload instead of crashing the app.
+                // The drawing comes back from localStorage.
+                override fun onRenderProcessGone(
+                    view: WebView,
+                    detail: android.webkit.RenderProcessGoneDetail,
+                ): Boolean {
+                    (view.parent as? android.view.ViewGroup)?.removeView(view)
+                    recreate() // onDestroy() destroys the dead WebView
+                    return true
+                }
+
                 // Keep kids inside the app: no external pages.
                 override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean =
                     request.url.host != "appassets.androidplatform.net"

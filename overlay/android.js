@@ -70,8 +70,12 @@
         // canvas has a 1px border; offset is from the padding edge
         var cw = r.width - 2,
             ch = r.height - 2;
-        var x = (e.clientX - r.left - 1) * (canvas.width / cw);
-        var y = (e.clientY - r.top - 1) * (canvas.height / ch);
+        // Whole pixels, inside the canvas: flood fill and friends index ImageData with these
+        // and loop forever on fractional or out-of-range coordinates.
+        var x = Math.round((e.clientX - r.left - 1) * (canvas.width / cw));
+        var y = Math.round((e.clientY - r.top - 1) * (canvas.height / ch));
+        x = Math.max(0, Math.min(canvas.width - 1, x));
+        y = Math.max(0, Math.min(canvas.height - 1, y));
         return {
             x: x,
             y: y
@@ -137,6 +141,29 @@
         withPressure(e, function() {
             ev_canvas(fe);
         });
+    }
+
+    // Upstream erasers stamp once per event, so fast strokes leave gaps. Fill them in.
+    function fillEraserGap(canvas, e, tool) {
+        var last = state.lastXY;
+        if (!last) return;
+        var dx = e.clientX - last.clientX,
+            dy = e.clientY - last.clientY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var step = Math.max(2, (tool.size || 10) * 0.5);
+        var n = Math.floor(dist / step);
+        for (var i = 1; i < n; i++) {
+            var t = i / n;
+            send('mousemove', canvas, {
+                clientX: last.clientX + dx * t,
+                clientY: last.clientY + dy * t,
+                pageX: last.clientX + dx * t,
+                pageY: last.clientY + dy * t,
+                pressure: e.pressure,
+                pointerType: e.pointerType,
+                timeStamp: e.timeStamp
+            });
+        }
     }
 
     function clearOverlays() {
@@ -215,7 +242,12 @@
                 penUndoButton(e);
             }
             if (palmBlocked(e)) return;
-            if (state.activeId !== null) return; // one stroke at a time
+            // A primary pointer going down means every earlier contact lifted, so a stroke
+            // still marked active missed its pointerup. Close it rather than freeze drawing.
+            if (state.activeId !== null && (e.isPrimary || e.pointerType === 'pen')) {
+                endStroke(canvas, e);
+            }
+            if (state.activeId !== null) return; // second finger: one stroke at a time
             if (e.pointerType === 'mouse' && e.button !== 0) return;
 
             state.activeId = e.pointerId;
@@ -238,14 +270,24 @@
             if (state.activeId === e.pointerId) {
                 // Pencil follows every sample the pen reports for smooth lines;
                 // other tools keep one dab per frame like the web version.
+                var tool = KiddoPaint.Current.tool;
+                var isEraser = tool === penEraser || tool === KiddoPaint.Tools.Eraser;
                 var list = [e];
-                if (e.pointerType === 'pen' && KiddoPaint.Current.tool === KiddoPaint.Tools.Pencil &&
+                if (e.pointerType === 'pen' && (tool === KiddoPaint.Tools.Pencil || isEraser) &&
                     typeof e.getCoalescedEvents === 'function') {
                     var c = e.getCoalescedEvents();
                     if (c && c.length) list = c;
                 }
-                for (var i = 0; i < list.length; i++) send('mousemove', canvas, list[i]);
+                for (var i = 0; i < list.length; i++) {
+                    if (isEraser) fillEraserGap(canvas, list[i], tool);
+                    send('mousemove', canvas, list[i]);
+                }
                 return;
+            }
+            // pen hovering while we think it's touching: the pointerup was lost
+            if (state.activeType === 'pen' && e.pointerType === 'pen' && e.buttons === 0 &&
+                state.activeId !== null) {
+                endStroke(canvas, e);
             }
             // hovering pen (or mouse) with nothing pressed: show tool previews like a mouse cursor
             if (state.activeId === null && (e.pointerType === 'pen' || e.pointerType === 'mouse') && e.buttons === 0) {
@@ -266,6 +308,7 @@
         }
         canvas.addEventListener('pointerup', up);
         canvas.addEventListener('pointercancel', up);
+        canvas.addEventListener('lostpointercapture', up);
 
         function leave(e) {
             if (e.pointerType === 'pen') {
@@ -300,7 +343,7 @@
             ['pointerdown', 'mousedown', 'click'].forEach(function(type) {
                 el.addEventListener(type, function(e) {
                     var t = e.pointerType || (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents ? 'touch' : '');
-                    if (state.activeType === 'pen' && t !== 'pen') {
+                    if (state.activeType === 'pen' && t !== 'pen' && now() - state.lastPenTs < 1000) {
                         e.stopImmediatePropagation();
                         e.preventDefault();
                     }
