@@ -5,8 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.provider.MediaStore
-import android.util.Size
 import android.webkit.WebResourceResponse
 import androidx.webkit.WebViewAssetLoader
 import org.json.JSONArray
@@ -56,8 +56,13 @@ class PicturesHandler(private val context: Context) : WebViewAssetLoader.PathHan
     }
 
     private fun thumb(id: Long): ByteArray {
-        val src = context.contentResolver.loadThumbnail(uri(id), Size(480, 360), null)
-        // saved drawings can be transparent; JPEG would turn that black
+        // Decode the picture ourselves: Android's cached thumbnails turn transparent
+        // pixels (pictures saved before 0.3.0) black.
+        val src = ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri(id))) { d, info, _ ->
+            val scale = minOf(1f, 480f / info.size.width, 360f / info.size.height)
+            d.setTargetSize(maxOf(1, (info.size.width * scale).toInt()), maxOf(1, (info.size.height * scale).toInt()))
+            d.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+        }
         val bmp = Bitmap.createBitmap(src.width, src.height, Bitmap.Config.ARGB_8888)
         Canvas(bmp).apply { drawColor(Color.WHITE); drawBitmap(src, 0f, 0f, null) }
         return ByteArrayOutputStream().also { bmp.compress(Bitmap.CompressFormat.JPEG, 88, it) }.toByteArray()
