@@ -2,6 +2,8 @@
 
 [JS Kid Pix](https://github.com/vikrum/kidpix) as an Android tablet app, with real pen support.
 
+![Opening page](docs/opening.jpg)
+
 ![Pressure-sensitive pencil on a Lenovo tablet](docs/pressure.jpg)
 
 ## Install

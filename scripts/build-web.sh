@@ -22,6 +22,9 @@ cp "$UP/LICENSE" "$UP/NOTICE" "$OUT/"
 
 cp "$ROOT/overlay/android.js" "$OUT/js/android.js"
 cp "$ROOT/overlay/android.css" "$OUT/css/android.css"
+mkdir -p "$OUT/android"
+cp "$ROOT/overlay/opening.png" "$OUT/android/opening.png"
+rm -f "$OUT/static/splash.png"
 
 # Inject overlay after app.js / kidpix.css, swap the boot hook, lock the viewport.
 python3 -I - "$UP/index.html" "$OUT/index.html" <<'PY'
@@ -41,6 +44,7 @@ sub('<link rel="stylesheet" type="text/css" href="css/kidpix.css">',
 sub('<meta name="viewport" content="width=device-width, initial-scale=1.0">',
     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">')
 sub('<body onload="init_kiddo_paint();">', '<body onload="kidpix_android_boot();">')
+sub('<title>JSKIDPIX v1.0.2021</title>', '<title>Kid Pix</title>')
 open(dst, "w", encoding="utf-8").write(html)
 PY
 

@@ -37,7 +37,7 @@
         canvas.height = h;
     }
 
-    // Splash fits the canvas instead of being cropped at 1024x1024.
+    // Our own opening page instead of the JS Kid Pix splash, fit to the canvas.
     function patchSplash() {
         var orig = KiddoPaint.Display.loadFromLocalStorage;
         KiddoPaint.Display.loadFromLocalStorage = function() {
@@ -47,13 +47,17 @@
             var img = new Image();
             img.onload = function() {
                 var c = KiddoPaint.Display.main_canvas;
-                var s = Math.min(c.width / img.width, c.height / img.height);
+                var ctx = KiddoPaint.Display.main_context;
+                var s = Math.min(c.width / img.width, c.height / img.height); // white art edges blend into the page
                 var w = img.width * s,
                     h = img.height * s;
                 KiddoPaint.Display.clearMain();
-                KiddoPaint.Display.main_context.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
+                ctx.imageSmoothingEnabled = false;
             };
-            img.src = 'static/splash.png';
+            img.src = 'android/opening.png';
         };
     }
 
