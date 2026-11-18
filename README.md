@@ -17,7 +17,7 @@ Works with Android active pens: Lenovo Tab Pen / Tab Pen Plus, USI, MPP, Wacom A
 - **Pressure** changes line size for the pencil, brushes and eraser
 - **Hover** previews stamps, letters and the eraser under the pen tip before you touch down
 - **Side button 1 (hold) or the eraser end** erases; your tool comes back when you lift
-- **Side button 2** is undo
+- **Side button 2** is undo (press twice quickly to redo)
 - **Palm rejection**: fingers on the canvas are ignored while the pen is down, hovering, or just lifted. Fingers still draw when there's no pen around.
 - Pen samples are delivered unbuffered, and the pencil uses every sample for smooth lines
 
@@ -25,6 +25,8 @@ Some tablets bind pen side buttons to system shortcuts (notes, screenshots). If 
 
 ## Tablet niceties
 
+- **Undo Guy**: tap to go back a step (up to 30), double-tap to go forward again
+- The selected tool and its options light up yellow with a red ring
 - Fullscreen landscape: tools on the left, tool options on the right, the canvas fills the rest
 - **Save** puts a PNG in `Pictures/Kid Pix`; the **folder** button under it shows saved pictures as thumbnails, and tapping one opens it (undo brings back what you had). The picker only shows pictures saved by Kid Pix itself. Clearing the app's storage or reinstalling hides older ones from it (they stay in the Gallery), because Android only lets an app see its own pictures without a photo permission.
 - The **door** button at the bottom of the tools leaves the app; your drawing is still there when you come back
@@ -54,6 +56,7 @@ On a debug build, with the app open on a device or emulator:
 adb forward tcp:9333 localabstract:webview_devtools_remote_$(adb shell pidof dev.kidpix.tablet)
 uv run --with websockets scripts/pen_test.py 9333    # pressure, side buttons, eraser, palm, hover, stuck-stroke recovery
 uv run --with websockets scripts/tool_smoke.py 9333  # every tool x every option with pen taps and strokes
+uv run --with websockets scripts/undo_test.py 9333   # multi-step undo, double-tap redo, selected-tool highlight
 ```
 
 ## Releasing

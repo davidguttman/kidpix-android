@@ -205,9 +205,7 @@
         var pressed = (e.buttons & 4) !== 0;
         if (pressed && state.undoArmed) {
             state.undoArmed = false;
-            KiddoPaint.Sounds.mainmenu();
-            KiddoPaint.Sounds.oops();
-            KiddoPaint.Display.undo(!KiddoPaint.Current.modifiedAlt);
+            undoGuyTap();
         } else if (!pressed) {
             state.undoArmed = true;
         }
@@ -486,6 +484,224 @@
         });
     }
 
+
+    // ---------- multi-step undo / redo ----------
+    // Upstream keeps one snapshot and toggles. Keep a real history instead: every change
+    // already calls Display.saveUndo() first, so that's where the stack grows.
+    // Tap the Undo Guy = back one step, double-tap = forward one step.
+    var HISTORY_MAX = 30;
+    var history = {
+        past: [], // Promise<Blob> PNG snapshots, kept outside the JS heap
+        future: [],
+        restoring: null, // snapshot being drawn onto the canvas
+        token: 0
+    };
+
+    function snap() {
+        // toBlob copies the pixels now and encodes in the background
+        return new Promise(function(res) {
+            KiddoPaint.Display.main_canvas.toBlob(res, 'image/png');
+        });
+    }
+
+    function currentSnapshot() {
+        return history.restoring || snap();
+    }
+
+    function showSnapshot(snapshot, doClearMain) {
+        var token = ++history.token;
+        history.restoring = snapshot;
+        snapshot.then(function(blob) {
+            return createImageBitmap(blob);
+        }).then(function(bmp) {
+            if (token !== history.token) return; // a newer undo/redo won
+            if (doClearMain) KiddoPaint.Display.clearMain();
+            KiddoPaint.Display.main_context.drawImage(bmp, 0, 0);
+            history.restoring = null;
+            KiddoPaint.Display.saveToLocalStorage();
+        });
+    }
+
+    function installHistory() {
+        KiddoPaint.Display.saveUndo = function() {
+            if (!KiddoPaint.Display.undoOn) return false;
+            history.past.push(currentSnapshot());
+            if (history.past.length > HISTORY_MAX) history.past.shift();
+            history.future.length = 0;
+            KiddoPaint.Display.undoData = true; // upstream checks this is truthy
+            return true;
+        };
+        KiddoPaint.Display.undo = function(doClearMain) {
+            if (doClearMain === undefined) doClearMain = true;
+            if (!history.past.length) return false;
+            history.future.push(currentSnapshot());
+            showSnapshot(history.past.pop(), doClearMain);
+            return true;
+        };
+        KiddoPaint.Display.redo = function(doClearMain) {
+            if (doClearMain === undefined) doClearMain = true;
+            if (!history.future.length) return false;
+            history.past.push(currentSnapshot());
+            showSnapshot(history.future.pop(), doClearMain);
+            return true;
+        };
+    }
+
+    var DOUBLE_TAP_MS = 320;
+    var undoTapTimer = null;
+
+    function nudge(el) {
+        if (!el) return;
+        el.classList.remove('kp-nope');
+        void el.offsetWidth;
+        el.classList.add('kp-nope');
+    }
+
+    function undoGuyTap() {
+        var guy = document.getElementById('undo');
+        if (undoTapTimer) { // second tap: forward
+            clearTimeout(undoTapTimer);
+            undoTapTimer = null;
+            KiddoPaint.Sounds.mainmenu();
+            if (KiddoPaint.Display.redo(!KiddoPaint.Current.modifiedAlt)) {
+                KiddoPaint.Sounds.submenuoption();
+            } else {
+                nudge(guy);
+            }
+            return;
+        }
+        undoTapTimer = setTimeout(function() { // single tap: back
+            undoTapTimer = null;
+            KiddoPaint.Sounds.mainmenu();
+            if (KiddoPaint.Display.undo(!KiddoPaint.Current.modifiedAlt)) {
+                KiddoPaint.Sounds.oops();
+            } else {
+                nudge(guy);
+            }
+        }, DOUBLE_TAP_MS);
+    }
+
+    function installUndoGuy() {
+        var old = document.getElementById('undo');
+        if (!old) return;
+        var guy = old.cloneNode(true); // drops upstream's single-step listener
+        old.parentNode.replaceChild(guy, old);
+        guy.addEventListener('click', function(e) {
+            e.preventDefault();
+            undoGuyTap();
+        });
+    }
+
+    // ---------- show which tool is selected ----------
+    var TOOL_IDS = ['pencil', 'line', 'square', 'circle', 'brush', 'jumble', 'flood',
+        'eraser', 'alphabet', 'stamp', 'truck'
+    ];
+    var ACTION_IDS = ['save', 'open', 'undo', 'exit'];
+    var currentSubmenu = null;
+    var subSelection = {}; // submenu name -> {groupIndex: buttonIndex}
+
+    function markMainTool(id) {
+        TOOL_IDS.forEach(function(t) {
+            var b = document.getElementById(t);
+            if (b) b.classList.toggle('kp-selected', t === id);
+        });
+    }
+
+    // Spacer buttons split a submenu into independent choices (e.g. pencil size vs texture).
+    function submenuGroups(container) {
+        var groups = [
+            []
+        ];
+        Array.prototype.forEach.call(container.children, function(b) {
+            if (b.classList.contains('invisible')) groups.push([]);
+            else groups[groups.length - 1].push(b);
+        });
+        return groups.filter(function(g) {
+            return g.length;
+        });
+    }
+
+    function paintSubSelection(container, name) {
+        var sel = subSelection[name] || {};
+        submenuGroups(container).forEach(function(g, gi) {
+            g.forEach(function(b, bi) {
+                b.classList.toggle('kp-selected', sel[gi] === bi);
+            });
+        });
+    }
+
+    function installSelectionHighlight() {
+        TOOL_IDS.forEach(function(id) {
+            var b = document.getElementById(id);
+            if (b) b.addEventListener('mousedown', function() {
+                markMainTool(id);
+            });
+        });
+        ACTION_IDS.forEach(function(id) {
+            var b = document.getElementById(id);
+            if (!b) return;
+            b.addEventListener('pointerdown', function() {
+                b.classList.add('kp-pressed');
+            });
+            ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(t) {
+                b.addEventListener(t, function() {
+                    b.classList.remove('kp-pressed');
+                });
+            });
+        });
+        markMainTool('pencil');
+
+        var origShow = window.show_generic_submenu;
+        window.show_generic_submenu = function(name) {
+            currentSubmenu = name;
+            // upstream picks the first option itself for these
+            if (!subSelection[name] && (name === 'wackybrush' || name === 'sprites')) {
+                subSelection[name] = {
+                    0: 0
+                };
+            }
+            var r = origShow.apply(this, arguments);
+            paintSubSelection(document.getElementById('genericsubmenu'), name);
+            return r;
+        };
+
+        // taps inside the option bar (generic submenu + letters)
+        var bars = [document.getElementById('genericsubmenu'), document.getElementById('alphabettoolbar')];
+        bars.forEach(function(bar) {
+            if (!bar) return;
+            bar.addEventListener('click', function(e) {
+                var b = e.target.closest('button');
+                if (!b || b.classList.contains('invisible') || !bar.contains(b)) return;
+                var name = bar.id === 'alphabettoolbar' ? '__alphabet' : currentSubmenu;
+                var groups = submenuGroups(bar);
+                for (var gi = 0; gi < groups.length; gi++) {
+                    var bi = groups[gi].indexOf(b);
+                    if (bi !== -1) {
+                        subSelection[name] = subSelection[name] || {};
+                        subSelection[name][gi] = bi;
+                    }
+                }
+                paintSubSelection(bar, name);
+            }, true);
+        });
+        // letters use mousedown upstream; mirror it so the highlight lands immediately
+        var letters = document.getElementById('alphabettoolbar');
+        if (letters) letters.addEventListener('mousedown', function(e) {
+            var b = e.target.closest('button');
+            if (!b || b.id === 'alnext') return;
+            Array.prototype.forEach.call(letters.querySelectorAll('button'), function(x) {
+                x.classList.toggle('kp-selected', x === b);
+            });
+        }, true);
+        // pencil starts on the middle size and solid ink, both shown selected
+        KiddoPaint.Tools.Pencil.size = 9;
+        subSelection.pencil = {
+            0: 2,
+            1: 0
+        };
+        paintSubSelection(document.getElementById('genericsubmenu'), 'pencil');
+    }
+
     window.kidpix_android_boot = function() {
         document.documentElement.classList.add('kidpix-android');
         sizeCanvasToScreen();
@@ -494,12 +710,17 @@
         guardToolbarFromPalms();
         installOpenButton();
         installExitButton();
+        installHistory();
+        installUndoGuy();
+        installSelectionHighlight();
     };
 
     // test hook: lets instrumentation read state without poking internals
     window.__kidpixAndroid = {
         state: state,
         openPicker: openPicker,
+        history: history,
+        undoGuyTap: undoGuyTap,
         loadPicture: loadPicture,
         toolName: function() {
             return toolName(KiddoPaint.Current.tool);

@@ -133,3 +133,25 @@ html.kidpix-android canvas {
     opacity: 0.35;
     image-rendering: pixelated;
 }
+
+/* selected tool / option: bright yellow paper with a red ring */
+html.kidpix-android .tool.kp-selected {
+    background: #ffe14d !important;
+    box-shadow: inset 0 0 0 3px #e00000, inset 0 0 0 5px #000;
+}
+
+html.kidpix-android .tool.kp-pressed {
+    background: #ffe14d !important;
+    box-shadow: inset 0 0 0 3px #000;
+}
+
+/* nothing to undo / redo: little shake */
+@keyframes kp-nope {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+html.kidpix-android .tool.kp-nope {
+    animation: kp-nope 0.25s ease-in-out 2;
+}
