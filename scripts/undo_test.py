@@ -60,34 +60,35 @@ async def main():
         L, T = await js("(function(){var r=KiddoPaint.Display.canvas.getBoundingClientRect();return [r.left,r.top]})()")
         ux, uy = await js(center("undo"))
         await js("window.__kidpixAndroid.history.past.length=0;window.__kidpixAndroid.history.future.length=0;true")
-        await js("KiddoPaint.Display.clearMain();document.getElementById('pencil').dispatchEvent(new MouseEvent('mousedown',{bubbles:true}));true")
+        await js("KiddoPaint.Display.clearMain();document.getElementById('pencil').dispatchEvent(new MouseEvent('mousedown',{bubbles:KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true}));KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true")
         await asyncio.sleep(1.0)
         for i, color in enumerate(["rgb(255,0,0)", "rgb(0,170,0)", "rgb(0,0,255)"]):
             await js(f"KiddoPaint.Current.color='{color}';true")
             await stroke(L + 100, T + 150 + i * 150, L + 600, T + 150 + i * 150)
-        check("three strokes drawn", await strokes_shown() == "111")
+        got = await strokes_shown(); check("three strokes drawn", got == "111", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
 
         await tap(ux, uy); await asyncio.sleep(0.6)
-        check("tap 1: blue undone", await strokes_shown() == "110")
+        got = await strokes_shown(); check("tap 1: blue undone", got == "110", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
         await tap(ux, uy); await asyncio.sleep(0.6)
-        check("tap 2: green undone too (multi-step)", await strokes_shown() == "100")
+        got = await strokes_shown(); check("tap 2: green undone too (multi-step)", got == "100", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
 
-        await tap(ux, uy); await asyncio.sleep(0.12); await tap(ux, uy)
-        check("double-tap: green comes back", await strokes_shown() == "110")
-        await tap(ux, uy); await asyncio.sleep(0.12); await tap(ux, uy)
-        check("double-tap again: blue comes back", await strokes_shown() == "111")
-        await tap(ux, uy); await asyncio.sleep(0.12); await tap(ux, uy)
-        check("double-tap with nothing ahead: no change", await strokes_shown() == "111")
+        await tap(ux, uy); await tap(ux, uy)
+        got = await strokes_shown()
+        check("double-tap: green comes back", got == "110", got)
+        await tap(ux, uy); await tap(ux, uy)
+        got = await strokes_shown(); check("double-tap again: blue comes back", got == "111", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
+        await tap(ux, uy); await tap(ux, uy)
+        got = await strokes_shown(); check("double-tap with nothing ahead: no change", got == "111", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
 
         await tap(ux, uy); await asyncio.sleep(0.6)
         await js("KiddoPaint.Current.color='rgb(255,0,0)';true")
         await stroke(L + 700, T + 500, L + 900, T + 500)
-        await tap(ux, uy); await asyncio.sleep(0.12); await tap(ux, uy)
-        check("new stroke after undo clears the forward steps", await strokes_shown() == "110")
+        await tap(ux, uy); await tap(ux, uy)
+        got = await strokes_shown(); check("new stroke after undo clears the forward steps", got == "110", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
 
         for _ in range(4):
             await tap(ux, uy); await asyncio.sleep(0.6)
-        check("undo all the way back to blank", await strokes_shown() == "000")
+        got = await strokes_shown(); check("undo all the way back to blank", got == "000", got + " past/fut " + str(await js("[window.__kidpixAndroid.history.past.length, window.__kidpixAndroid.history.future.length].join('/')")))
 
         # selection highlight
         bx, by = await js(center("brush"))

@@ -26,7 +26,8 @@ Some tablets bind pen side buttons to system shortcuts (notes, screenshots). If 
 ## Tablet niceties
 
 - **Undo Guy**: tap to go back a step (up to 30), double-tap to go forward again
-- The selected tool and its options light up yellow with a red ring
+- The selected tool shows inverted (MacPaint-style); the selected size/ink/brush gets a thick black frame
+- While the pen hovers, the current tool's icon floats next to the tip (the eraser while the side button is held)
 - Fullscreen landscape: tools on the left, tool options on the right, the canvas fills the rest
 - **Save** puts a PNG in `Pictures/Kid Pix`; the **folder** button under it shows saved pictures as thumbnails, and tapping one opens it (undo brings back what you had). The picker only shows pictures saved by Kid Pix itself. Clearing the app's storage or reinstalling hides older ones from it (they stay in the Gallery), because Android only lets an app see its own pictures without a photo permission.
 - The **door** button at the bottom of the tools leaves the app; your drawing is still there when you come back

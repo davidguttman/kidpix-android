@@ -491,16 +491,21 @@
     // Tap the Undo Guy = back one step, double-tap = forward one step.
     var HISTORY_MAX = 30;
     var history = {
-        past: [], // Promise<Blob> PNG snapshots, kept outside the JS heap
+        past: [], // PNG Blobs, kept outside the JS heap
         future: [],
         restoring: null, // snapshot being drawn onto the canvas
         token: 0
     };
 
+    // canvas.toBlob is idle-scheduled in Android WebView and can take ~4 s while Kid Pix
+    // animates; toDataURL is ~20 ms. Encode synchronously, then park the bytes in a Blob.
     function snap() {
-        // toBlob copies the pixels now and encodes in the background
-        return new Promise(function(res) {
-            KiddoPaint.Display.main_canvas.toBlob(res, 'image/png');
+        var url = KiddoPaint.Display.main_canvas.toDataURL('image/png');
+        var bin = atob(url.slice(url.indexOf(',') + 1));
+        var bytes = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new Blob([bytes], {
+            type: 'image/png'
         });
     }
 
@@ -508,24 +513,26 @@
         return history.restoring || snap();
     }
 
-    function showSnapshot(snapshot, doClearMain) {
+    function showSnapshot(blob, doClearMain) {
         var token = ++history.token;
-        history.restoring = snapshot;
-        snapshot.then(function(blob) {
-            return createImageBitmap(blob);
-        }).then(function(bmp) {
-            if (token !== history.token) return; // a newer undo/redo won
+        history.restoring = blob;
+        createImageBitmap(blob).then(function(bmp) {
+            if (token !== history.token) return; // a newer undo/redo (or a new stroke) won
             if (doClearMain) KiddoPaint.Display.clearMain();
             KiddoPaint.Display.main_context.drawImage(bmp, 0, 0);
-            history.restoring = null;
             KiddoPaint.Display.saveToLocalStorage();
+        }).catch(function() {}).then(function() {
+            if (token === history.token) history.restoring = null;
         });
     }
 
     function installHistory() {
         KiddoPaint.Display.saveUndo = function() {
             if (!KiddoPaint.Display.undoOn) return false;
-            history.past.push(currentSnapshot());
+            // a real change: record exactly what's on the canvas and drop any half-done restore
+            history.token++;
+            history.restoring = null;
+            history.past.push(snap());
             if (history.past.length > HISTORY_MAX) history.past.shift();
             history.future.length = 0;
             KiddoPaint.Display.undoData = true; // upstream checks this is truthy
@@ -547,7 +554,7 @@
         };
     }
 
-    var DOUBLE_TAP_MS = 320;
+    var DOUBLE_TAP_MS = 350;
     var undoTapTimer = null;
 
     function nudge(el) {
@@ -600,7 +607,10 @@
     var currentSubmenu = null;
     var subSelection = {}; // submenu name -> {groupIndex: buttonIndex}
 
+    var currentToolId = 'pencil';
+
     function markMainTool(id) {
+        currentToolId = id;
         TOOL_IDS.forEach(function(t) {
             var b = document.getElementById(t);
             if (b) b.classList.toggle('kp-selected', t === id);
@@ -702,6 +712,47 @@
         paintSubSelection(document.getElementById('genericsubmenu'), 'pencil');
     }
 
+
+    // ---------- the tool riding next to a hovering pen ----------
+    // On a desktop the mouse pointer turns into the tool; a tablet has no pointer,
+    // so show the tool's icon just up-left of the pen tip while it hovers.
+    var BADGE_DX = -50,
+        BADGE_DY = -50;
+
+    function installPenBadge() {
+        var badge = document.createElement('div');
+        badge.id = 'kp-pen-badge';
+        var img = document.createElement('img');
+        badge.appendChild(img);
+        document.body.appendChild(badge);
+        var eraserIcon = (function() {
+            var b = document.querySelector('#eraser img');
+            return b ? b.src : '';
+        })();
+
+        function iconFor(e) {
+            if (e.buttons & 34) return eraserIcon; // side button or eraser end: temporary eraser
+            var b = document.querySelector('#' + currentToolId + ' img');
+            return b ? b.src : '';
+        }
+
+        function hide() {
+            badge.style.display = 'none';
+        }
+
+        var canvas = KiddoPaint.Display.canvas;
+        canvas.addEventListener('pointermove', function(e) {
+            if (e.pointerType !== 'pen' || (e.buttons & 1) || state.activeId !== null) return hide();
+            var src = iconFor(e);
+            if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+            badge.style.transform = 'translate(' + (e.clientX + BADGE_DX) + 'px,' + (e.clientY + BADGE_DY) + 'px)';
+            badge.style.display = 'block';
+        });
+        ['pointerdown', 'pointerleave', 'pointerout', 'pointercancel'].forEach(function(t) {
+            canvas.addEventListener(t, hide);
+        });
+    }
+
     window.kidpix_android_boot = function() {
         document.documentElement.classList.add('kidpix-android');
         sizeCanvasToScreen();
@@ -713,6 +764,7 @@
         installHistory();
         installUndoGuy();
         installSelectionHighlight();
+        installPenBadge();
     };
 
     // test hook: lets instrumentation read state without poking internals

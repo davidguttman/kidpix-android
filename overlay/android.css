@@ -134,15 +134,43 @@ html.kidpix-android canvas {
     image-rendering: pixelated;
 }
 
-/* selected tool / option: bright yellow paper with a red ring */
+/* selected tool / option: inverted, MacPaint-style. invert + hue-rotate flips light/dark
+   but keeps colors roughly their own hue, so black line art turns white on black. */
 html.kidpix-android .tool.kp-selected {
-    background: #ffe14d !important;
-    box-shadow: inset 0 0 0 3px #e00000, inset 0 0 0 5px #000;
+    background: #fff !important;
+    filter: invert(1) hue-rotate(180deg);
+    border-color: #fff;
 }
 
 html.kidpix-android .tool.kp-pressed {
-    background: #ffe14d !important;
-    box-shadow: inset 0 0 0 3px #000;
+    background: #fff !important;
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* the current tool riding next to a hovering pen */
+#kp-pen-badge {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    padding: 3px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    z-index: 900;
+    display: none;
+    will-change: transform;
+}
+
+#kp-pen-badge img {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    display: block;
 }
 
 /* nothing to undo / redo: little shake */
@@ -154,4 +182,12 @@ html.kidpix-android .tool.kp-pressed {
 
 html.kidpix-android .tool.kp-nope {
     animation: kp-nope 0.25s ease-in-out 2;
+}
+
+/* options keep their true look (inverting the black ink swatch would read as white ink):
+   white paper inside a thick black frame instead */
+html.kidpix-android #subtoolbars .tool.kp-selected {
+    filter: none;
+    background: #fff !important;
+    box-shadow: inset 0 0 0 4px #000;
 }

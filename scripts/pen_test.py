@@ -65,7 +65,7 @@ async def main():
         async def reset():
             await js("KiddoPaint.Display.clearMain(); KiddoPaint.Display.clearPreview(); "
                      "document.getElementById('pencil').dispatchEvent(new MouseEvent('mousedown',{bubbles:true,which:1})); "
-                     "KiddoPaint.Tools.Pencil.size = 5; KiddoPaint.Current.color = 'rgb(0,0,0)'; true")
+                     "KiddoPaint.Tools.Pencil.size = 5; KiddoPaint.Current.color = 'rgb(0,0,0)'; KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true")
             await asyncio.sleep(1.0)  # let palm grace from earlier pen input lapse
 
         r = await js("(function(){var r=KiddoPaint.Display.canvas.getBoundingClientRect();return [r.left,r.top,r.width,r.height]})()")
