@@ -58,6 +58,7 @@ adb forward tcp:9333 localabstract:webview_devtools_remote_$(adb shell pidof dev
 uv run --with websockets scripts/pen_test.py 9333    # pressure, side buttons, eraser, palm, hover, stuck-stroke recovery
 uv run --with websockets scripts/tool_smoke.py 9333  # every tool x every option with pen taps and strokes
 uv run --with websockets scripts/undo_test.py 9333   # multi-step undo, double-tap redo, selected-tool highlight
+uv run --with websockets scripts/selection_test.py 9333  # the lit option is the tool you get, also after switching tools (add `touch` for finger taps)
 ```
 
 ## Releasing

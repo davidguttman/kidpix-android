@@ -640,11 +640,47 @@
         });
     }
 
+    // Buttons that act (flip the stamp page) instead of choosing, and ones upstream never built.
+    function isActionOption(d) {
+        var h = String(d && d.handler || '');
+        return /show_generic_submenu|init_sprites_submenu/.test(h) ||
+            (/Sounds\.unimpl/.test(h) && !/Current\.tool/.test(h));
+    }
+
+    // Upstream's main tool buttons reset to a default (eraser -> plain eraser, brush -> first brush,
+    // stamp -> first stamp) while the highlight remembered the earlier pick, so the lit option lied.
+    // Re-apply the remembered pick instead: coming back to a tool gets back what you chose there.
+    function restoreSubSelection(id) {
+        var bar = document.getElementById('genericsubmenu');
+        var name = currentSubmenu;
+        if (!bar || bar.className !== 'subtoolbar' || !name) return;
+        if (id === 'stamp' && name === 'sprites') { // stamps change with the page; upstream picks the first
+            subSelection.sprites = {
+                0: 0
+            };
+        } else {
+            var items = KiddoPaint.Submenu[name] || [];
+            var sel = subSelection[name] || {};
+            submenuGroups(bar).forEach(function(g, gi) {
+                var b = g[sel[gi]];
+                if (!b) return;
+                var d = items[Array.prototype.indexOf.call(bar.children, b)];
+                if (d && typeof d.handler === 'function' && !isActionOption(d) && !/Sounds\.unimpl/.test(String(d.handler))) {
+                    d.handler({
+                        type: 'click'
+                    });
+                }
+            });
+        }
+        paintSubSelection(bar, name);
+    }
+
     function installSelectionHighlight() {
         TOOL_IDS.forEach(function(id) {
             var b = document.getElementById(id);
-            if (b) b.addEventListener('mousedown', function() {
+            if (b) b.addEventListener('mousedown', function() { // runs after upstream's own handler
                 markMainTool(id);
+                restoreSubSelection(id);
             });
         });
         ACTION_IDS.forEach(function(id) {
@@ -683,6 +719,14 @@
                 var b = e.target.closest('button');
                 if (!b || b.classList.contains('invisible') || !bar.contains(b)) return;
                 var name = bar.id === 'alphabettoolbar' ? '__alphabet' : currentSubmenu;
+                if (bar.id === 'genericsubmenu' && KiddoPaint.Submenu[name]) {
+                    var d = KiddoPaint.Submenu[name][Array.prototype.indexOf.call(bar.children, b)];
+                    if (isActionOption(d)) {
+                        // a new stamp page doesn't contain the chosen stamp, so light nothing
+                        if (/show_generic_submenu/.test(String(d.handler))) subSelection[name] = {};
+                        return;
+                    }
+                }
                 var groups = submenuGroups(bar);
                 for (var gi = 0; gi < groups.length; gi++) {
                     var bi = groups[gi].indexOf(b);

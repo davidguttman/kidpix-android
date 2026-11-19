@@ -60,7 +60,7 @@ async def main():
         L, T = await js("(function(){var r=KiddoPaint.Display.canvas.getBoundingClientRect();return [r.left,r.top]})()")
         ux, uy = await js(center("undo"))
         await js("window.__kidpixAndroid.history.past.length=0;window.__kidpixAndroid.history.future.length=0;true")
-        await js("KiddoPaint.Display.clearMain();document.getElementById('pencil').dispatchEvent(new MouseEvent('mousedown',{bubbles:KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true}));KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true")
+        await js("KiddoPaint.Display.clearMain();document.getElementById('pencil').dispatchEvent(new MouseEvent('mousedown',{bubbles:true}));KiddoPaint.Tools.Pencil.texture = function(c){return KiddoPaint.Textures.Solid(c)}; true")
         await asyncio.sleep(1.0)
         for i, color in enumerate(["rgb(255,0,0)", "rgb(0,170,0)", "rgb(0,0,255)"]):
             await js(f"KiddoPaint.Current.color='{color}';true")
