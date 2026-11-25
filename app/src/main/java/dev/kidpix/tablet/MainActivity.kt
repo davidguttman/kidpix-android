@@ -60,6 +60,7 @@ class MainActivity : Activity() {
                 ) {
                     v.requestUnbufferedDispatch(ev)
                 }
+                watchEdgeSwipes(v, ev)
                 false
             }
 
@@ -86,9 +87,60 @@ class MainActivity : Activity() {
             }
             addJavascriptInterface(Bridge(), "KidPixAndroid")
         }
+        // The page lays itself out; window insets (bars, cutouts, Lenovo's window-button strip) never pad it.
+        webView.setOnApplyWindowInsetsListener { _, _ -> WindowInsets.CONSUMED }
         setContentView(webView)
         hideSystemBars()
+        // A swipe from an edge brings the bars back. If they don't slide away on their own (some Lenovo
+        // builds leave an empty bar up, and under the kiosk lock there's nothing in it), hide them again.
+        if (Build.VERSION.SDK_INT >= 30) {
+            window.decorView.setOnApplyWindowInsetsListener { v, insets ->
+                val shown = insets.isVisible(WindowInsets.Type.statusBars()) ||
+                    insets.isVisible(WindowInsets.Type.navigationBars()) ||
+                    insets.isVisible(WindowInsets.Type.captionBar())
+                v.removeCallbacks(rehide)
+                if (shown) v.postDelayed(rehide, 1500)
+                v.onApplyWindowInsets(insets)
+            }
+        }
         webView.loadUrl("https://appassets.androidplatform.net/assets/kidpix/index.html")
+    }
+
+    private val rehide = Runnable { if (!isFinishing) hideSystemBars() }
+    private var edgeDownY = -1f
+    private var peekShown = false
+    private val dismissPeek = Runnable { dismissPeekBars() }
+
+    /**
+     * A swipe in from the top or bottom edge "peeks" the system bars over the app without telling it.
+     * Most devices slide them away after a moment; the Lenovo leaves them up (an empty gray strip with
+     * its window-button dots under the kiosk lock). The swipe itself reaches the page too, so watch for
+     * one, then push the bars away on the next touch, or 1.5 s after the swipe if nothing else happens.
+     */
+    private fun watchEdgeSwipes(v: View, ev: MotionEvent) {
+        val edge = 40 * resources.displayMetrics.density
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                if (peekShown) dismissPeekBars()
+                edgeDownY = if (ev.y < edge || ev.y > v.height - edge) ev.y else -1f
+            }
+            MotionEvent.ACTION_MOVE -> if (edgeDownY >= 0 && Math.abs(ev.y - edgeDownY) > edge) peekShown = true
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                edgeDownY = -1f
+                if (peekShown) { v.removeCallbacks(dismissPeek); v.postDelayed(dismissPeek, 1500) }
+            }
+        }
+    }
+
+    /** Showing then hiding again ends the peek at once (hiding alone doesn't; the bars are still "hidden"). */
+    private fun dismissPeekBars() {
+        peekShown = false
+        webView.removeCallbacks(dismissPeek)
+        if (Build.VERSION.SDK_INT < 30 || isFinishing) return
+        window.insetsController?.let {
+            it.show(WindowInsets.Type.systemBars())
+            it.hide(WindowInsets.Type.systemBars())
+        }
     }
 
     private fun isPen(ev: MotionEvent): Boolean {
@@ -111,6 +163,18 @@ class MainActivity : Activity() {
             return
         }
         window.setDecorFitsSystemWindows(false)
+        // Lenovo ZUI (One Vision "full screen window button") keeps a strip at the top that hiding the
+        // system bars doesn't remove, and the window gets fitted below it, leaving a gray band. Don't fit
+        // the window to any insets and lay it out over everything, the way games and video players do.
+        window.attributes = window.attributes.also {
+            it.fitInsetsTypes = 0
+            it.fitInsetsSides = 0
+            it.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+        }
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        )
         window.insetsController?.let {
             it.hide(WindowInsets.Type.systemBars())
             it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
