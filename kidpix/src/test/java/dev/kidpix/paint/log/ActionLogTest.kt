@@ -108,6 +108,7 @@ class ActionLogTest {
         is Action.Open -> "O ${a.name}"
         is Action.Pause -> "PAUSE"
         is Action.Shift -> "SH ${a.d}"
+        is Action.Opened -> "OPENED"
     }
 
     @Test fun aTwoThousandPointPenStrokeIsAFewKB() {

@@ -2,6 +2,8 @@ package dev.kidpix.paint.log
 
 import dev.kidpix.paint.KAndroid
 import dev.kidpix.paint.KSounds
+import dev.kidpix.paint.KiddoPaint
+import dev.kidpix.paint.stamp
 import dev.kidpix.paint.PEvent
 import dev.kidpix.paint.color_next
 import dev.kidpix.paint.color_prev
@@ -55,6 +57,11 @@ sealed class Action {
         override val code get() = OPEN
         override fun apply() { KLog.inputPicture(name)?.let { KAndroid.loadPicture(it) } }
     }
+    /**
+     * The first action after a picture was opened with its history (KLog.openState: checkpoint
+     * zero of a new segment holds the picture): the sound opening a picture makes.
+     */
+    class Opened : Action() { override val code get() = OPENED; override fun apply() { KiddoPaint.Sounds.stamp() } }
     class Pause : Action() { override val code get() = PAUSE; override fun apply() = KSounds.player.stopAll() }
     /** Every pending timer [d] ms later (applied before the clock moves to the record's time). */
     class Shift(val d: Long) : Action() { override val code get() = SHIFT; override val starts get() = false; override fun apply() {} }
@@ -63,7 +70,7 @@ sealed class Action {
         const val DOWN = 1; const val MOVE = 2; const val UP = 3; const val CANCEL = 4; const val LEAVE = 5
         const val WHEEL = 6; const val TOOL = 7; const val SUB = 8; const val LETTER = 9; const val COLOR = 10
         const val PALETTE = 11; const val KEYDOWN = 12; const val KEYUP = 13; const val OPEN = 14; const val PAUSE = 15
-        const val SHIFT = 16
+        const val SHIFT = 16; const val OPENED = 17
     }
 }
 
@@ -213,6 +220,7 @@ class RecordCoder {
             is Action.Key -> { o.u(a.keyCode); o.byte(if (a.ctrl) 1 else 0); o.str(a.key) }
             is Action.Open -> o.str(a.name)
             is Action.Pause -> {}
+            is Action.Opened -> {}
             is Action.Shift -> o.u(a.d)
         }
     }
@@ -243,6 +251,7 @@ class RecordCoder {
             Action.KEYDOWN, Action.KEYUP -> Action.Key(code == Action.KEYDOWN, r.ui(), r.byte() == 1, r.str())
             Action.OPEN -> Action.Open(r.str())
             Action.PAUSE -> Action.Pause()
+            Action.OPENED -> Action.Opened()
             Action.SHIFT -> Action.Shift(r.u())
             else -> throw Reader.Bad()
         }

@@ -82,8 +82,25 @@ object KLog {
     private val inputs = HashMap<String, Bitmap>()
     private var w = 0
     private var h = 0
-    /** Main frame of checkpoint zero of each segment (kept for replays from the start). */
-    private val zeroFrames = java.util.concurrent.ConcurrentHashMap<Int, Long>()
+    /** Main and layer frames of checkpoint zero of each segment (kept for replays from the start). */
+    private val zeroFrames = java.util.concurrent.ConcurrentHashMap<Int, Set<Long>>()
+    /** Every frame checkpoint zero of each segment names (pictures and its undo history). */
+    private val zeroAll = java.util.concurrent.ConcurrentHashMap<Int, Set<Long>>()
+    /**
+     * What came before the current segment's start, oldest first: (segment, blocks) pieces whose
+     * replays, one after the other, end where this segment starts (a clear-all, a save point
+     * opened, a restart that could not replay). Empty: the segment starts the picture.
+     */
+    @Volatile var chainPrefix: List<IntArray> = emptyList()
+    /** Frames and segments that save points and drafts hold (log/SavePoints.kt): never pruned. */
+    var pinned: () -> Pair<Set<Long>, Set<Int>> = { emptySet<Long>() to emptySet() }
+    /** Called on the writer thread after each checkpoint write (the storage cap of save points). */
+    var afterCheckpointWrite: (() -> Unit)? = null
+    /** A save point's or a segment's replay is being played (input is dropped). */
+    var playing = false
+        private set
+    /** The newest checkpoint taken, in memory (playing a save point comes back to it). */
+    private var lastCkpt: Checkpoint? = null
     /** History refs of the last two checkpoints (kept when pruning). */
     private var lastRefs: List<Pair<Set<Long>, Long>> = emptyList()
 
@@ -106,8 +123,11 @@ object KLog {
         writer?.close(); writer = null
         replaying = false
         cur.clear(); curHasRecords = false
-        inputs.clear(); zeroFrames.clear(); lastRefs = emptyList()
+        inputs.clear(); zeroFrames.clear(); zeroAll.clear(); lastRefs = emptyList()
+        chainPrefix = emptyList(); lastCkpt = null; playing = false
+        pinned = { emptySet<Long>() to emptySet() }; afterCheckpointWrite = null
         root = null
+        SavePoints.close()
     }
 
     /**
@@ -128,11 +148,13 @@ object KLog {
             kidpix_android_boot()
             fresh()
             clock.runDue()
-            History.clear(); History.nextId = (History.frames.ids().maxOrNull() ?: 0L) + 1
+            History.clear(); History.nextId = (History.frames.ids().filter { it < FrameStore.OOB_BASE }.maxOrNull() ?: 0L) + 1
             segment = existingSegments().maxOrNull() ?: 0
-            startSegment()
+            startSegment(emptyList())
             "fresh start, segment $segment"
         }
+        for (s in existingSegments()) if (!zeroAll.containsKey(s)) checkpoints(segFile(s)).lastOrNull()?.takeIf { it.seq == 0 }?.let { noteZero(s, it) }
+        SavePoints.load(dir)
         lastRestore += " in %.1f ms".format((System.nanoTime() - t0) / 1e6)
         log(lastRestore)
         return lastRestore
@@ -148,7 +170,7 @@ object KLog {
 
     /** Runs [a] in the engine, recording it first. All app input goes through here. */
     fun entry(a: Action) {
-        if (replaying) return // input during a replay (the replay API) is dropped
+        if (replaying || playing) return // input during a replay (the replay API) is dropped
         liveNow?.invoke()?.let { liveAdvance(it) }
         val rec = recording
         val t0 = if (rec) System.nanoTime() else 0L
@@ -241,12 +263,35 @@ object KLog {
         val due = rollWanted || actionsSince >= checkpointActions || costSinceNs >= checkpointCostMs * 1e6 || (force && actionsSince > 0)
         if (!due) return false
         if (!quiescent()) { requestRetry?.invoke(); return false }
-        if (rollWanted) { flushBlock(true); startSegment() } else checkpoint()
+        if (rollWanted) { flushBlock(true); startSegment(chainPrefix + intArrayOf(segment, blocks)) } else checkpoint()
         return true
     }
 
-    /** Opens segment [segment] + 1 and takes its checkpoint zero (the state now). */
-    private fun startSegment() {
+    /** The pieces whose replays end in the picture as it is now (the current segment up to now last). */
+    fun chainNow(): List<IntArray> { flushBlock(true); return chainPrefix + intArrayOf(segment, blocks) }
+
+    /**
+     * The canvas becomes [picture] (the canvas's size) with the undo history [past] / [future]
+     * (frame ids, oldest first), and a new segment starts from it, continuing [chain] (the pieces
+     * that made it; empty for a picture without a history). Recorded as checkpoint zero of that
+     * segment, so it needs a quiet moment: false (nothing done) when something is in progress.
+     */
+    fun openState(picture: Bitmap, past: List<Long>, future: List<Long>, chain: List<IntArray>): Boolean {
+        if (replaying || playing) return false
+        if (recording && !quiescent()) return false
+        flushBlock(true)
+        KDisplay.main_context.replaceWith(BitmapSource(picture))
+        History.restore(past, future, History.nextId)
+        KDisplay.undoData = if (History.canUndo) true else null
+        if (recording) startSegment(chain) else chainPrefix = chain
+        entry(Action.Opened())
+        KUi.ui.invalidate()
+        return true
+    }
+
+    /** Opens segment [segment] + 1 (continuing [prefix]) and takes its checkpoint zero (the state now). */
+    private fun startSegment(prefix: List<IntArray>) {
+        chainPrefix = prefix
         writer?.close()
         segment++
         val d = segFile(segment); d.mkdirs()
@@ -267,13 +312,16 @@ object KLog {
         val layers = JSONObject()
         for ((name, c) in overlayLayers()) if (!c.knownBlank) layers.put(name, History.store(c.bitmap).first)
         History.remember(KDisplay.main_canvas.bitmap, mainId, mainCopy)
-        if (ckptSeq == 0) zeroFrames[segment] = mainId
         val o = JSONObject()
             .put("v", 1).put("seg", segment).put("seq", ckptSeq).put("blocks", blocks).put("recTime", coder.lastTime)
             .put("time", clock.time).put("random", KRandom.state).put("version", versionCode).put("w", w).put("h", h)
             .put("engine", EngineState.capture())
             .put("past", JSONArray(History.pastIds)).put("future", JSONArray(History.futureIds)).put("next", History.nextId)
             .put("main", mainId).put("layers", layers).put("inputSeq", inputSeq)
+            .put("chain", JSONArray().also { a -> chainPrefix.forEach { p -> a.put(JSONArray().put(p[0]).put(p[1])) } })
+        val cpObj = Checkpoint(o, d)
+        lastCkpt = cpObj
+        if (ckptSeq == 0) noteZero(segment, cpObj)
         val text = o.toString()
         val crc = CRC32().apply { update(text.toByteArray()) }.value
         val f = File(d, "ckpt-%06d.json".format(ckptSeq))
@@ -282,7 +330,12 @@ object KLog {
         actionsSince = 0; costSinceNs = 0
         val refs = (History.pastIds + History.futureIds + mainId + layers.keys().asSequence().map { layers.getLong(it) }).toSet()
         lastRefs = (lastRefs + (refs to History.nextId)).takeLast(2)
-        val keep = lastRefs.flatMap { it.first } + zeroFrames.values
+        val keep = HashSet<Long>()
+        lastRefs.forEach { keep += it.first }
+        zeroFrames.values.forEach { keep += it }
+        for (p in chainPrefix) zeroAll[p[0]]?.let { keep += it }
+        zeroAll[segment]?.let { keep += it }
+        keep += pinned().first
         val below = lastRefs.minOf { it.second }
         val seg = segment
         History.frames.afterWrites {
@@ -295,6 +348,7 @@ object KLog {
                     all.drop(1).dropLast(2).forEach { it.delete() }
                 }
                 pruneSegments(seg)
+                afterCheckpointWrite?.invoke()
             }.onFailure { FrameStore.logError("checkpoint $seq write failed", it) }
         }
         History.frames.prune(keep, below)
@@ -313,9 +367,14 @@ object KLog {
         if (n > 0) log("storage cap: dropped the $n oldest undo steps")
     }
 
-    /** Writer thread: old segments' logs go (the newest [KEEP_SEGMENTS], within [logCapBytes]). */
+    /**
+     * Writer thread: old segments' logs go (the newest [KEEP_SEGMENTS], within [logCapBytes]),
+     * except the ones the current picture was made from ([chainPrefix]) and the ones save points
+     * and drafts were made from ([pinned]): those count toward the save points' storage cap.
+     */
     private fun pruneSegments(current: Int) {
-        val segs = existingSegments().filter { it < current }.sortedDescending()
+        val held = chainPrefix.map { it[0] }.toSet() + pinned().second
+        val segs = existingSegments().filter { it < current && it !in held }.sortedDescending()
         var bytes = File(segFile(current), "log.kpl").length()
         for ((i, s) in segs.withIndex()) {
             val dir = segFile(s)
@@ -323,9 +382,24 @@ object KLog {
             bytes += size
             if (i >= KEEP_SEGMENTS - 1 || bytes > logCapBytes) {
                 dir.listFiles()?.forEach { it.delete() }; dir.delete()
-                zeroFrames.remove(s)
+                zeroFrames.remove(s); zeroAll.remove(s)
             }
         }
+    }
+
+    /** Bytes of segment [seg]'s files (0 if it is gone). Any thread. */
+    fun segmentBytes(seg: Int): Long = segFile(seg).listFiles()?.sumOf { it.length() } ?: 0L
+
+    fun hasSegment(seg: Int): Boolean = root != null && File(segFile(seg), "log.kpl").isFile
+    fun segments(): List<Int> = existingSegments()
+    /** Frames checkpoint zero of [seg] names (pictures, layers, undo history). */
+    fun zeroRefs(seg: Int): Set<Long> = zeroAll[seg] ?: emptySet()
+
+    private fun noteZero(seg: Int, z: Checkpoint) {
+        val pics = HashSet<Long>(); pics += z.o.getLong("main")
+        z.o.optJSONObject("layers")?.let { l -> l.keys().forEach { pics += l.getLong(it) } }
+        zeroFrames[seg] = pics
+        zeroAll[seg] = pics + z.ids("past") + z.ids("future")
     }
 
     // ---------------------------------------------------------------- restore
@@ -334,6 +408,7 @@ object KLog {
         val seg = o.getInt("seg"); val seq = o.getInt("seq"); val blocks = o.getInt("blocks")
         val version = o.getInt("version")
         fun ids(key: String): List<Long> = o.optJSONArray(key)?.let { a -> (0 until a.length()).map { a.getLong(it) } } ?: emptyList()
+        fun chain(): List<IntArray> = o.optJSONArray("chain")?.let { a -> (0 until a.length()).map { val p = a.getJSONArray(it); intArrayOf(p.getInt(0), p.getInt(1)) } } ?: emptyList()
     }
 
     fun readCheckpoint(f: File): Checkpoint? = runCatching {
@@ -357,7 +432,8 @@ object KLog {
                 val main = History.frames.get(cp.o.getLong("main")) ?: continue
                 segment = seg; segDir = d
                 applyCheckpoint(cp, main)
-                for (s in existingSegments()) segFile(s).let { sd -> checkpoints(sd).lastOrNull()?.let { z -> if (z.seq == 0) zeroFrames[s] = z.o.getLong("main") } }
+                chainPrefix = cp.chain()
+                for (s in existingSegments()) segFile(s).let { sd -> checkpoints(sd).lastOrNull()?.let { z -> if (z.seq == 0) noteZero(s, z) } }
                 return replayAfter(cp)
             }
         }
@@ -431,7 +507,7 @@ object KLog {
             if (r != null) { forked = true; why += ", stopped: $r" }
         }
         if (forked || header == null) {
-            startSegment()
+            startSegment(chainPrefix + intArrayOf(segment, cp.blocks))
             why += "; new segment $segment"
         } else {
             writer = LogWriter(logFile, io, header)
@@ -439,6 +515,7 @@ object KLog {
             blocks = complete.size
             ckptSeq = (checkpoints(cp.dir).maxOfOrNull { it.seq } ?: cp.seq) + 1
             lastRefs = listOf((cp.ids("past") + cp.ids("future") + cp.o.getLong("main")).toSet() to cp.o.getLong("next"))
+            lastCkpt = cp
             actionsSince = tail.size
             if (tail.isNotEmpty()) { costSinceNs = (checkpointCostMs * 1e6).toLong(); maybeCheckpoint() }
         }
@@ -494,24 +571,116 @@ object KLog {
         // where the live clock is now: after the last record the timers ran on to here (animations ending)
         val endTime = maxOf(clock.time, liveNow?.invoke() ?: clock.time)
         writer = null
-        applyCheckpoint(zero, main)
-        val t0 = recs.firstOrNull()?.time ?: clock.time
-        var i = 0
-        val startWall = System.nanoTime()
-        fun step() {
-            val target = if (speed.isInfinite()) Long.MAX_VALUE else t0 + ((System.nanoTime() - startWall) / 1e6 * speed).toLong()
-            var j = i
-            while (j < recs.size && recs[j].time <= target) j++
-            val r = replay(recs.subList(i, j))
-            i = j
-            KUi.ui.invalidate()
-            if (r != null || i >= recs.size) {
-                if (r == null) { replaying = true; try { clock.advanceTo(endTime) } finally { replaying = false } }
-                writer = keepWriter; coder = keepCoder; done(r == null)
-            }
-            else schedule(16) { step() }
+        playing = true
+        playPieces(listOf(Piece(zero, main, recs)), endTime, speed, schedule) { r ->
+            playing = false
+            writer = keepWriter; coder = keepCoder; done(r == null)
         }
+    }
+
+    /** One piece of a chain: a segment's checkpoint zero, its picture, the records to replay after it. */
+    class Piece(val zero: Checkpoint, val main: Bitmap, val recs: List<Rec>)
+
+    /**
+     * The pieces of [chain] ((segment, blocks): checkpoint zero of the segment and the records of
+     * its first `blocks` blocks), read with [frames]. Fails (null, why) when a piece is gone, was
+     * written by another versionCode (never a wrong replay: such a save point opens from its
+     * frames only) or is shorter than recorded.
+     */
+    fun loadChain(chain: List<IntArray>, frames: FrameStore = History.frames): Pair<List<Piece>?, String> {
+        if (chain.isEmpty()) return null to "no history"
+        val out = ArrayList<Piece>()
+        for (p in chain) {
+            val d = segFile(p[0])
+            val zero = checkpoints(d).lastOrNull()?.takeIf { it.seq == 0 } ?: return null to "segment ${p[0]}: no checkpoint zero"
+            if (zero.version != versionCode) return null to "segment ${p[0]}: versionCode ${zero.version}"
+            if (zero.o.getInt("w") != w || zero.o.getInt("h") != h) return null to "segment ${p[0]}: another canvas size"
+            val main = frames.get(zero.o.getLong("main")) ?: return null to "segment ${p[0]}: picture missing"
+            val parsed = LogFormat.read(File(d, "log.kpl"))
+            val header = parsed.header ?: return null to "segment ${p[0]}: log unreadable"
+            val blocksIn = LogWriter.completeBlocks(parsed).filter { it.index < p[1] }
+            if (p[1] > 0 && blocksIn.none { it.index == p[1] - 1 }) return null to "segment ${p[0]}: log shorter than ${p[1]} blocks"
+            if (blocksIn.any { it.version != versionCode }) return null to "segment ${p[0]}: blocks of another versionCode"
+            val recs = runCatching { LogFormat.records(header, blocksIn).flatMap { it.second } }.getOrNull() ?: return null to "segment ${p[0]}: undecodable"
+            out.add(Piece(zero, main, recs))
+        }
+        return out to "ok"
+    }
+
+    /**
+     * Plays [pieces] one after the other onto the canvas (each from its checkpoint zero), [speed]
+     * times as fast as they were drawn, then runs the timers on to [endTime]. [done] gets null or
+     * why the replay stopped. The caller puts the live picture back afterwards.
+     */
+    fun playPieces(pieces: List<Piece>, endTime: Long, speed: Double, schedule: (Long, () -> Unit) -> Unit, done: (String?) -> Unit) {
+        var k = -1
+        var recs: List<Rec> = emptyList()
+        var i = 0
+        var t0 = 0L
+        var startWall = 0L
+        fun next(): Boolean {
+            k++
+            if (k >= pieces.size) return false
+            val p = pieces[k]
+            applyCheckpoint(p.zero, p.main)
+            recs = p.recs; i = 0
+            t0 = recs.firstOrNull()?.time ?: clock.time
+            startWall = System.nanoTime()
+            return true
+        }
+        fun step() {
+            while (true) {
+                val target = if (speed.isInfinite()) Long.MAX_VALUE else t0 + ((System.nanoTime() - startWall) / 1e6 * speed).toLong()
+                var j = i
+                while (j < recs.size && recs[j].time <= target) j++
+                val r = replay(recs.subList(i, j))
+                i = j
+                KUi.ui.invalidate()
+                if (r != null) return done(r)
+                if (i < recs.size) return schedule(16) { step() }
+                if (!next()) break
+            }
+            replaying = true; try { clock.advanceTo(maxOf(endTime, clock.time)) } finally { replaying = false }
+            KUi.ui.invalidate()
+            done(null)
+        }
+        if (!next()) return done("nothing to play")
         step()
+    }
+
+    /**
+     * Plays a save point's history ([chain], see [chainNow]; [endTime]: the engine time it was
+     * taken) from its start onto the canvas, [speed] times as fast as it was drawn, then puts the
+     * live picture, history and tool back. Needs a quiet moment (a checkpoint is taken first).
+     * [done] gets null or why it could not play, and the picture the replay ended with (before
+     * the live one came back). Frames the replay stores stay in memory. For a later "watch it
+     * being drawn" button and the debug verify; no UI.
+     */
+    fun playSavePoint(chain: List<IntArray>, endTime: Long, speed: Double, schedule: (Long, () -> Unit) -> Unit,
+                      done: (String?, Bitmap?) -> Unit) {
+        if (!recording || playing) return done("not recording", null)
+        if (!quiescent()) return done("busy", null)
+        flushBlock(true)
+        checkpoint()
+        val live = lastCkpt ?: return done("no checkpoint", null)
+        val liveMain = KDisplay.main_canvas.bitmap.copy(Bitmap.Config.ARGB_8888, false)
+        drainIo()
+        val real = History.frames
+        val (pieces, why) = loadChain(chain, real)
+        if (pieces == null) return done(why, null)
+        val keepWriter = writer; val keepCoder = coder
+        val keepSince = actionsSince; val keepCost = costSinceNs
+        writer = null; playing = true
+        History.frames = real.overlay()
+        playPieces(pieces, endTime, speed, schedule) { r ->
+            val result = KDisplay.main_canvas.bitmap.copy(Bitmap.Config.ARGB_8888, false)
+            History.frames = real
+            applyCheckpoint(live, liveMain)
+            writer = keepWriter; coder = keepCoder; actionsSince = keepSince; costSinceNs = keepCost
+            playing = false
+            KUi.ui.invalidate()
+            done(r, result)
+        }
     }
 
     // ---------------------------------------------------------------- export (debug)
@@ -558,6 +727,8 @@ object KLog {
     }
 
     private fun runIo(f: () -> Unit) { val e = io; if (e != null) e.execute(f) else f() }
+    /** Runs [f] on the log's writer thread after everything handed to it so far (headless: now). */
+    fun onWriter(f: () -> Unit) = runIo(f)
 
     fun writeRaw(b: Bitmap, f: File) {
         val px = IntArray(b.width * b.height)

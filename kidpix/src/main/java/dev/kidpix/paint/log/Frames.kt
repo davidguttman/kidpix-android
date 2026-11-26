@@ -25,7 +25,7 @@ import java.util.zip.Inflater
  * (null: at once on the caller's thread, as headless tests do). Until it is written a frame is
  * served from memory, so [get] never misses a frame that was put.
  */
-class FrameStore(private val backend: Backend, private val io: Executor?) {
+class FrameStore(private val backend: Backend, private val io: Executor?, seed: Map<Long, Info>? = null) {
 
     /** Where encoded frames live: a directory in the app, a map in tests. */
     interface Backend {
@@ -87,7 +87,7 @@ class FrameStore(private val backend: Backend, private val io: Executor?) {
     val totalBytes: Long get() = synchronized(lock) { infos.values.sumOf { it.bytes } }
 
     init {
-        for (id in backend.ids()) {
+        if (seed != null) infos.putAll(seed) else for (id in backend.ids()) {
             val b = backend.head(id, HEADER_BYTES) ?: continue
             header(b)?.let { infos[id] = it.copyWith(bytes = backend.size(id)) }
         }
@@ -177,6 +177,21 @@ class FrameStore(private val backend: Backend, private val io: Executor?) {
     /** From now on until the next [put] with key = true... frames are whole (see [put]). */
     fun keyFramesOnly(on: Boolean) { forceKey = on }
 
+    /**
+     * A store that reads this one's written frames and keeps its own writes in memory (replays
+     * of save points: what they store never reaches the disk). Call after the writer drained.
+     */
+    fun overlay(): FrameStore = FrameStore(OverlayBackend(backend), null, synchronized(lock) { HashMap(infos) })
+
+    private class OverlayBackend(val under: Backend) : Backend {
+        val map = java.util.concurrent.ConcurrentHashMap<Long, ByteArray>()
+        override fun write(id: Long, bytes: ByteArray) { map[id] = bytes }
+        override fun read(id: Long): ByteArray? = map[id] ?: under.read(id)
+        override fun delete(id: Long) { map.remove(id) }
+        override fun ids(): List<Long> = (map.keys + under.ids()).sorted()
+        override fun size(id: Long): Long = map[id]?.size?.toLong() ?: under.size(id)
+    }
+
     /** The picture of frame [id], or null if it is missing or damaged (blocking; any thread). */
     fun get(id: Long): Bitmap? {
         synchronized(lock) { pending[id] }?.let { return it }
@@ -230,7 +245,8 @@ class FrameStore(private val backend: Backend, private val io: Executor?) {
     fun prune(keep: Collection<Long>, below: Long) {
         afterWrites {
             val live = closure(keep) + setOfNotNull(lastId.takeIf { it >= 0 })
-            val gone = synchronized(lock) { infos.keys.filter { it < below && it !in live && it !in pending } }
+            // save points' and drafts' frames ([OOB_BASE] and up) are not numbered by the history: only [keep] holds them
+            val gone = synchronized(lock) { infos.keys.filter { (it < below || it >= OOB_BASE) && it !in live && it !in pending } }
             for (id in gone) { backend.delete(id); synchronized(lock) { infos.remove(id) } }
         }
     }
@@ -240,6 +256,12 @@ class FrameStore(private val backend: Backend, private val io: Executor?) {
         const val MAX_DEPTH = 12
         const val KEY_AREA = 2.0 // XOR deltas stay small however big the box: key frames come by depth only
         const val HEADER_BYTES = 64
+        /**
+         * Frames of save points and drafts (log/SavePoints.kt) are numbered from here: they are
+         * taken outside the actions, so a replay (which numbers the history's frames exactly as
+         * the live app did) never meets one.
+         */
+        const val OOB_BASE = 1L shl 40
 
         fun header(b: ByteArray): Info? = runCatching {
             DataInputStream(b.inputStream()).use { i ->
