@@ -294,6 +294,9 @@ class SavePointTest {
                     assertEquals("round $round op $op: save point ${sp.id} picture [${log.takeLast(6)}]", want[0], crc(SavePoints.picture(sp)!!))
                     val past = sp.past.reversed().map { crc(History.frames.get(it) ?: error("round $round op $op: frame $it of save point ${sp.id} gone [${log.takeLast(6)}]")) }
                     assertEquals("round $round op $op: save point ${sp.id} history", want.drop(1), past)
+                    // and its history can be replayed from its start: every segment of its chain is kept
+                    val (pieces, why) = KLog.loadChain(sp.chain)
+                    assertNotNull("round $round op $op: save point ${sp.id} chain ${sp.chain.map { it.toList() }}: $why [${log.takeLast(6)}]", pieces)
                 }
             }
             KLog.close()
@@ -502,6 +505,24 @@ class SavePointTest {
         val a = IntArray(flat.width * flat.height); val b = IntArray(a.size)
         flat.getPixels(a, 0, flat.width, 0, 0, flat.width, flat.height); png.getPixels(b, 0, png.width, 0, 0, png.width, png.height)
         assertEquals("the export replays to the saved picture", 0, a.indices.count { a[it] != b[it] })
+    }
+
+    @Test fun segmentsASavePointWasMadeFromOutliveTheLogsOwnPruning() {
+        val s = session("segments")
+        repeat(3) { stroke(s, it) }; s.settle()
+        val want = mainCrc()
+        val sp = SavePoints.forMedia(save(s))!!
+        repeat(KLog.KEEP_SEGMENTS + 6) { i -> stroke(s, 20 + i); s.settle(); open(s, SavePoints.get(sp.id)!!) }
+        assertTrue("many segments since: ${KLog.segment}", KLog.segment > sp.chain.last()[0] + KLog.KEEP_SEGMENTS + 2)
+        restart(s)
+        assertTrue("segment ${sp.chain.map { it[0] }} kept", sp.chain.all { KLog.hasSegment(it[0]) })
+        var res: Pair<String?, Bitmap?>? = null
+        KLog.playSavePoint(sp.chain, sp.time, Double.POSITIVE_INFINITY, { _, f -> f() }) { r, b -> res = r to b }
+        assertNull(res!!.first)
+        assertEquals(want, crc(res!!.second!!))
+        // a segment nothing holds is pruned as before
+        println("segments kept: ${KLog.segments()} (save point chain ${sp.chain.map { it.toList() }})")
+        assertTrue(KLog.segments().size <= KLog.KEEP_SEGMENTS + sp.chain.size + 1 + SavePoints.drafts().sumOf { it.chain.size })
     }
 
     @Test fun migrationFromTheActionLogKeepsTheCanvasAndHistory() {
