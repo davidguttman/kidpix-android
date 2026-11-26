@@ -28,6 +28,6 @@ class ApptestSeed {
             drawCircle(750f, 350f, 150f, Paint().apply { color = Color.BLUE; isAntiAlias = true })
         }
         val bytes = java.io.ByteArrayOutputStream().also { b.compress(Bitmap.CompressFormat.PNG, 100, it) }.toByteArray()
-        assertTrue(Pictures(ctx).savePng(bytes))
+        assertTrue(Pictures(ctx).savePng(bytes) != null)
     }
 }

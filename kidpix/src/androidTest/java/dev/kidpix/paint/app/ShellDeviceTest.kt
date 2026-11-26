@@ -161,16 +161,52 @@ class ShellDeviceTest {
         assertEquals(0, alphaAt(250, 200))
         onMain { act.toolButtons["open"]!!.performClick() }
         waitFor("thumbs") { onMain { act.picker?.thumbs?.isNotEmpty() == true } }
-        val first = onMain { act.picker!!.thumbs.first() }
+        // drafts (drawings put aside unsaved) come first; then the saved pictures, newest first
+        val thumbs = onMain { act.picker!!.thumbs.toList() }
+        assertTrue(thumbs.dropWhile { it.draft }.none { it.draft })
+        val first = thumbs.first { !it.draft }
         assertEquals(newest.id, first.id)
         waitFor("thumb decoded") { onMain { first.bitmap != null } }
         onMain { first.performClick() }
         waitFor("opened") { alphaAt(250, 200) > 0 }
         assertEquals(null, onMain { act.picker })
-        // undo brings back what was there (blank)
+        // the canvas cleared outside the app's actions had unsaved changes: put aside as a draft first
+        assertTrue(dev.kidpix.paint.log.SavePoints.drafts().isNotEmpty())
+        // undo walks the opened picture's own history: back to before the stroke (blank)
         onMain { act.toolButtons["undo"]!!.performClick() }
         waitFor("undo open", 3000) { alphaAt(250, 200) == 0 }
         act.contentResolver.delete(android.content.ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, newest.id), null, null)
+    }
+
+    @Test
+    fun aSavedPictureOpensWithItsHistoryAndTheDrawingBeforeIsADraft() {
+        stroke(MotionEvent.TOOL_TYPE_STYLUS, 0, 200)
+        stroke(MotionEvent.TOOL_TYPE_STYLUS, 0, 300)
+        val before = Pictures(act).list().size
+        onMain { act.toolButtons["save"]!!.performClick() }
+        waitFor("saved", 10_000) { Pictures(act).list().size == before + 1 }
+        val saved = Pictures(act).list().first()
+        waitFor("save point written", 5_000) { dev.kidpix.paint.log.SavePoints.forMedia(saved.id)?.media == saved.id }
+        stroke(MotionEvent.TOOL_TYPE_STYLUS, 0, 400) // not saved
+        val drafts = dev.kidpix.paint.log.SavePoints.drafts().size
+        onMain { act.toolButtons["open"]!!.performClick() }
+        waitFor("thumbs") { onMain { act.picker?.thumbs?.any { it.id == saved.id && !it.draft } == true } }
+        onMain { act.picker!!.thumbs.first { it.id == saved.id && !it.draft }.performClick() }
+        waitFor("opened") { alphaAt(250, 400) == 0 && alphaAt(250, 300) > 0 }
+        assertEquals("the unsaved drawing was put aside", drafts + 1, dev.kidpix.paint.log.SavePoints.drafts().size)
+        // the Undo Guy walks back through how the saved picture was made
+        onMain { act.toolButtons["undo"]!!.performClick() }
+        waitFor("undo 1", 3000) { alphaAt(250, 300) == 0 && alphaAt(250, 200) > 0 }
+        Thread.sleep(500)
+        onMain { act.toolButtons["undo"]!!.performClick() }
+        waitFor("undo 2", 3000) { alphaAt(250, 200) == 0 }
+        // the draft opens with its picture
+        Thread.sleep(500)
+        onMain { act.toolButtons["open"]!!.performClick() }
+        waitFor("draft thumb") { onMain { act.picker?.thumbs?.firstOrNull()?.draft == true } }
+        onMain { act.picker!!.thumbs.first().performClick() }
+        waitFor("draft opened") { alphaAt(250, 400) > 0 && alphaAt(250, 300) > 0 }
+        act.contentResolver.delete(android.content.ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, saved.id), null, null)
     }
 
     @Test
@@ -178,7 +214,7 @@ class ShellDeviceTest {
         val b = Bitmap.createBitmap(64, 48, Bitmap.Config.ARGB_8888) // transparent like pre-0.3.0 saves
         b.setPixel(1, 1, Color.RED)
         val bytes = java.io.ByteArrayOutputStream().also { b.compress(Bitmap.CompressFormat.PNG, 100, it) }.toByteArray()
-        assertTrue(Pictures(act).savePng(bytes))
+        assertTrue(Pictures(act).savePng(bytes) != null)
         val pic = Pictures(act).list().first()
         val t = Pictures(act).thumb(pic.id)
         assertEquals(Color.WHITE, t.getPixel(30, 30))
