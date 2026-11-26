@@ -1,0 +1,1051 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "alphabet-page1",
+   "group": "alphabet",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 1
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "letter",
+     "index": 2
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "letter",
+     "index": 3
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "letter",
+     "index": 4
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "letter",
+     "index": 5
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "letter",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "letter",
+     "index": 7
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "letter",
+     "index": 8
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       990,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "letter",
+     "index": 9
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "letter",
+     "index": 10
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "letter",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 12
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 13
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "letter",
+     "index": 14
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "letter",
+     "index": 15
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "letter",
+     "index": 16
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "letter",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       990,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "letter",
+     "index": 18
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "letter",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "letter",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "letter",
+     "index": 21
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "letter",
+     "index": 22
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "letter",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 24
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       590
+      ]
+     ]
+    }
+   ],
+   "note": "Every letter of page 1, each in another color; index 26 is the next-page arrow."
+  },
+  {
+   "id": "alphabet-page2",
+   "group": "alphabet",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "letter",
+     "index": 26
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 1
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "letter",
+     "index": 2
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "letter",
+     "index": 3
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "letter",
+     "index": 4
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "letter",
+     "index": 5
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "letter",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "letter",
+     "index": 7
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "letter",
+     "index": 8
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       990,
+       130
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "letter",
+     "index": 9
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "letter",
+     "index": 10
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "letter",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 12
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 13
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "letter",
+     "index": 14
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "letter",
+     "index": 15
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "letter",
+     "index": 16
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "letter",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       990,
+       360
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "letter",
+     "index": 18
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       70,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "letter",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       185,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "letter",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "letter",
+     "index": 21
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       415,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "letter",
+     "index": 22
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       530,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "letter",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       645,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "letter",
+     "index": 24
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       760,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "letter",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       875,
+       590
+      ]
+     ]
+    }
+   ],
+   "note": "Every letter of page 2, each in another color; index 26 is the next-page arrow."
+  },
+  {
+   "id": "alphabet-boot",
+   "group": "alphabet",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       399
+      ]
+     ]
+    }
+   ],
+   "note": "Tool press alone: first letter of page 1, current color (black)."
+  },
+  {
+   "id": "alphabet-wrap",
+   "group": "alphabet",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "letter",
+     "index": 26
+    },
+    {
+     "op": "letter",
+     "index": 26
+    },
+    {
+     "op": "letter",
+     "index": 3
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       399
+      ]
+     ]
+    }
+   ],
+   "note": "Next page twice wraps back to page 1."
+  },
+  {
+   "id": "alphabet-hover",
+   "group": "alphabet",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "letter",
+     "index": 10
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "hover",
+     "points": [
+      [
+       500,
+       400
+      ],
+      [
+       540,
+       420
+      ]
+     ]
+    }
+   ],
+   "overlays": true
+  },
+  {
+   "id": "alphabet-on-base",
+   "group": "alphabet",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "alphabet"
+    },
+    {
+     "op": "letter",
+     "index": 7
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       450
+      ]
+     ]
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       780,
+       520
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

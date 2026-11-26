@@ -1,0 +1,4622 @@
+{
+ "alphabet-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 0.47,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 32
+ },
+ "alphabet-hover": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 32
+ },
+ "alphabet-on-base": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 0.81,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 64
+ },
+ "alphabet-page1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 4.22,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 832
+ },
+ "alphabet-page2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 4.53,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 832
+ },
+ "alphabet-wrap": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "alphabet.json",
+  "group": "alphabet",
+  "secs": 0.6,
+  "settle_ms": 0,
+  "tool": "Stamp",
+  "vclock": 32
+ },
+ "brush-00-leaky-pen": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.57,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 464
+ },
+ "brush-01-zig-zag": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.65,
+  "settle_ms": 0,
+  "tool": "Scribble",
+  "vclock": 464
+ },
+ "brush-02-dots": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.68,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-02-dots-slow": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.58,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 1080
+ },
+ "brush-03-bubbly": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 464
+ },
+ "brush-04-pies": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.84,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-05-echoes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-06-northern-lights": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Contours",
+  "vclock": 464
+ },
+ "brush-07-fuzzer": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.23,
+  "settle_ms": 0,
+  "tool": "Fuzzer",
+  "vclock": 464
+ },
+ "brush-08-magnifier": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.23,
+  "settle_ms": 0,
+  "tool": "Magnify",
+  "vclock": 240
+ },
+ "brush-09-spray-paint": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.9,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 464
+ },
+ "brush-09-spray2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.76,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-09-spray3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.0,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-09-spray4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.91,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-09-spray5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.88,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-09-spray6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.88,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-09-spray7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.96,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 656
+ },
+ "brush-10-pine-needles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.88,
+  "settle_ms": 0,
+  "tool": "Pines",
+  "vclock": 464
+ },
+ "brush-11-3d": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.83,
+  "settle_ms": 0,
+  "tool": "ThreeDBrush",
+  "vclock": 464
+ },
+ "brush-12-kaleidoscope": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.19,
+  "settle_ms": 0,
+  "tool": "Kaleidoscope",
+  "vclock": 464
+ },
+ "brush-13-connect-dots": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.92,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-14-swirl": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.75,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-15-rotating-dots": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-16-inverter": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.01,
+  "settle_ms": 0,
+  "tool": "Inverter",
+  "vclock": 464
+ },
+ "brush-17-geometry": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 2.28,
+  "settle_ms": 0,
+  "tool": "Guilloche",
+  "vclock": 464
+ },
+ "brush-18-xy-to-xy": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.95,
+  "settle_ms": 0,
+  "tool": "Astroid",
+  "vclock": 144
+ },
+ "brush-19-tree": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 5.9,
+  "settle_ms": 0,
+  "tool": "Tree",
+  "vclock": 32
+ },
+ "brush-20-splatter": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.78,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 464
+ },
+ "brush-21-starburst": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 464
+ },
+ "brush-22-looper": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.89,
+  "settle_ms": 0,
+  "tool": "Looper",
+  "vclock": 464
+ },
+ "brush-23-galaxy": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.01,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-24-hugs-xs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.15,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-25-cards": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.0,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-26-shapes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.13,
+  "settle_ms": 0,
+  "tool": "PlainBrush",
+  "vclock": 464
+ },
+ "brush-27-paw-prints": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 1.01,
+  "settle_ms": 0,
+  "tool": "Brush",
+  "vclock": 464
+ },
+ "brush-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.59,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 464
+ },
+ "brush-hover": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "brush.json",
+  "group": "brush",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Kaleidoscope",
+  "vclock": 32
+ },
+ "circle-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 192
+ },
+ "circle-on-base": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-shift": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-bubbles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.5,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-chevron": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-corner-stair": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-cross": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-diag-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-diamond": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-houndstooth": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-none": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-partial-artifact": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.51,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-partial1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-partial2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.58,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-partial3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-rainbow-grad": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.75,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-ribbon": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.54,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-sand": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-shingles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-solid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-speckles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-stairs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-stripes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "circle-tex-thatch": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "circle.json",
+  "group": "circle",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Circle",
+  "vclock": 96
+ },
+ "eraser-00-blank": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.8,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-00-square20": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-01-circle10": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.99,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-02-square10": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-03-square2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.01,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-04-firecracker": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 3.01,
+  "settle_ms": 2500,
+  "tool": "Tnt",
+  "vclock": 2532
+ },
+ "eraser-04-firecracker-mid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.85,
+  "settle_ms": 0,
+  "tool": "Tnt",
+  "vclock": 732
+ },
+ "eraser-05-hidden-pictures": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.97,
+  "settle_ms": 0,
+  "tool": "EraserHiddenPicture",
+  "vclock": 464
+ },
+ "eraser-06-white-circles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.2,
+  "settle_ms": 0,
+  "tool": "EraserWhiteCircles",
+  "vclock": 464
+ },
+ "eraser-07-slip-sliding": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.92,
+  "settle_ms": 0,
+  "tool": "Doorbell",
+  "vclock": 32
+ },
+ "eraser-07-slip-sliding-mid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Doorbell",
+  "vclock": 832
+ },
+ "eraser-07-slip-sliding-tap2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.0,
+  "settle_ms": 0,
+  "tool": "Doorbell",
+  "vclock": 64
+ },
+ "eraser-08-letters": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.87,
+  "settle_ms": 0,
+  "tool": "EraserLetters",
+  "vclock": 464
+ },
+ "eraser-08-letters-mid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 2.09,
+  "settle_ms": 0,
+  "tool": "EraserLetters",
+  "vclock": 224
+ },
+ "eraser-09-fade-away": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.44,
+  "settle_ms": 1600,
+  "tool": "EraserFadeAway",
+  "vclock": 2064
+ },
+ "eraser-09-fade-away-mid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.17,
+  "settle_ms": 0,
+  "tool": "EraserFadeAway",
+  "vclock": 1332
+ },
+ "eraser-10-black-hole": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.97,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-11-count-down": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 0.83,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.18,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "eraser-remembered": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "eraser.json",
+  "group": "eraser",
+  "secs": 1.22,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 464
+ },
+ "flood-blank": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 32
+ },
+ "flood-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 32
+ },
+ "flood-tex-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.74,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-bubbles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-chevron": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.84,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-corner-stair": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.85,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-cross": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-diag-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.84,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-diamond": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-houndstooth": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-partial-artifact": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.05,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-partial1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.38,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-partial2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.3,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-partial3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.4,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-rainbow-grad": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.83,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-ribbon": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.85,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-sand": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-shingles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.9,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-solid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.51,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-speckles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.44,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-stairs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.85,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-stripes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 1.08,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "flood-tex-thatch": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "flood.json",
+  "group": "flood",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 64
+ },
+ "jumble-00-invert": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 3.23,
+  "settle_ms": 1300,
+  "tool": "ElectricMixerInvert",
+  "vclock": 1444
+ },
+ "jumble-00-invert-twice": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 7.22,
+  "settle_ms": 1400,
+  "tool": "ElectricMixerInvert",
+  "vclock": 1464
+ },
+ "jumble-01-raindrops": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 144
+ },
+ "jumble-01-raindrops-hold": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.74,
+  "settle_ms": 0,
+  "tool": "AnimBrush",
+  "vclock": 496
+ },
+ "jumble-02-checkerboard": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.65,
+  "settle_ms": 0,
+  "tool": "WackyMixerCheckerboard",
+  "vclock": 144
+ },
+ "jumble-03-wallpaper": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.65,
+  "settle_ms": 0,
+  "tool": "WackyMixerWallpaper",
+  "vclock": 144
+ },
+ "jumble-04-venetian-blinds": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.64,
+  "settle_ms": 0,
+  "tool": "WackyMixerVenetianBlinds",
+  "vclock": 144
+ },
+ "jumble-05-outliner": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-06-shadow-boxes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "WackyMixerShadowBoxes",
+  "vclock": 144
+ },
+ "jumble-07-zoom-in": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-08-broken-glass": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-09-picture-in-picture": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Placer",
+  "vclock": 144
+ },
+ "jumble-10-highlighter": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-11-pattern-maker": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.67,
+  "settle_ms": 0,
+  "tool": "WackyMixerPattern",
+  "vclock": 144
+ },
+ "jumble-12-wrap-around": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-13-swirl": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.89,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-14-pancake-stack": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.92,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 144
+ },
+ "jumble-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "jumble.json",
+  "group": "jumble",
+  "secs": 0.68,
+  "settle_ms": 0,
+  "tool": "WholeCanvasEffect",
+  "vclock": 32
+ },
+ "line-boot-size": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.75,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 192
+ },
+ "line-size1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-size13": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.76,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-size17": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.64,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-size25": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.95,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-size5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.73,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-size9": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.67,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.77,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-bubbles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-chevron": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.68,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-corner-stair": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.78,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-cross": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.81,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-diag-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.78,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-diamond": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-houndstooth": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-partial-artifact": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.75,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-partial1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-partial2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-partial3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-rainbow": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-ribbon": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.77,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-sand": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-shingles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.77,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-solid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.93,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-speckles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-stairs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.67,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-stripes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.79,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "line-tex-thatch": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "line.json",
+  "group": "line",
+  "secs": 0.67,
+  "settle_ms": 0,
+  "tool": "Line",
+  "vclock": 96
+ },
+ "pencil-all-colors": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 3.45,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 1536
+ },
+ "pencil-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-hover": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 32
+ },
+ "pencil-palette-next": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 352
+ },
+ "pencil-palette-prev": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 352
+ },
+ "pencil-shift": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.55,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size13": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size17": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.61,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size25": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-size9": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-bubbles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-chevron": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.59,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-corner-stair": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.64,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-cross": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-diag-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.6,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-diamond": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-houndstooth": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.57,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-partial-artifact": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.76,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-partial1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-partial2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-partial3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.79,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-rainbow": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.54,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-rainbow-thin": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.5,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-ribbon": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-sand": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.51,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-shingles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-solid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.73,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-speckles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.68,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-stairs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-stripes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 0.77,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "pencil-tex-thatch": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "pencil.json",
+  "group": "pencil",
+  "secs": 1.09,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 464
+ },
+ "square-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.88,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 192
+ },
+ "square-on-base": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 1.0,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-shift": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.95,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.57,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-bubbles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-chevron": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.66,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-corner-stair": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.76,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-cross": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.67,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-diag-brick": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-diamond": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-houndstooth": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.86,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-none": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.58,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-partial-artifact": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-partial1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-partial2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-partial3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.52,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-rainbow-grad": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-ribbon": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-sand": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-shingles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.48,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-solid": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.47,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-speckles": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.53,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-stairs": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.64,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-stripes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.49,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "square-tex-thatch": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "square.json",
+  "group": "square",
+  "secs": 0.5,
+  "settle_ms": 0,
+  "tool": "Square",
+  "vclock": 96
+ },
+ "stamp-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 0.6,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 32
+ },
+ "stamp-drag": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 0.75,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 208
+ },
+ "stamp-hover": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 0.76,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 32
+ },
+ "stamp-on-base": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.07,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 64
+ },
+ "stamp-pack-wrap": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.42,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 32
+ },
+ "stamp-pack0-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.09,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.34,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.2,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.36,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.16,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.18,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.29,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack0-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.59,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.26,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.28,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.73,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.81,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.89,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.81,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack1-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.85,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.66,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.7,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.73,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.76,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.82,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.9,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack2-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.97,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.73,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.75,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.82,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.04,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.45,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.35,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack3-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.1,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.09,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.38,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.38,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.1,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.55,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.2,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.96,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack4-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.0,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.8,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.84,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.89,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.91,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.95,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.98,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.09,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack5-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.12,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.86,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.86,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.91,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.96,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.02,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.02,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.07,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack6-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 3.06,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.86,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.05,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.07,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.24,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.82,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 3.09,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.76,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack7-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 3.0,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.39,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.51,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.45,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.54,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.48,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.67,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.74,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack8-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.86,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row0": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.52,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.6,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.73,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row3": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row4": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.65,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row6": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.71,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-pack9-row7": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 2.66,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 448
+ },
+ "stamp-row-wrap": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 0.78,
+  "settle_ms": 0,
+  "tool": "SpritePlacer",
+  "vclock": 32
+ },
+ "stamp-stickers": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "stamp.json",
+  "group": "stamp",
+  "secs": 1.26,
+  "settle_ms": 0,
+  "tool": "",
+  "vclock": 192
+ },
+ "truck-00-50x50": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 1.09,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-01-25x25": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.78,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-02-10x10": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-03-5x5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.61,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-04-1x1": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-05-50x25": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-06-25x10": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-07-10x5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-08-5x2": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.7,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-09-25x50": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-10-10x25": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-11-5x10": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.63,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-12-2x5": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.62,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-13-unimpl": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.69,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-boot": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.64,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 112
+ },
+ "truck-twice": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "truck.json",
+  "group": "truck",
+  "secs": 0.71,
+  "settle_ms": 0,
+  "tool": "Cut",
+  "vclock": 224
+ },
+ "undo-after-new-stroke": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.72,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 752
+ },
+ "undo-base-stroke": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.95,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 576
+ },
+ "undo-eraser": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.85,
+  "settle_ms": 0,
+  "tool": "Eraser",
+  "vclock": 864
+ },
+ "undo-flood": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.96,
+  "settle_ms": 0,
+  "tool": "Flood",
+  "vclock": 464
+ },
+ "undo-mixer": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 3.44,
+  "settle_ms": 1000,
+  "tool": "ElectricMixerInvert",
+  "vclock": 1432
+ },
+ "undo-nothing": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.58,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 400
+ },
+ "undo-one": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.56,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 576
+ },
+ "undo-redo": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.8,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 752
+ },
+ "undo-tnt": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 1.49,
+  "settle_ms": 0,
+  "tool": "Tnt",
+  "vclock": 3432
+ },
+ "undo-twice": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.82,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 1328
+ },
+ "undo-two-strokes": {
+  "canvas": {
+   "h": 798,
+   "w": 1074
+  },
+  "deterministic": true,
+  "errors": [],
+  "file": "undo.json",
+  "group": "undo",
+  "secs": 0.65,
+  "settle_ms": 0,
+  "tool": "Pencil",
+  "vclock": 752
+ }
+}

@@ -1,0 +1,1349 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "line-size1",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-size5",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-size9",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 2
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-size13",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-size17",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 4
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-size25",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-solid",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 7
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-partial1",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 8
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-partial2",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 9
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-partial3",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 10
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-partial-artifact",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 11
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-speckles",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 12
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-stripes",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 13
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-thatch",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 14
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-shingles",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 15
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-bubbles",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 16
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-diamond",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 17
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-ribbon",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 18
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-sand",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 19
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-brick",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 20
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-chevron",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 21
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-stairs",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 22
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-cross",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 23
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-diag-brick",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 24
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-corner-stair",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 25
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-houndstooth",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 26
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-tex-rainbow",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "sub",
+     "index": 27
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "line-boot-size",
+   "group": "line",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "line"
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       200,
+       600
+      ],
+      [
+       375,
+       488
+      ],
+      [
+       550,
+       375
+      ],
+      [
+       725,
+       262
+      ],
+      [
+       900,
+       150
+      ]
+     ]
+    }
+   ],
+   "note": "Line without option presses; two lines."
+  }
+ ]
+}

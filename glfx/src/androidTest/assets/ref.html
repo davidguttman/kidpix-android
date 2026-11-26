@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8"></head><body style="margin:0;background:#888">
+<canvas id="src"></canvas>
+<script>/*GLFX*/</script>
+<script>
+// Runs upstream glfx.js the way Kid Pix does (texture from the main canvas or from getImageData,
+// draw().filter().update(), then drawImage onto a 2D canvas) and hands back a PNG.
+var gfx = null, src = document.getElementById('src');
+function report(kind, id, payload) { Ref.result(kind, id, payload); }
+function loadPicture(b64, w, h, noFloat) {
+  if (noFloat) { // glfx.js's 8-bit path, as on GPUs without float textures
+    var orig = WebGLRenderingContext.prototype.getExtension;
+    WebGLRenderingContext.prototype.getExtension = function(n) { return /^OES_texture_float/.test(n) ? null : orig.call(this, n); };
+  }
+  // The picture arrives as the straight RGBA bytes Android decoded, so both sides start from the
+  // same pixels (Chrome's drawImage(<img>) bleeds a little alpha into transparent neighbours).
+  var bin = atob(b64), bytes = new Uint8ClampedArray(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  src.width = w; src.height = h;
+  src.getContext('2d').putImageData(new ImageData(bytes, w, h), 0, 0);
+  try {
+    gfx = fx.canvas();
+    var gl = gfx._.gl;
+    var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    report('ready', '', (dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)) + ' | float=' + !!gl.getExtension('OES_texture_float') + ' linear=' + !!gl.getExtension('OES_texture_float_linear'));
+  } catch (e) { report('error', '', 'fx.canvas: ' + e); }
+}
+// Alpha probe: what texImage2D(canvas) stores and what drawImage(gfx) gives back.
+function probe() {
+  try {
+    var c = document.createElement('canvas'); c.width = 4; c.height = 1;
+    var x = c.getContext('2d'); x.fillStyle = 'rgba(255,0,0,0.5)'; x.fillRect(0, 0, 1, 1); x.fillStyle = 'rgb(0,255,0)'; x.fillRect(2, 0, 1, 1);
+    var t = gfx.texture(c); gfx.draw(t); var up = Array.prototype.slice.call(gfx.getPixelArray());
+    gfx.update(); var o = document.createElement('canvas'); o.width = 4; o.height = 1; var ox = o.getContext('2d'); ox.drawImage(gfx, 0, 0);
+    var back = Array.prototype.slice.call(ox.getImageData(0, 0, 4, 1).data);
+    var id = new ImageData(new Uint8ClampedArray([255,0,0,128, 0,0,0,0, 0,255,0,255, 0,0,0,0]), 4, 1);
+    var t2 = gfx.texture(id); gfx.draw(t2).update(); ox.clearRect(0,0,4,1); ox.drawImage(gfx, 0, 0);
+    var back2 = Array.prototype.slice.call(ox.getImageData(0, 0, 4, 1).data);
+    var c3 = document.createElement('canvas'); c3.width = 2; c3.height = 1; var x3 = c3.getContext('2d'); x3.fillStyle = 'rgb(255,0,0)'; x3.fillRect(0, 0, 1, 1);
+    var t3 = gfx.texture(c3); gfx.draw(t3, 4, 1).update(); ox.clearRect(0,0,4,1); ox.drawImage(gfx, 0, 0);
+    var stretch = Array.prototype.slice.call(ox.getImageData(0, 0, 4, 1).data);
+    var t4 = gfx.texture(new ImageData(new Uint8ClampedArray([255,0,0,255, 0,0,0,0]), 2, 1)); gfx.draw(t4, 4, 1).update(); ox.clearRect(0,0,4,1); ox.drawImage(gfx, 0, 0);
+    var stretch2 = Array.prototype.slice.call(ox.getImageData(0, 0, 4, 1).data);
+    var tb = gfx.texture(src); gfx.draw(tb); var gl = gfx._.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, gl.framebuffer); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, gfx._.texture.id, 0);
+    var big = '';
+    [[548,250],[480,250],[478,250],[476,250],[1116,789],[1115,789],[1000,10]].forEach(function(p) {
+      var f = new Float32Array(4); gl.readPixels(p[0], p[1], 1, 1, gl.RGBA, gl.FLOAT, f);
+      big += ' (' + p + ')=' + Array.prototype.map.call(f, function(v) { return Math.round(v * 255); });
+    });
+    big += ' glerr=' + gl.getError();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null); tb.destroy();
+    report('probe', '', 'bigTexture:' + big + ' stretch(canvas)=' + stretch + ' stretch(imageData)=' + stretch2 + ' upload(canvas)=' + up + ' drawImage=' + back + ' imageData->drawImage=' + back2);
+  } catch (e) { report('error', '', 'probe ' + e); }
+}
+function runCase(id, crop, chain, iters) {
+  try {
+    var tex = crop ? gfx.texture(src.getContext('2d').getImageData(crop[0], crop[1], crop[2], crop[3])) : gfx.texture(src);
+    var run = new Function('gfx', 'tex', 'return gfx.draw(tex).' + chain + '.update();');
+    var gl = gfx._.gl, px = new Uint8Array(4);
+    run(gfx, tex); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+    var t0 = performance.now();
+    for (var i = 0; i < iters; i++) { run(gfx, tex); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+    var ms = iters ? (performance.now() - t0) / iters : 0;
+    run(gfx, tex);
+    var o = document.createElement('canvas'); o.width = gfx.width; o.height = gfx.height;
+    o.getContext('2d').drawImage(gfx, 0, 0);
+    var floatTex = gfx._.texture.type == gl.FLOAT;
+    tex.destroy();
+    report('done', id, ms.toFixed(2) + '|' + floatTex + '|' + o.toDataURL('image/png'));
+  } catch (e) { report('error', id, String(e) + (e.stack ? ' ' + e.stack : '')); }
+}
+</script></body></html>

@@ -7,3 +7,5 @@ app/src/main/assets/kidpix/
 *.zip
 .local/
 dist/
+NOTES.md
+ref/sheets/

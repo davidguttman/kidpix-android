@@ -1,0 +1,754 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "truck-00-50x50",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-01-25x25",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-02-10x10",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 2
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-03-5x5",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-04-1x1",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 4
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-05-50x25",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-06-25x10",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-07-10x5",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-08-5x2",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 8
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-09-25x50",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 9
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-10-10x25",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 10
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-11-5x10",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 11
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-12-2x5",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 12
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Drag from the blue square up-right."
+  },
+  {
+   "id": "truck-13-unimpl",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       470,
+       430
+      ],
+      [
+       504,
+       396
+      ],
+      [
+       538,
+       362
+      ],
+      [
+       572,
+       328
+      ],
+      [
+       606,
+       294
+      ],
+      [
+       640,
+       260
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: option 13 only plays the 'unimplemented' sound; the van keeps its previous size (50x50)."
+  },
+  {
+   "id": "truck-boot",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       780,
+       520
+      ],
+      [
+       684,
+       476
+      ],
+      [
+       588,
+       432
+      ],
+      [
+       492,
+       388
+      ],
+      [
+       396,
+       344
+      ],
+      [
+       300,
+       300
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "truck-twice",
+   "group": "truck",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "truck"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       340,
+       320
+      ],
+      [
+       412,
+       316
+      ],
+      [
+       484,
+       312
+      ],
+      [
+       556,
+       308
+      ],
+      [
+       628,
+       304
+      ],
+      [
+       700,
+       300
+      ]
+     ]
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       700,
+       300
+      ],
+      [
+       680,
+       370
+      ],
+      [
+       660,
+       440
+      ],
+      [
+       640,
+       510
+      ],
+      [
+       620,
+       580
+      ],
+      [
+       600,
+       650
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

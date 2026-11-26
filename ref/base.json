@@ -1,0 +1,20 @@
+{"canvas": {"w": 1074, "h": 798}, "seed": 4242,
+ "note": "Builds ref/base.png: the app's opening page (overlay/opening.png fit to the canvas, as the WebView draws it) plus solid shapes and strokes in the empty middle. Run with --out and copy _base.png to ref/base.png.",
+ "scenarios": [
+  {"id": "_base", "group": "base", "keep_opening": true, "steps": [
+   {"op": "tool", "id": "square"}, {"op": "sub", "index": 1},
+   {"op": "color", "index": 7},  {"op": "stroke", "points": [[250, 250], [420, 400]]},
+   {"op": "color", "index": 17}, {"op": "stroke", "points": [[380, 330], [560, 520]]},
+   {"op": "color", "index": 9},  {"op": "stroke", "points": [[600, 240], [800, 380]]},
+   {"op": "tool", "id": "circle"}, {"op": "sub", "index": 1},
+   {"op": "color", "index": 13}, {"op": "stroke", "points": [[700, 420], [860, 640]]},
+   {"op": "color", "index": 23}, {"op": "stroke", "points": [[260, 470], [420, 660]]},
+   {"op": "color", "index": 29}, {"op": "stroke", "points": [[520, 560], [660, 700]]},
+   {"op": "tool", "id": "pencil"}, {"op": "sub", "index": 5}, {"op": "color", "index": 0},
+   {"op": "stroke", "points": [[240, 420], [330, 380], [440, 440], [560, 400], [680, 460], [820, 400]]},
+   {"op": "sub", "index": 4}, {"op": "color", "index": 20},
+   {"op": "stroke", "points": [[300, 700], [400, 600], [500, 650], [600, 540], [700, 620], [840, 560]]},
+   {"op": "sub", "index": 13}, {"op": "color", "index": 11},
+   {"op": "stroke", "points": [[470, 250], [520, 300], [560, 260], [600, 330], [640, 290]]}
+  ]}
+ ]}

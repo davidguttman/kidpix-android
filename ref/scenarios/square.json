@@ -1,0 +1,1144 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "square-tex-none",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-solid",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-partial1",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 2
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-partial2",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-partial3",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 4
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-partial-artifact",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-speckles",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 6
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-stripes",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 7
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-thatch",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 8
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-shingles",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 9
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-bubbles",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 10
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-diamond",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 11
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-ribbon",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 12
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-sand",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 13
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-brick",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 14
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-chevron",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 15
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-stairs",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 16
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-cross",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 17
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-diag-brick",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 18
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-corner-stair",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 19
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-houndstooth",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 20
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-tex-rainbow-grad",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 21
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square-boot",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       600,
+       150
+      ],
+      [
+       525,
+       288
+      ],
+      [
+       450,
+       425
+      ],
+      [
+       375,
+       562
+      ],
+      [
+       300,
+       700
+      ]
+     ]
+    }
+   ],
+   "note": "No option press (upstream default texture); second drag goes up-left."
+  },
+  {
+   "id": "square-shift",
+   "group": "square",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "key",
+     "name": "shift",
+     "down": true
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    },
+    {
+     "op": "key",
+     "name": "shift",
+     "down": false
+    }
+   ],
+   "note": "Shift held while dragging."
+  },
+  {
+   "id": "square-on-base",
+   "group": "square",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "square"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       230,
+       210
+      ],
+      [
+       362,
+       305
+      ],
+      [
+       495,
+       400
+      ],
+      [
+       628,
+       495
+      ],
+      [
+       760,
+       590
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

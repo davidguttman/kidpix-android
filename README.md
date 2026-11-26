@@ -1,6 +1,6 @@
 # Kid Pix for Android
 
-[JS Kid Pix](https://github.com/vikrum/kidpix) as an Android tablet app, with real pen support.
+[JS Kid Pix](https://github.com/vikrum/kidpix) as a native Android tablet app, with real pen support.
 
 ![Opening page](docs/opening.jpg)
 
@@ -20,6 +20,7 @@ Works with Android active pens: Lenovo Tab Pen / Tab Pen Plus, USI, MPP, Wacom A
 - **Side button 2** is undo (press twice quickly to redo)
 - **Palm rejection**: fingers on the canvas are ignored while the pen is down, hovering, or just lifted. Fingers still draw when there's no pen around.
 - Pen samples are delivered unbuffered, and the pencil uses every sample for smooth lines
+- On tablets that support it, the stroke in progress is drawn on a low-latency layer (kept only where the app measures it to be faster)
 
 Some tablets bind pen side buttons to system shortcuts (notes, screenshots). If a button does that instead, turn the shortcut off in the tablet's pen settings.
 
@@ -31,39 +32,39 @@ Some tablets bind pen side buttons to system shortcuts (notes, screenshots). If 
 - Fullscreen landscape: tools on the left, tool options on the right, the canvas fills the rest
 - **Save** puts a PNG in `Pictures/Kid Pix`; the **folder** button under it shows saved pictures as thumbnails, and tapping one opens it (undo brings back what you had). The picker only shows pictures saved by Kid Pix itself. Clearing the app's storage or reinstalling hides older ones from it (they stay in the Gallery), because Android only lets an app see its own pictures without a photo permission.
 - The **door** button at the bottom of the tools leaves the app; your drawing is still there when you come back
-- Links to outside websites are blocked, so kids stay in the app
-- If the browser engine crashes, the app reloads with the drawing intact instead of closing
+- If the app is closed or killed, the drawing, tool and colours are there when it opens again
 
 ## How it's built
 
-Upstream JS Kid Pix is a git submodule at `upstream/` and isn't modified. The Android layer sits on top:
+A native Android app in Kotlin: no WebView. Upstream JS Kid Pix is a git submodule at `upstream/` and isn't modified; its pictures and sounds are copied into the APK at build time, and its drawing code is translated to Kotlin file for file, with the same names.
 
-- `overlay/android.js` replaces the mouse/touch input with Pointer Events (pressure, hover, pen buttons, palm rejection), sizes the canvas to the screen, and saves to the gallery
-- `overlay/android.css` is the tablet layout
-- `app/` is a small Kotlin WebView app that serves the files locally
-- `scripts/build-web.sh` assembles upstream + overlay into the APK assets (runs automatically before each build; no npm needed)
+- `kidpix/` is the app. `Ctx2D` gives the translated code the browser's Canvas2D API on top of `android.graphics`, so each upstream file is one Kotlin file, close to line for line. `kidpix/CONVENTIONS.md` is the guide to the code.
+- `glfx/` is a small library with the WebGL effects of upstream's `glfx.js` (swirl, pancake stack) on OpenGL ES 2.0 with the same shaders.
+- `app/` and `overlay/` are the earlier WebView version (up to 0.5.2), kept as the reference the native app is compared against. It is not what gets released.
+- `ref/` has scripted test drawings for every option of every tool and the pictures the WebView version made of them.
 
 ```bash
 git clone --recursive https://github.com/davidguttman/kidpix-android
 cd kidpix-android
-./gradlew assembleDebug        # JDK 17+, Android SDK 35
+./gradlew :kidpix:assembleDebug        # JDK 17 or 21, Android SDK 35
 ```
 
 ## Tests
 
-On a debug build, with the app open on a device or emulator:
-
 ```bash
-adb forward tcp:9333 localabstract:webview_devtools_remote_$(adb shell pidof dev.kidpix.tablet)
-uv run --with websockets scripts/pen_test.py 9333    # pressure, side buttons, eraser, palm, hover, stuck-stroke recovery
-uv run --with websockets scripts/tool_smoke.py 9333  # every tool x every option with pen taps and strokes
-uv run --with websockets scripts/undo_test.py 9333   # multi-step undo, double-tap redo, selected-tool highlight
-uv run --with websockets scripts/selection_test.py 9333  # the lit option is the tool you get, also after switching tools (add `touch` for finger taps)
+./gradlew :kidpix:testDebugUnitTest    # unit tests, on the computer (no device)
+
+# draw one group of test drawings without a device and compare with the reference pictures
+./gradlew :kidpix:renderScenarios -Pscenarios=$PWD/ref/scenarios/brush.json -Pout=/tmp/kp/brush
+uv run scripts/compare.py ref/out /tmp/kp/brush --only 'brush-*'
+
+./gradlew :kidpix:connectedDebugAndroidTest   # on a device or emulator: pen layer, save/open/undo, emoji glyphs
 ```
+
 
 ## Releasing
 
-Bump `versionCode` and `versionName` in `app/build.gradle.kts`, add `docs/release-notes/vX.Y.Z.md`, commit, then run `scripts/release.sh`.
+Bump `versionCode` and `versionName` in `kidpix/build.gradle.kts`, add `docs/release-notes/vX.Y.Z.md`, commit, then run `scripts/release.sh`.
 
 ## Credits and license
 

@@ -1,0 +1,943 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "flood-tex-solid",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-partial1",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-partial2",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 2
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-partial3",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-partial-artifact",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 4
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-speckles",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-stripes",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 6
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-thatch",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 7
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-shingles",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 8
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-bubbles",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 9
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-diamond",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 10
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-ribbon",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 11
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-sand",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 12
+    },
+    {
+     "op": "color",
+     "index": 7
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-brick",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 13
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-chevron",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 14
+    },
+    {
+     "op": "color",
+     "index": 13
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-stairs",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 15
+    },
+    {
+     "op": "color",
+     "index": 23
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-cross",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 16
+    },
+    {
+     "op": "color",
+     "index": 29
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-diag-brick",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 17
+    },
+    {
+     "op": "color",
+     "index": 20
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-corner-stair",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 18
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 11
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-houndstooth",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 19
+    },
+    {
+     "op": "color",
+     "index": 19
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-tex-rainbow-grad",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "sub",
+     "index": 20
+    },
+    {
+     "op": "color",
+     "index": 6
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       470,
+       470
+      ]
+     ]
+    },
+    {
+     "op": "color",
+     "index": 22
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       230
+      ]
+     ]
+    }
+   ],
+   "note": "Two fills on the base: inside the blue square, then the white middle."
+  },
+  {
+   "id": "flood-blank",
+   "group": "flood",
+   "base": false,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       500,
+       400
+      ]
+     ]
+    }
+   ],
+   "note": "Fill an empty canvas."
+  },
+  {
+   "id": "flood-boot",
+   "group": "flood",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "flood"
+    },
+    {
+     "op": "color",
+     "index": 25
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       780,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "No option press: default texture."
+  }
+ ]
+}

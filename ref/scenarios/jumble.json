@@ -1,0 +1,995 @@
+{
+ "canvas": {
+  "w": 1074,
+  "h": 798
+ },
+ "seed": 1234,
+ "base": "base.png",
+ "dt": 16,
+ "scenarios": [
+  {
+   "id": "jumble-00-invert",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-01-raindrops",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-02-checkerboard",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 2
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-03-wallpaper",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 3
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-04-venetian-blinds",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 4
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-05-outliner",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 5
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: the option only plays the 'unimplemented' sound; the tool stays what the jumble button set (whole-canvas invert)."
+  },
+  {
+   "id": "jumble-06-shadow-boxes",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 6
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-07-zoom-in",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 7
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: the option only plays the 'unimplemented' sound; the tool stays what the jumble button set (whole-canvas invert)."
+  },
+  {
+   "id": "jumble-08-broken-glass",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 8
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: the option only plays the 'unimplemented' sound; the tool stays what the jumble button set (whole-canvas invert)."
+  },
+  {
+   "id": "jumble-09-picture-in-picture",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 9
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-10-highlighter",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 10
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: the option only plays the 'unimplemented' sound; the tool stays what the jumble button set (whole-canvas invert)."
+  },
+  {
+   "id": "jumble-11-pattern-maker",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 11
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-12-wrap-around",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 12
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ],
+   "note": "Upstream gap: the option only plays the 'unimplemented' sound; the tool stays what the jumble button set (whole-canvas invert)."
+  },
+  {
+   "id": "jumble-13-swirl",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 13
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-14-pancake-stack",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 14
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       380,
+       300
+      ],
+      [
+       417,
+       331
+      ],
+      [
+       454,
+       363
+      ],
+      [
+       491,
+       394
+      ],
+      [
+       529,
+       426
+      ],
+      [
+       566,
+       457
+      ],
+      [
+       603,
+       489
+      ],
+      [
+       640,
+       520
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jumble-boot",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       537,
+       399
+      ]
+     ]
+    }
+   ],
+   "note": "Jumble button alone: invert."
+  },
+  {
+   "id": "jumble-01-raindrops-hold",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 1
+    },
+    {
+     "op": "color",
+     "index": 17
+    },
+    {
+     "op": "stroke",
+     "points": [
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ],
+      [
+       537,
+       399
+      ]
+     ]
+    }
+   ],
+   "note": "Draws on a timer while the button is held: points are fixed and dt is virtual, so the number of timer ticks is part of the scenario."
+  },
+  {
+   "id": "jumble-00-invert-twice",
+   "group": "jumble",
+   "base": true,
+   "steps": [
+    {
+     "op": "tool",
+     "id": "jumble"
+    },
+    {
+     "op": "sub",
+     "index": 0
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       300,
+       300
+      ]
+     ]
+    },
+    {
+     "op": "tap",
+     "points": [
+      [
+       700,
+       500
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
