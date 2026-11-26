@@ -127,6 +127,17 @@ object SavePoints {
     /** The save point of the gallery picture [media] (null: none, it opens flat). */
     fun forMedia(media: Long): SavePoint? = synchronized(lock) { all.values.lastOrNull { it.kind == SAVE && it.media == media } }
 
+    /**
+     * The save point of gallery picture [media] if the file is still the one saved ([hash]) and
+     * fits this canvas; null: open it flat. A file changed outside the app frees its save point.
+     */
+    fun forFile(media: Long, hash: String): SavePoint? {
+        val sp = forMedia(media) ?: return null
+        if (sp.hash != hash) { log("picture $media changed outside the app: opened flat"); delete(sp.id); return null }
+        if (!KDisplay.isReady || sp.w != KDisplay.main_canvas.width || sp.h != KDisplay.main_canvas.height) return null
+        return sp
+    }
+
     /** Frames and segments every save point holds (KLog keeps them). */
     fun pins(): Pair<Set<Long>, Set<Int>> = synchronized(lock) {
         val f = HashSet<Long>(); val s = HashSet<Int>()
@@ -342,7 +353,7 @@ object SavePoints {
         var dropped = 0
         while (t > capBytes) {
             val victim = synchronized(lock) {
-                all.values.firstOrNull { it.kind == SAVE && it.id != origin?.sp } ?: all.values.firstOrNull { it.kind == DRAFT && it.id != origin?.sp }
+                all.values.firstOrNull { it.kind == SAVE } ?: all.values.firstOrNull { it.kind == DRAFT }
             }
             if (victim != null) { delete(victim.id); dropped++ }
             else {
@@ -353,7 +364,7 @@ object SavePoints {
             }
             t = estimateAfterPrune(liveFrames())
         }
-        log("storage cap: dropped $dropped histories, about ${t / 1024} KB kept")
+        if (dropped > 0) log("storage cap: dropped $dropped histories, about ${t / 1024} KB kept")
     }
 
     /** Bytes after the next prune: frames still named, segments still held (live chain, pins, newest [KLog.KEEP_SEGMENTS]). */

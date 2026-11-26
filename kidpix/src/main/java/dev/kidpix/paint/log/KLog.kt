@@ -128,6 +128,7 @@ object KLog {
         pinned = { emptySet<Long>() to emptySet() }; afterCheckpointWrite = null
         root = null
         SavePoints.close()
+        History.frames = FrameStore(FrameStore.MemBackend(), null) // nothing points into a directory that may go
     }
 
     /**
@@ -142,6 +143,9 @@ object KLog {
         History.frames = FrameStore(FrameStore.DirBackend(File(dir, "frames")), ioExecutor)
         History.onPush = null
         val t0 = System.nanoTime()
+        // what save points and old segments hold, before anything can prune
+        for (s in existingSegments()) checkpoints(segFile(s)).lastOrNull()?.takeIf { it.seq == 0 }?.let { noteZero(s, it) }
+        SavePoints.load(dir)
         val msg = try { restore() } catch (t: Throwable) { FrameStore.logError("restore failed", t); null }
         lastRestore = if (msg != null) msg else {
             Engine.start(width, height, null)
@@ -153,8 +157,6 @@ object KLog {
             startSegment(emptyList())
             "fresh start, segment $segment"
         }
-        for (s in existingSegments()) if (!zeroAll.containsKey(s)) checkpoints(segFile(s)).lastOrNull()?.takeIf { it.seq == 0 }?.let { noteZero(s, it) }
-        SavePoints.load(dir)
         lastRestore += " in %.1f ms".format((System.nanoTime() - t0) / 1e6)
         log(lastRestore)
         return lastRestore
@@ -433,7 +435,6 @@ object KLog {
                 segment = seg; segDir = d
                 applyCheckpoint(cp, main)
                 chainPrefix = cp.chain()
-                for (s in existingSegments()) segFile(s).let { sd -> checkpoints(sd).lastOrNull()?.let { z -> if (z.seq == 0) noteZero(s, z) } }
                 return replayAfter(cp)
             }
         }

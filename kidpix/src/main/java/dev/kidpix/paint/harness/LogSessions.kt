@@ -28,6 +28,8 @@ class LogSession(val dir: File, val w: Int = 1074, val h: Int = 798, private val
     lateinit var clock: VirtualClock
     /** Main picture CRC after every action that closed a log block: block count -> crc. */
     val afterBlock = HashMap<Int, Long>()
+    /** The log's writer (null: writes at once, on the caller's thread). */
+    var io: java.util.concurrent.Executor? = null
 
     /** A fresh engine with an empty log under [dir] (cleared first if [wipe]); [base] drawn on main. */
     fun start(base: File? = null, seed: Int = 1234, wipe: Boolean = true): String {
@@ -36,7 +38,7 @@ class LogSession(val dir: File, val w: Int = 1074, val h: Int = 798, private val
         KTime.backend = clock
         KTime.origin = VirtualClock.T0
         KUi.ui = object : Ui {}
-        return KLog.start(dir, w, h, null) {
+        return KLog.start(dir, w, h, io) {
             if (base != null) {
                 val bmp = BitmapFactory.decodeFile(base.absolutePath) ?: error("base picture missing: $base")
                 val c = KDisplay.main_context
@@ -54,7 +56,7 @@ class LogSession(val dir: File, val w: Int = 1074, val h: Int = 798, private val
         clock = VirtualClock()
         KTime.backend = clock
         KTime.origin = VirtualClock.T0
-        return KLog.start(dir, w, h, null) { error("nothing to restore") }
+        return KLog.start(dir, w, h, io) { error("nothing to restore") }
     }
 
     private var nextId = 2
