@@ -37,6 +37,7 @@ import dev.kidpix.paint.engine.Engine
 import dev.kidpix.paint.log.Action
 import dev.kidpix.paint.log.FrameStore
 import dev.kidpix.paint.log.KLog
+import dev.kidpix.paint.log.SavePoints
 import dev.kidpix.paint.engine.KTime
 import dev.kidpix.paint.key_down
 import dev.kidpix.paint.key_up
@@ -154,6 +155,7 @@ class PaintActivity : Activity(), Ui {
         }
         appTime.arm()
         resyncUi()
+        sweepSavePoints()
         Warmup.start { paintView.contactDown }
         if (intent?.getBooleanExtra("perfLog", false) == true) Log.i("KidPixPerf", "restore ${KLog.lastRestore}")
     }
@@ -315,7 +317,7 @@ class PaintActivity : Activity(), Ui {
 
     /** A toolbar press, unless a palm hit it while the pen draws (guardToolbarFromPalms). */
     private fun tap(b: KButton, what: String, f: () -> Unit) {
-        if (!KDisplay.isReady || KLog.replaying) return
+        if (!KDisplay.isReady || KLog.replaying || KLog.playing) return
         KLog.liveAdvance(appTime.wallNow()) // the palm check below reads the engine's clock
         if (KAndroid.toolbarBlocked(b.lastPointerType)) return
         val t0 = System.nanoTime()
@@ -447,12 +449,30 @@ class PaintActivity : Activity(), Ui {
         badge.show(icon, paintView.left + paintView.viewPx(clientX), paintView.top + paintView.viewPx(clientY))
     }
 
+    /** Saved pictures deleted from the gallery (outside the app) free their histories. */
+    private fun sweepSavePoints() {
+        io.execute {
+            val ids = runCatching { pictures.listOrNull() }.getOrNull() ?: return@execute
+            main.post { runCatching { SavePoints.retainMedia(ids.map { it.id }.toSet()) } }
+        }
+    }
+
     // ---------- save to the Android gallery ----------
     override fun save() {
+        val t0 = System.nanoTime()
         val canvasToSave = if (KCurrent.modifiedAlt) trimAndFlattenCanvas(KDisplay.main_canvas) else KDisplay.main_canvas
         val snap = canvasToSave.snapshot()
+        // the picture's history goes with it (app-private, keyed to the saved file)
+        val sp = runCatching { SavePoints.saving() }.onFailure { Log.e("KidPix", "save point failed", it) }.getOrNull()
+        if (StrokePerf.enabled) Log.i("KidPixPerf", "save tap main thread %.1f ms".format((System.nanoTime() - t0) / 1e6))
         io.execute {
-            val ok = runCatching { pictures.savePng(Pictures.flatten(snap)) }.getOrDefault(false)
+            val bytes = runCatching { Pictures.flatten(snap) }.getOrNull()
+            val id = bytes?.let { runCatching { pictures.savePng(it) }.getOrNull() }
+            if (sp != null) {
+                if (id != null && bytes != null) runCatching { SavePoints.commitSave(sp, id, Pictures.hash(bytes)) }
+                else main.post { SavePoints.discard(sp) }
+            }
+            val ok = id != null
             main.post {
                 Toast.makeText(this, if (ok) "Saved to Pictures/Kid Pix" else "Couldn't save picture", Toast.LENGTH_SHORT).show()
             }
@@ -462,9 +482,14 @@ class PaintActivity : Activity(), Ui {
     // ---------- open a saved picture ----------
     override fun open() {
         closePicker()
+        val drafts = runCatching { SavePoints.drafts().map { it.id } }.getOrDefault(emptyList())
         val p = PickerView(this, pictures, KAssets.loadBitmap("android/img/open.png"),
             onClose = { KiddoPaint.Sounds.submenuoption(); closePicker() },
-            onPick = { id -> closePicker(); loadPicture(id) })
+            onPick = { id -> closePicker(); loadPicture(id) },
+            drafts = drafts,
+            draftThumb = { id -> SavePoints.get(id)?.let { SavePoints.picture(it) }?.let { Pictures.thumbOf(it) } },
+            draftBadge = KAssets.loadBitmap(MAIN_ICONS.getValue("pencil")),
+            onPickDraft = { id -> closePicker(); loadDraft(id) })
         picker = p
         root.addView(p, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
     }
@@ -474,16 +499,53 @@ class PaintActivity : Activity(), Ui {
         picker = null
     }
 
+    /**
+     * A gallery picture: with its history if it has a save point and the file is the one saved,
+     * else flat. Read and decoded off the main thread; on the main thread the drawing on the
+     * canvas is parked (if unsaved) and the picture opened.
+     */
     private fun loadPicture(id: Long) {
         io.execute {
-            val bmp = runCatching { pictures.full(id) }.getOrNull() ?: return@execute
+            val (bmp, hash) = runCatching { pictures.fullWithHash(id) }.getOrNull() ?: return@execute
+            val sp = runCatching { SavePoints.forFile(id, hash) }.getOrNull()
+            val pic = sp?.let { runCatching { SavePoints.picture(it) }.getOrNull() }
+            val flat = if (sp == null || pic == null) runCatching { SavePoints.fit(bmp) }.getOrNull() ?: bmp else null
             main.post {
-                val t0 = System.nanoTime()
-                safe("loadPicture") { KLog.openPicture(bmp) }
-                if (StrokePerf.enabled) StrokePerf.button("open-picture", System.nanoTime() - t0)
-                paintView.invalidate()
+                openWhenQuiet("open-picture") {
+                    if (sp != null && pic != null) SavePoints.open(sp, pic) else SavePoints.openFlat(flat!!)
+                }
             }
         }
+    }
+
+    /** A draft (app-private): its picture and history. */
+    private fun loadDraft(id: Long) {
+        io.execute {
+            val sp = SavePoints.get(id) ?: return@execute
+            val pic = runCatching { SavePoints.picture(sp) }.getOrNull() ?: return@execute
+            main.post { openWhenQuiet("open-draft") { SavePoints.open(sp, pic) } }
+        }
+    }
+
+    /**
+     * Runs [open] (it returns false while something is still in progress: a sound a tool waits
+     * on, a timer) now or a moment later. After 1.5 s the sounds are stopped (as when the app
+     * pauses); after 4 s it gives up (nothing changed: the drawing stays as it was).
+     */
+    private fun openWhenQuiet(what: String, tries: Int = 0, open: () -> Boolean) {
+        if (!KDisplay.isReady || isFinishing) return
+        KLog.liveAdvance(appTime.wallNow())
+        val t0 = System.nanoTime()
+        val ok = runCatching { open() }.onFailure { Log.e("KidPix", "$what failed", it) }.getOrDefault(true)
+        if (ok) {
+            if (StrokePerf.enabled) { StrokePerf.button(what, System.nanoTime() - t0); Log.i("KidPixPerf", "$what main thread %.1f ms".format((System.nanoTime() - t0) / 1e6)) }
+            Log.i("KidPixLog", "$what after $tries retries")
+            resyncUi()
+            return
+        }
+        if (tries == 30) safe("pause sounds") { KLog.entry(Action.Pause()) }
+        if (tries >= 80) { Log.w("KidPixLog", "$what: never quiet, not opened"); return }
+        main.postDelayed({ openWhenQuiet(what, tries + 1, open) }, 50)
     }
 
     // Exit: keep the drawing, then close the app (back to the launcher / ES-DE).

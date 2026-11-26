@@ -151,6 +151,25 @@ class LogSession(val dir: File, val w: Int = 1074, val h: Int = 798, private val
         fun replayExport(exportDir: File, out: File, log: (String) -> Unit = { println(it) }) {
             val work = File(System.getProperty("java.io.tmpdir"), "kp-replaylog-" + System.nanoTime())
             exportDir.copyRecursively(work, true)
+            // a save point's export (saves/sp-*.json): its chain replayed from the start
+            File(work, "saves").listFiles { f -> f.name.startsWith("sp-") && f.name.endsWith(".json") }?.firstOrNull()?.let { f ->
+                val sp = dev.kidpix.paint.log.SavePoints.SavePoint.fromJson(dev.kidpix.paint.log.SavePoints.readCrcJson(f)!!)
+                KLog.versionCode = sp.version
+                val s = LogSession(work, sp.w, sp.h)
+                log(s.restart())
+                s.settle()
+                var why: String? = "not played"; var pic: Bitmap? = null
+                KLog.playSavePoint(sp.chain, sp.time, Double.POSITIVE_INFINITY, { _, g -> g() }) { r, b -> why = r; pic = b }
+                log("save point ${sp.id} (chain ${sp.chain.map { it.toList() }}): ${why ?: "replayed"}")
+                pic?.let { b ->
+                    val flat = Bitmap.createBitmap(b.width, b.height, Bitmap.Config.ARGB_8888)
+                    android.graphics.Canvas(flat).apply { drawColor(android.graphics.Color.WHITE); drawBitmap(b, 0f, 0f, null) }
+                    out.outputStream().use { flat.compress(Bitmap.CompressFormat.PNG, 100, it) }
+                    log("wrote $out")
+                }
+                work.deleteRecursively()
+                return
+            }
             val seg = work.listFiles()!!.filter { it.name.startsWith("seg-") }.maxBy { it.name }
             // only checkpoint zero (or the oldest kept): the whole log is replayed
             val cps = KLog.checkpoints(seg)

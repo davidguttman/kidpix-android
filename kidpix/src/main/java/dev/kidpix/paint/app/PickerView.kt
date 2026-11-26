@@ -21,6 +21,8 @@ import java.util.concurrent.Executors
  * The wordless open-a-picture picker of the WebView build (#kp-picker in overlay/android.css):
  * white page over everything, a grid of thumbnails (4 px black frame, 6 px grey shadow, 4:3),
  * a red X top right, the faded folder icon when there is nothing saved yet. Sizes in CSS px = dp.
+ * Drafts (drawings put aside, unsaved, when another picture was opened) come first, newest
+ * first, each with the pencil tool's icon as a small badge in its corner.
  */
 @SuppressLint("ViewConstructor")
 class PickerView(
@@ -29,6 +31,10 @@ class PickerView(
     private val emptyIcon: Bitmap?,
     private val onClose: () -> Unit,
     private val onPick: (Long) -> Unit,
+    private val drafts: List<Long> = emptyList(),
+    private val draftThumb: (Long) -> Bitmap? = { null },
+    private val draftBadge: Bitmap? = null,
+    private val onPickDraft: (Long) -> Unit = {},
 ) : FrameLayout(context) {
     private val d = resources.displayMetrics.density
     private fun dp(v: Number) = (v.toFloat() * d + 0.5f).toInt()
@@ -66,7 +72,7 @@ class PickerView(
     }
 
     private fun show(list: List<Pictures.Pic>?) {
-        if (list.isNullOrEmpty()) {
+        if (list.isNullOrEmpty() && drafts.isEmpty()) {
             empty = true
             if (list != null && emptyIcon != null) {
                 addView(EmptyIcon(context, emptyIcon), 0, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
@@ -79,9 +85,10 @@ class PickerView(
         val cols = maxOf(1, ((avail + 20) / (230 + 20)).toInt())
         val cellW = (avail - 20 * (cols - 1)) / cols
         grid.columnCount = cols
-        list.forEachIndexed { i, pic ->
-            val t = Thumb(context, pic.id)
-            t.setOnClickListener { onPick(pic.id) }
+        val items = drafts.map { it to true } + (list ?: emptyList()).map { it.id to false }
+        items.forEachIndexed { i, (id, draft) ->
+            val t = Thumb(context, id, draft)
+            t.setOnClickListener { if (draft) onPickDraft(id) else onPick(id) }
             // the card fills the cell (aspect-ratio 4/3 on the content box, inside the 4 px
             // border); the view is 6 px larger for the box-shadow, which CSS hangs outside
             grid.addView(t, GridLayout.LayoutParams().apply {
@@ -91,14 +98,14 @@ class PickerView(
             })
             thumbs.add(t)
             io.execute {
-                val b = runCatching { pictures.thumb(pic.id) }.getOrNull()
+                val b = runCatching { if (draft) draftThumb(id) else pictures.thumb(id) }.getOrNull()
                 main.post { if (!closed) t.bitmap = b }
             }
         }
     }
 
     /** .kp-thumb: white, 4 px black border, 6 px #888 shadow (pressed: moves 3 px into it). */
-    inner class Thumb(context: Context, val id: Long) : View(context) {
+    inner class Thumb(context: Context, val id: Long, val draft: Boolean = false) : View(context) {
         var bitmap: Bitmap? = null; set(v) { field = v; invalidate() }
         private val p = Paint(Paint.FILTER_BITMAP_FLAG)
         private val fill = Paint()
@@ -125,7 +132,17 @@ class PickerView(
                 val l = off + b4 + (iw - dw) / 2; val t = off + b4 + (ih - dh) / 2
                 c.drawBitmap(b, null, RectF(l, t, l + dw, t + dh), p)
             }
+            val badge = draftBadge
+            if (draft && badge != null) {
+                // the pencil on a small white tile with the card's black frame, top left
+                val s = 44 * d; val x = off + b4 + 6 * d; val y = off + b4 + 6 * d
+                fill.color = Color.BLACK; c.drawRect(x, y, x + s, y + s, fill)
+                fill.color = Color.WHITE; c.drawRect(x + 3 * d, y + 3 * d, x + s - 3 * d, y + s - 3 * d, fill)
+                val inset = 5 * d
+                c.drawBitmap(badge, null, RectF(x + inset, y + inset, x + s - inset, y + s - inset), badgePaint)
+            }
         }
+        private val badgePaint = Paint().apply { isFilterBitmap = false }
     }
 
     /** .kp-close: 64 px red square, 4 px black border, 4 px #888 shadow, white ✕. */

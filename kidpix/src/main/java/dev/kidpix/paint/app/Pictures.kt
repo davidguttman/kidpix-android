@@ -20,8 +20,8 @@ import java.io.ByteArrayOutputStream
 class Pictures(private val context: Context) {
     class Pic(val id: Long, val added: Long)
 
-    /** Inserts a PNG as `kidpix-<ms>.png`; false if anything failed. */
-    fun savePng(bytes: ByteArray): Boolean = try {
+    /** Inserts a PNG as `kidpix-<ms>.png`; its MediaStore id, or null if anything failed. */
+    fun savePng(bytes: ByteArray): Long? = try {
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "kidpix-${System.currentTimeMillis()}.png")
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
@@ -34,25 +34,27 @@ class Pictures(private val context: Context) {
         values.clear()
         values.put(MediaStore.Images.Media.IS_PENDING, 0)
         resolver.update(uri, values, null, null)
-        true
+        ContentUris.parseId(uri)
     } catch (e: Exception) {
-        false
+        null
     }
 
     private fun uri(id: Long) = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
     /** Newest first, like /pictures/list. */
-    fun list(): List<Pic> {
+    fun list(): List<Pic> = listOrNull() ?: emptyList()
+
+    /** [list], or null when the gallery could not be asked (nothing can be concluded from it). */
+    fun listOrNull(): List<Pic>? {
         val out = ArrayList<Pic>()
-        context.contentResolver.query(
+        val c = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED),
             "${MediaStore.Images.Media.RELATIVE_PATH} = ? AND ${MediaStore.Images.Media.IS_PENDING} = 0",
             arrayOf("$SAVE_DIR/"),
             "${MediaStore.Images.Media.DATE_ADDED} DESC",
-        )?.use { c ->
-            while (c.moveToNext()) out.add(Pic(c.getLong(0), c.getLong(1)))
-        }
+        ) ?: return null
+        c.use { while (it.moveToNext()) out.add(Pic(it.getLong(0), it.getLong(1))) }
         return out
     }
 
@@ -71,6 +73,15 @@ class Pictures(private val context: Context) {
         return bmp
     }
 
+    /** The saved picture as it is, and the hash of its file (a save point is only for that exact file). */
+    fun fullWithHash(id: Long): Pair<Bitmap, String> {
+        val bytes = context.contentResolver.openInputStream(uri(id))!!.use { it.readBytes() }
+        val b = ImageDecoder.decodeBitmap(ImageDecoder.createSource(java.nio.ByteBuffer.wrap(bytes))) { d, _, _ ->
+            d.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+        }
+        return (if (b.config == Bitmap.Config.ARGB_8888) b else b.copy(Bitmap.Config.ARGB_8888, false)) to hash(bytes)
+    }
+
     /** The saved picture as it is (an <img> of /pictures/full/<id>). */
     fun full(id: Long): Bitmap {
         val b = ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri(id))) { d, _, _ ->
@@ -81,6 +92,25 @@ class Pictures(private val context: Context) {
 
     companion object {
         val SAVE_DIR = Environment.DIRECTORY_PICTURES + "/Kid Pix"
+
+        /** SHA-256 of a saved file, hex. */
+        fun hash(bytes: ByteArray): String =
+            java.security.MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
+
+        /**
+         * A save point's picture (the canvas, possibly with see-through parts) as the picker shows
+         * pictures: on white, at most 480 x 360.
+         */
+        fun thumbOf(picture: Bitmap): Bitmap {
+            val s = minOf(1f, 480f / picture.width, 360f / picture.height)
+            val w = maxOf(1, (picture.width * s).toInt()); val h = maxOf(1, (picture.height * s).toInt())
+            val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            Canvas(bmp).apply {
+                drawColor(Color.WHITE)
+                drawBitmap(picture, null, android.graphics.Rect(0, 0, w, h), android.graphics.Paint(android.graphics.Paint.FILTER_BITMAP_FLAG))
+            }
+            return bmp
+        }
 
         /** save_to_file: white paper behind the drawing, so it looks right in the gallery and the picker. */
         fun flatten(picture: Bitmap): ByteArray {

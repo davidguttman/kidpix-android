@@ -483,6 +483,27 @@ class SavePointTest {
         assertNull(done)
     }
 
+    @Test fun anExportedSavePointReplaysHeadless() {
+        val s = session("export")
+        repeat(4) { stroke(s, it) }; s.settle()
+        val sp = SavePoints.forMedia(save(s))!!
+        repeat(2) { stroke(s, 9 + it) }; s.settle() // more drawing after the save: not part of it
+        val want = KDisplay.main_canvas.let { c -> SavePoints.picture(sp)!! }
+        val dest = File(tmp, "exported")
+        var ok = false
+        SavePoints.export(sp, dest) { ok = it }
+        assertTrue(ok)
+        KLog.close()
+        val out = File(tmp, "export.png")
+        LogSession.replayExport(dest, out)
+        val png = android.graphics.BitmapFactory.decodeFile(out.absolutePath)
+        val flat = Bitmap.createBitmap(want.width, want.height, Bitmap.Config.ARGB_8888)
+        android.graphics.Canvas(flat).apply { drawColor(android.graphics.Color.WHITE); drawBitmap(want, 0f, 0f, null) }
+        val a = IntArray(flat.width * flat.height); val b = IntArray(a.size)
+        flat.getPixels(a, 0, flat.width, 0, 0, flat.width, flat.height); png.getPixels(b, 0, png.width, 0, 0, png.width, png.height)
+        assertEquals("the export replays to the saved picture", 0, a.indices.count { a[it] != b[it] })
+    }
+
     @Test fun migrationFromTheActionLogKeepsTheCanvasAndHistory() {
         // a 1.1.0 log: no chains, no saves directory
         val s = session("migrate")
