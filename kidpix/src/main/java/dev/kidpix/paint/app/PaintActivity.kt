@@ -610,7 +610,7 @@ class PaintActivity : Activity(), Ui {
         val end = w.replayEnd
         val same = end?.let { it.sameAs(KDisplay.main_canvas.bitmap) }
         Log.i("KidPixLog", "play: ${if (w.stopped) "stopped" else "ended"} after ${w.endedAt - w.startedAt} ms (planned ${w.plannedMs}), " +
-            "${w.recordsPlayed} records, pieces picture-only ${w.piecesPictureOnly}, cut ${w.piecesCut}, longest step %.1f ms".format(w.maxStepMs) +
+            "${w.recordsPlayed} records, pieces picture-only ${w.piecesPictureOnly}, cut ${w.piecesCut}, ${w.stepStats()}" +
             (if (same != null) ", replay end identical to live: $same" else "") + "; ${KLog.describe()}")
     }
 

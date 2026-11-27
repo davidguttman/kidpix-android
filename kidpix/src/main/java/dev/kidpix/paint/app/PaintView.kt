@@ -400,7 +400,11 @@ class PaintView(context: Context, private val onCanvasSize: (Int, Int) -> Unit) 
         if (!KDisplay.isReady) return false
         if (KLog.playing || swallowGesture) {
             when (e.actionMasked) {
-                MotionEvent.ACTION_DOWN -> { swallowGesture = true; safe("stop replay") { onTouchWhilePlaying?.invoke() } }
+                MotionEvent.ACTION_DOWN -> {
+                    swallowGesture = true
+                    if (KLog.playing) Log.i("KidPixLog", "play: tap to stop, input %d ms old".format(android.os.SystemClock.uptimeMillis() - e.eventTime))
+                    safe("stop replay") { onTouchWhilePlaying?.invoke() }
+                }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> swallowGesture = false
             }
             return true

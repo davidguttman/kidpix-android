@@ -59,6 +59,14 @@ class Watch private constructor(
     /** Longest main-thread step (ms), for the report. */
     var maxStepMs = 0.0
         private set
+    private val stepMs = ArrayList<Double>()
+    /** Main-thread ms per frame of the replay: p50 / p90 / p99 / max, frames (the report). */
+    fun stepStats(): String {
+        if (stepMs.isEmpty()) return "no frames"
+        val v = stepMs.sorted()
+        fun p(q: Double) = v[minOf(v.size - 1, (q * v.size).toInt())]
+        return "steps p50 %.1f p90 %.1f p99 %.1f max %.1f ms, %d frames, %d over 16 ms".format(p(0.5), p(0.9), p(0.99), v.last(), v.size, v.count { it > 16 })
+    }
 
     private var k = -1
     private var i = 0
@@ -100,6 +108,7 @@ class Watch private constructor(
         }
         val ms = (System.nanoTime() - t0) / 1e6
         if (ms > maxStepMs) maxStepMs = ms
+        stepMs.add(ms)
         if (finished) return
         onFrame()
         schedule(FRAME_MS) { step() }
@@ -149,7 +158,8 @@ class Watch private constructor(
                 }
             }
             var j = i
-            while (j < recs.size && recs[j].time <= e) j++
+            // a few records at a time: the CPU check above runs between them
+            while (j < recs.size && recs[j].time <= e && j - i < BATCH) j++
             val why = KLog.replay(recs.subList(i, j), null, player)
             recordsPlayed += j - i
             for (x in i until j) if (!isHover(recs[x])) lastActive = recs[x].time
@@ -190,7 +200,8 @@ class Watch private constructor(
         /** Animations after a piece's last record run at most this long. */
         const val TIMERS_MAX_MS = 4000L
         const val MAX_STEP_WALL_MS = 100L
-        const val STEP_CPU_NS = 12_000_000L
+        const val STEP_CPU_NS = 10_000_000L
+        const val BATCH = 6
 
         /** Wall ms for [engineMs] of drawing: as drawn up to 6 s (at least 1.2 s), then sped up toward 20 s. */
         fun bodyFor(engineMs: Long): Long = when {
