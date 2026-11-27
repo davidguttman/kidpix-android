@@ -113,6 +113,7 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
      * With [windows], only the pixels inside them are touched (they must not overlap).
      */
     fun fill(bitmap: Bitmap, c: Canvas, outline: Path, paint: Paint, ctm: android.graphics.Matrix, windows: List<android.graphics.Rect>? = null) {
+        version++
         val b = RectF(); outline.computeBounds(b, true)
         val left = max(0, floor(b.left).toInt() - 1); val top = max(0, floor(b.top).toInt() - 1)
         val right = min(w, ceil(b.right).toInt() + 1); val bottom = min(h, ceil(b.bottom).toInt() + 1)
@@ -359,13 +360,20 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
         c.restore()
     }
 
+    /** Changes whenever a stroke may have written samples. */
+    var version = 0
+        private set
+
     /**
-     * The samples that say more than their pixel (not all four equal to the value written from
-     * them), as groups of six ints: pixel index, the four samples, that value. Every other pixel
-     * behaves as a fresh surface makes it (its samples become the pixel's value when next used),
-     * so this is all a checkpoint has to keep (log/EngineGraph.kt).
+     * The samples that say more than their pixel, as groups of six ints: pixel index, the four
+     * samples, the value written from them. Only where that value is still the pixel's (trusted)
+     * and the four are not all equal to it: every other pixel behaves as on a fresh surface (its
+     * samples become the pixel's value when next used), so this is all a checkpoint has to keep
+     * (log/EngineGraph.kt).
      */
-    fun exportSamples(): IntArray {
+    fun exportSamples(bitmap: Bitmap): IntArray {
+        if (bitmap.width != w || bitmap.height != h || tiles.all { it == null }) return IntArray(0)
+        val cur = premul(bitmap, IntArray(w * h))
         var out = IntArray(0); var n = 0
         for ((ti, tile) in tiles.withIndex()) {
             if (tile == null) continue
@@ -374,8 +382,10 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
                 val o = p * 5
                 val v = tile[o + 4]
                 if (tile[o] == v && tile[o + 1] == v && tile[o + 2] == v && tile[o + 3] == v) continue
+                val x = tx + p % T; val y = ty + p / T
+                if (x >= w || y >= h || cur[y * w + x] != v) continue
                 if (n + 6 > out.size) out = out.copyOf(maxOf(64, out.size * 2))
-                out[n] = (ty + p / T) * w + tx + p % T
+                out[n] = y * w + x
                 System.arraycopy(tile, o, out, n + 1, 5)
                 n += 6
             }

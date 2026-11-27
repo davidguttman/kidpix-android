@@ -112,6 +112,13 @@ object KLog {
         private set
     /** Main-thread cost of the engine state in checkpoints (for the report and perfLog). */
     var graphNs = 0L; var graphCount = 0L; var graphMaxNs = 0L; var graphBytes = 0L
+    /** The same for whole checkpoints (frames handed to the writer, the engine state, the JSON). */
+    var ckptNs = 0L; var ckptMaxNs = 0L
+
+    /** Debug: what checkpoints cost (main thread) and weigh. */
+    fun costs(): String = "checkpoints $graphCount: %.2f ms mean, %.2f ms max (engine state %.2f ms mean, %.2f ms max), last %d bytes; moves %d logged %.4f ms mean, %.3f ms max".format(
+        if (graphCount > 0) ckptNs / 1e6 / graphCount else 0.0, ckptMaxNs / 1e6, if (graphCount > 0) graphNs / 1e6 / graphCount else 0.0, graphMaxNs / 1e6,
+        graphBytes, moves, if (moves > 0) moveNs / 1e6 / moves else 0.0, moveMaxNs / 1e6)
 
     /** Timing (for the report and perfLog): ns of main-thread logging work per record. */
     var recordNs = 0L; var records = 0L
@@ -329,6 +336,7 @@ object KLog {
     /** Takes a checkpoint now (the caller checked [quiescent]). */
     fun checkpoint() {
         val d = segDir ?: return
+        val c0 = System.nanoTime()
         flushBlock(true)
         trimToCap()
         val (mainId, mainCopy) = History.store(KDisplay.main_canvas.bitmap)
@@ -380,6 +388,8 @@ object KLog {
             }.onFailure { FrameStore.logError("checkpoint $seq write failed", it) }
         }
         History.frames.prune(keep, below)
+        val cns = System.nanoTime() - c0
+        ckptNs += cns; if (cns > ckptMaxNs) ckptMaxNs = cns
     }
 
     private fun overlayLayers() = listOf("bnim" to KDisplay.bnimCanvas, "anim" to KDisplay.animCanvas,

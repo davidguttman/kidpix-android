@@ -93,6 +93,7 @@ class LogDebugReceiver : BroadcastReceiver() {
             "dev.kidpix.LOG_STATS" -> {
                 Log.i(TAG, "stats: ${KLog.describe()}; records ${KLog.records}, logging %.4f ms/record; restore: ${KLog.lastRestore}"
                     .format(if (KLog.records > 0) KLog.recordNs / 1e6 / KLog.records else 0.0))
+                Log.i(TAG, "costs: ${KLog.costs()}")
                 val fs = dev.kidpix.paint.History.frames
                 for (sp in SavePoints.list()) Log.i(TAG, "save point ${sp.id} ${sp.kind} media ${sp.media} undo ${sp.past.size}/${sp.future.size} " +
                     "chain ${sp.chain.map { it.toList() }} frames ${fs.bytesOf(fs.closure(sp.frames())) / 1024} KB (shared)")

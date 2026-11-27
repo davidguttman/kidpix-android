@@ -403,15 +403,22 @@ object EngineGraph {
                 sb.append("],")
                 if (g.unstorable != null) { sb.append("[\"U\","); jstr(sb, g.unstorable); sb.append(']') } else value(sb, g.path)
                 // the multisampled strokes' samples: a stroke over an edge pixel uses them
-                val ms = ctx.msaaSamples()
-                sb.append(",\"")
-                if (ms.isNotEmpty()) {
-                    val raw = java.nio.ByteBuffer.allocate(ms.size * 4); raw.asIntBuffer().put(ms)
-                    sb.append(ms.size).append(':').append(android.util.Base64.encodeToString(FrameStore.deflate(raw.array()), android.util.Base64.NO_WRAP))
-                }
-                sb.append("\"]")
+                sb.append(",\"").append(samples(ctx)).append("\"]")
             }
             sb.append(']')
+        }
+
+        /** [Ctx2D.msaaSamples] as text (cached while they cannot have changed). */
+        private fun samples(ctx: Ctx2D): String {
+            val key = ctx.msaaKey()
+            synchronized(sampleCache) { sampleCache[ctx]?.let { (k, v) -> if (k == key) return v } }
+            val ms = ctx.msaaSamples()
+            val txt = if (ms.isEmpty()) "" else {
+                val raw = java.nio.ByteBuffer.allocate(ms.size * 4); raw.asIntBuffer().put(ms)
+                ms.size.toString() + ":" + android.util.Base64.encodeToString(FrameStore.deflate(raw.array()), android.util.Base64.NO_WRAP)
+            }
+            synchronized(sampleCache) { sampleCache[ctx] = key to txt }
+            return txt
         }
 
         private fun bitmap(sb: StringBuilder, b: Bitmap) {
@@ -422,6 +429,14 @@ object EngineGraph {
         }
 
         private fun pixels(sb: StringBuilder, b: Bitmap) {
+            val gen = b.generationId
+            synchronized(pixelCache) { pixelCache[b]?.let { (g, v) -> if (g == gen) { sb.append(v); return } } }
+            val start = sb.length
+            pixelsNow(sb, b)
+            synchronized(pixelCache) { pixelCache[b] = gen to sb.substring(start) }
+        }
+
+        private fun pixelsNow(sb: StringBuilder, b: Bitmap) {
             val px = IntArray(b.width * b.height)
             b.getPixels(px, 0, b.width, 0, 0, b.width, b.height)
             val raw = java.nio.ByteBuffer.allocate(px.size * 4)
@@ -431,6 +446,10 @@ object EngineGraph {
             sb.append("\"]")
         }
     }
+
+    /** Encodings of pixels and samples, reused while their bitmap or surface has not changed. */
+    private val pixelCache = java.util.WeakHashMap<Bitmap, Pair<Int, String>>()
+    private val sampleCache = java.util.WeakHashMap<Ctx2D, Pair<List<Any?>, String>>()
 
     private fun scalarKey(v: Any?): String = when (v) { null -> "0"; is String -> "s$v"; is Number -> "n" + v.javaClass.simpleName + v; else -> "x$v" }
 
