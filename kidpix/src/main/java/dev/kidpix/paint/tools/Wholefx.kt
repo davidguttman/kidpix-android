@@ -55,6 +55,11 @@ class ToolboxWholeCanvasEffect : Tool() {
         if (usesGl()) tool.textureGfx = tool.gfx.texture(KiddoPaint.Display.main_canvas)
         else tool.mainImageData = KiddoPaint.Display.main_context.getImageData(0, 0, KiddoPaint.Display.main_canvas.width, KiddoPaint.Display.main_canvas.height)
         KiddoPaint.Display.saveUndo()
+        // glfx effects arrive from the GL thread a frame or more later: until the first rendered
+        // picture replaces tmp, tmp shows the picture as it was (main is cleared below), so no
+        // frame ever shows a blank canvas. Every path that ends the drag (mouseup; a cancel is a
+        // pointerup) renders into tmp with replaceWith, so the end state is unchanged.
+        if (tool.effect in GL_EFFECTS) KiddoPaint.Display.context.replaceWith(KiddoPaint.Display.main_canvas)
         KiddoPaint.Display.clearMain() // this causes the bug where if the mouse move off screen, the mouseout even clears tmp context and everything is lost; but we need the main clear incase there's alpha it gets double rendered on preview...
         tool.mousemove(ev)
     }
@@ -63,7 +68,8 @@ class ToolboxWholeCanvasEffect : Tool() {
         if (tool.isDown) {
             lastEv = ev
             // a replay (log/KLog.kt) shows nothing while dragging: only the last position counts (mouseup)
-            if (tool.effect in GL_EFFECTS && async && dev.kidpix.paint.log.KLog.replaying) return
+            // (the play button's replay, KLog.showDrags, shows the drag as it was drawn)
+            if (tool.effect in GL_EFFECTS && async && dev.kidpix.paint.log.KLog.replaying && !dev.kidpix.paint.log.KLog.showDrags) return
             if (tool.effect in GL_EFFECTS && async) {
                 // While dragging, the GPU renders in the background and the newest picture replaces
                 // tmp when it is ready (a frame or so later); the main thread doesn't wait for the
@@ -71,7 +77,8 @@ class ToolboxWholeCanvasEffect : Tool() {
                 val s = stroke
                 val chain = glChain(ev) ?: return
                 chain.updateAsync { img ->
-                    if (tool.isDown && s == stroke) { KiddoPaint.Display.context.replaceWith(img); KUi.ui.invalidate() }
+                    // (and only into this world: a replay that ended restarts the engine)
+                    if (tool.isDown && s == stroke && KiddoPaint.Tools.WholeCanvasEffect === tool) { KiddoPaint.Display.context.replaceWith(img); KUi.ui.invalidate() }
                 }
                 return
             }
