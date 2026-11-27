@@ -71,10 +71,10 @@ class SafetyNetTest {
         var animKey = ""
         rewrite(cp) { o ->
             val roots = o.getJSONObject("graph").getJSONObject("roots")
-            val spray = roots.getString(toolKey)
+            val spray = roots.get(toolKey).toString()
             assertTrue("the tool is SpritePlacer's slot: $spray", spray.contains("SpritePlacer"))
             animKey = roots.keys().asSequence().firstOrNull { it.contains("#AnimBrush#") } ?: "1dev.kidpix.paint.tools_AnimBrush#AnimBrush#getAnimBrush(Ldev/kidpix/paint/KiddoPaint\$Tools;)Ldev/kidpix/paint/ToolboxAnimBrush;"
-            roots.put(toolKey, "[\"W\"," + JSONObject.quote(animKey) + "]")
+            roots.put(toolKey, JSONArray().put("W").put(animKey))
         }
 
         // 1. the stored fingerprint does not match: the checkpoint's picture, no tail
@@ -89,7 +89,7 @@ class SafetyNetTest {
         File(dir, "seg-000002").deleteRecursively() // the new segment the first restore started
         cp.writeText(good)
         rewrite(cp) { o ->
-            o.getJSONObject("graph").getJSONObject("roots").put(toolKey, "[\"W\"," + JSONObject.quote(animKey) + "]")
+            o.getJSONObject("graph").getJSONObject("roots").put(toolKey, JSONArray().put("W").put(animKey))
             o.getJSONObject("graph").put("fp", forged)
         }
         val m2 = s.restart(); s.settle()

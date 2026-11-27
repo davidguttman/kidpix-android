@@ -110,6 +110,9 @@ object KLog {
     /** Why the last checkpoint applied did not reproduce its engine state exactly (null: it did). */
     var lastApplyProblem: String? = null
         private set
+    /** What the last checkpoint applied took (debug). */
+    var lastApplyTimes = ""
+        private set
     /** Main-thread cost of the engine state in checkpoints (for the report and perfLog). */
     var graphNs = 0L; var graphCount = 0L; var graphMaxNs = 0L; var graphBytes = 0L
     /** The same for whole checkpoints (frames handed to the writer, the engine state, the JSON). */
@@ -172,7 +175,7 @@ object KLog {
             startSegment(emptyList())
             "fresh start, segment $segment"
         }
-        lastRestore += " in %.1f ms".format((System.nanoTime() - t0) / 1e6)
+        lastRestore += " in %.1f ms".format((System.nanoTime() - t0) / 1e6) + (if (msg != null && lastApplyTimes.isNotEmpty()) " ($lastApplyTimes)" else "")
         log(lastRestore)
         return lastRestore
     }
@@ -350,14 +353,15 @@ object KLog {
         val o = JSONObject()
             .put("v", 2).put("seg", segment).put("seq", ckptSeq).put("blocks", blocks).put("recTime", coder.lastTime)
             .put("time", clock.time).put("random", KRandom.state).put("version", versionCode).put("w", w).put("h", h)
-            .put("graph", graph)
             .put("past", JSONArray(History.pastIds)).put("future", JSONArray(History.futureIds)).put("next", History.nextId)
             .put("main", mainId).put("layers", layers).put("inputSeq", inputSeq)
             .put("chain", JSONArray().also { a -> chainPrefix.forEach { p -> a.put(JSONArray().put(p[0]).put(p[1])) } })
+        // the engine state goes in as JSON values (EngineGraph.toText), not as an escaped string
+        val text = o.toString().dropLast(1) + ",\"graph\":" + EngineGraph.toText(graph) + "}"
+        o.put("graph", graph)
         val cpObj = Checkpoint(o, d)
         lastCkpt = cpObj
         if (ckptSeq == 0) noteZero(segment, cpObj)
-        val text = o.toString()
         graphBytes = text.length.toLong()
         val crc = CRC32().apply { update(text.toByteArray()) }.value
         val f = File(d, "ckpt-%06d.json".format(ckptSeq))
@@ -518,8 +522,11 @@ object KLog {
         val ui = KUi.ui
         KUi.ui = object : Ui {}
         val problem: String?
+        val t0 = System.nanoTime()
+        var t1 = t0; var t2 = t0
         try {
             freshEngine(o.getInt("w"), o.getInt("h"))
+            t1 = System.nanoTime()
             clock.runDue() // what starting the engine queued (as on a fresh start)
             KDisplay.main_context.replaceWith(BitmapSource(main))
             val layers = o.optJSONObject("layers")
@@ -528,6 +535,7 @@ object KLog {
                 layers?.optLong(name, -1)?.takeIf { it >= 0 }?.let { id -> History.frames.get(id)?.let { c.getContext("2d").replaceWith(BitmapSource(it)) } }
             }
             // everything else: the tools, the options, the layers' drawing state, the clock, KRandom
+            t2 = System.nanoTime()
             problem = try { EngineGraph.apply(o.getJSONObject("graph"), baseline) } catch (t: Throwable) { "engine state unreadable: $t" }
             History.restore(cp.ids("past"), cp.ids("future"), o.getLong("next"))
             History.remember(KDisplay.main_canvas.bitmap, o.getLong("main"), main)
@@ -536,6 +544,7 @@ object KLog {
             inputSeq = o.optInt("inputSeq")
         } finally { KUi.ui = ui }
         lastApplyProblem = problem
+        lastApplyTimes = "engine start %.1f ms, pictures %.1f ms, engine state %.1f ms".format((t1 - t0) / 1e6, (t2 - t1) / 1e6, (System.nanoTime() - t2) / 1e6)
         if (problem != null) log("checkpoint ${cp.seg}/${cp.seq}: $problem")
         return problem
     }

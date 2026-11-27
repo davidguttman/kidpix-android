@@ -152,6 +152,27 @@ object EngineGraph {
         return JSONObject().put("v", FORMAT).put("fp", enc.fingerprint).put("roots", stored).put("gone", gone)
     }
 
+    /**
+     * A [capture] as JSON text with the roots written as JSON values (not as strings inside JSON:
+     * no second escaping, half the size). Read back, it is a graph whose roots are values ("raw").
+     */
+    fun toText(graph: JSONObject): String {
+        val sb = StringBuilder(4096)
+        sb.append("{\"v\":").append(graph.optInt("v", FORMAT)).append(",\"raw\":true,\"fp\":"); jstr(sb, graph.optString("fp"))
+        sb.append(",\"gone\":").append(graph.optJSONArray("gone") ?: JSONArray()).append(",\"roots\":{")
+        val roots = graph.getJSONObject("roots")
+        var first = true
+        for (k in roots.keys()) { if (!first) sb.append(','); first = false; jstr(sb, k); sb.append(':').append(roots.getString(k)) }
+        return sb.append("}}").toString()
+    }
+
+    /** Root [k] of a graph's stored roots as a JSON value (raw graphs hold values, captures hold text). */
+    private fun rootValue(graph: JSONObject, stored: JSONObject, k: String): Any? =
+        if (graph.optBoolean("raw")) stored.get(k) else JSONArray("[" + stored.getString(k) + "]").get(0)
+
+    /** The text of a stored root in org.json's own form (for comparing raw and captured roots). */
+    private fun canonical(v: Any?): String = JSONArray().put(v).toString()
+
     /** The shared objects' fields as they are (tests: two runs in one process start from the same). */
     fun captureStatics(): Map<String, String> = encode().roots.filterKeys { it.startsWith("2") }
 
@@ -180,16 +201,17 @@ object EngineGraph {
             val curV = runCatching { r.get() }.getOrNull()
             if (stored.has(k) && r.set == null && curV != null && !inPlace(curV)) {
                 // a constant that cannot be written (an immutable collection in a final field): it must already be the same
-                if (d.walk(r) != stored.getString(k)) problems.add("$k: a final constant differs")
+                val w = d.walk(r)
+                if (w == null || canonical(JSONArray("[$w]").get(0)) != canonical(rootValue(graph, stored, k))) problems.add("$k: a final constant differs")
             } else if (stored.has(k)) {
-                try { d.root(r, JSONArray("[" + stored.getString(k) + "]").get(0)) }
+                try { d.root(r, rootValue(graph, stored, k)) }
                 catch (t: Throwable) { problems.add("$k: ${t.javaClass.simpleName} ${t.message}") }
             } else d.walk(r)
         }
         val now = encode()
         val fp = graph.optString("fp")
         if (now.fingerprint == fp && problems.isEmpty()) return null
-        lastMismatch = diff(stored, now, fresh, gone, synchronized(captures) { captures[fp] })
+        lastMismatch = diff(graph, stored, now, fresh, gone, synchronized(captures) { captures[fp] })
         return "engine state fingerprint ${now.fingerprint} != $fp" + (if (problems.isNotEmpty()) " (${problems.take(3)})" else "") +
             (lastMismatch?.let { " first difference: $it" } ?: "")
     }
@@ -202,10 +224,10 @@ object EngineGraph {
     var lastMismatch: String? = null
         private set
 
-    private fun diff(stored: JSONObject, now: Encoded, fresh: Map<String, String>?, gone: Set<String>, lastCapture: Map<String, String>?): String? {
+    private fun diff(graph: JSONObject, stored: JSONObject, now: Encoded, fresh: Map<String, String>?, gone: Set<String>, lastCapture: Map<String, String>?): String? {
         val want = LinkedHashMap<String, String>()
         fresh?.forEach { (k, v) -> if (k !in gone) want[k] = v }
-        for (k in stored.keys()) want[k] = stored.getString(k)
+        for (k in stored.keys()) want[k] = if (graph.optBoolean("raw")) canonical(stored.get(k)) else stored.getString(k)
         for (k in now.roots.keys) if (k !in want) return "$k not in the checkpoint"
         lastCapture?.let { lc -> for (k in (lc.keys + now.roots.keys).toSortedSet()) if (lc[k] != now.roots[k]) {
             val a = lc[k] ?: "(none)"; val b = now.roots[k] ?: "(none)"
@@ -214,7 +236,7 @@ object EngineGraph {
             return "$k at $i (vs the capture): ${a.substring(maxOf(0, i - 60), minOf(a.length, i + 80))} | ${b.substring(maxOf(0, i - 60), minOf(b.length, i + 80))}"
         } }
         for ((k, a) in want) {
-            val b = now.roots[k] ?: return "$k missing"
+            val b = now.roots[k]?.let { if (graph.optBoolean("raw")) canonical(JSONArray("[$it]").get(0)) else it } ?: return "$k missing"
             if (a != b) {
                 var i = 0
                 while (i < a.length && i < b.length && a[i] == b[i]) i++
