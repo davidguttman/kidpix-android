@@ -44,22 +44,44 @@ class EngineGraphTest {
         "dev.kidpix.paint.canvas.EmojiFallback.cache" to "rendered emoji glyphs (derived from the text)",
         "dev.kidpix.paint.engine.World.slots" to "the list of slots itself (their values are the roots)",
         "dev.kidpix.paint.engine.World.generation" to "which world is current (a counter; restore starts a new one)",
+        "dev.kidpix.paint.History.*" to "the undo history: a checkpoint keeps it as frame ids and a restore brings it back from the frames (KLog)",
+        "dev.kidpix.paint.canvas.AaStroke.*" to "scratch bitmap and bytes, written whole before each use",
+        "dev.kidpix.paint.canvas.MsaaSurface.*" to "the companion's scratch masks, pools and buffers (cleared before use), constants, a one-entry colour cache, the platform's byte order; the samples themselves are per canvas and kept (msaaSamples)",
+        "dev.kidpix.paint.Filters.tmpCanvas" to "a canvas only used to make empty ImageData",
+        "dev.kidpix.paint.Filters.tmpCtx" to "its context",
+        "dev.kidpix.paint.KGlfx.*" to "the GL bridge the app plugs in",
+        "dev.kidpix.paint.canvas.Ctx2D.batchTimer" to "a timing hook (perf builds)",
+        "dev.kidpix.paint.canvas.EmojiFallback.*" to "where the emoji font is and its loaded glyph tables (derived from the font)",
+        "dev.kidpix.paint.R\$*" to "resource ids",
     )
 
-    private fun classesDir(): File {
-        val url = EngineGraph::class.java.protectionDomain.codeSource.location
-        return File(url.toURI())
+    private fun listed(id: String): Boolean = id in NOT_STATE || NOT_STATE.keys.any { k ->
+        k.endsWith("*") && id.startsWith(k.removeSuffix("*").replace("\\$", "$"))
+    }
+
+    /** Names of the compiled engine classes (from the classes directory or jar the tests run on). */
+    private fun classNames(): List<String> {
+        val u = EngineGraph::class.java.classLoader!!.getResource("dev/kidpix/paint/log/EngineGraph.class")!!
+        val names = ArrayList<String>()
+        if (u.protocol == "jar") {
+            val path = u.path.substringAfter("file:").substringBefore("!")
+            java.util.jar.JarFile(java.net.URLDecoder.decode(path, "UTF-8")).use { jf ->
+                for (e in jf.entries()) if (e.name.startsWith("dev/kidpix/paint/") && e.name.endsWith(".class")) names.add(e.name)
+            }
+        } else {
+            val root = File(u.toURI()).parentFile.parentFile.parentFile.parentFile.parentFile
+            File(root, "dev/kidpix/paint").walkTopDown().filter { it.isFile && it.name.endsWith(".class") }.forEach { names.add(it.relativeTo(root).path) }
+        }
+        return names.map { it.removeSuffix(".class").replace('/', '.').replace(File.separatorChar, '.') }
     }
 
     @Test fun everyGlobalIsKeptOrListed() {
-        val root = classesDir()
-        val pkg = File(root, "dev/kidpix/paint")
-        assertTrue("compiled classes at $pkg", pkg.isDirectory)
         val roots = EngineGraph.roots().map { it.key }.toSet()
         val missing = ArrayList<String>()
         var checked = 0
-        pkg.walkTopDown().filter { it.isFile && it.name.endsWith(".class") }.forEach { f ->
-            val rel = f.relativeTo(root).path.removeSuffix(".class").replace(File.separatorChar, '.')
+        val names = classNames()
+        assertTrue("engine classes found: ${names.size}", names.size > 100)
+        names.forEach { rel ->
             if (rel.startsWith("dev.kidpix.paint.app.") || rel.startsWith("dev.kidpix.paint.log.") || rel.startsWith("dev.kidpix.paint.harness.")) return@forEach
             val c = runCatching { Class.forName(rel, false, EngineGraph::class.java.classLoader) }.getOrNull() ?: return@forEach
             for (fl in runCatching { c.declaredFields }.getOrDefault(emptyArray())) {
@@ -71,7 +93,7 @@ class EngineGraphTest {
                     WorldSlot::class.java.isAssignableFrom(fl.type) -> {} // a `by world` slot: its value is a root
                     Modifier.isFinal(fl.modifiers) && (fl.type.isPrimitive || fl.type == String::class.java) -> {} // a constant
                     ("2$id") in roots -> {}
-                    id in EngineGraph.IGNORED || id in NOT_STATE -> {}
+                    id in EngineGraph.IGNORED || listed(id) -> {}
                     Modifier.isFinal(fl.modifiers) && constant(fl) -> {}
                     else -> missing.add("$id (${fl.type.simpleName})")
                 }
@@ -85,6 +107,9 @@ class EngineGraphTest {
     private fun constant(f: java.lang.reflect.Field): Boolean {
         f.isAccessible = true
         val v = f.get(null) ?: return true
+        // a function or object without fields (a top-level lambda, a stateless helper)
+        if (v !is Collection<*> && v !is Map<*, *> && !v.javaClass.isArray && !v.javaClass.name.startsWith("java.") &&
+            EngineGraph.info(v.javaClass).fields.all { it.second.declaringClass == kotlin.jvm.internal.Lambda::class.java }) return true
         // top-level lookup tables and sets of names (listOf/setOf/mapOf of constants, string tables)
         return v is Array<*> && v.all { it is String } || v is DoubleArray || v is IntArray && f.name.startsWith("lum") ||
             v.javaClass.name.startsWith("java.util.Collections\$Unmodifiable") || v.javaClass.name.startsWith("java.util.Collections\$Singleton") ||
