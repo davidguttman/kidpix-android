@@ -604,7 +604,9 @@ class PaintActivity : Activity(), Ui {
         watch = null
         playButton.picked = false
         appTime.arm()
-        resyncUi()
+        // the views were never told anything during the replay (it runs with a silent Ui), so
+        // they are as they were: only the canvas is redrawn
+        paintView.invalidate()
         val end = w.replayEnd
         val same = end?.let { it.sameAs(KDisplay.main_canvas.bitmap) }
         Log.i("KidPixLog", "play: ${if (w.stopped) "stopped" else "ended"} after ${w.endedAt - w.startedAt} ms (planned ${w.plannedMs}), " +
