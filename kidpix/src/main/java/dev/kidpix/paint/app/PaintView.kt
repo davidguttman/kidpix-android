@@ -390,9 +390,21 @@ class PaintView(context: Context, private val onCanvasSize: (Int, Int) -> Unit) 
     private val pendingLeave = Runnable { lastHover?.let { e -> safe("pointerleave") { KLog.entry(Action.Pointer(Action.LEAVE, e)) } }; postInvalidateOnAnimation() }
     private var lastHover: PEvent? = null
 
+    /** A touch on the canvas while the play button's replay plays: it stops it (the app sets it). */
+    var onTouchWhilePlaying: (() -> Unit)? = null
+    /** The rest of a gesture that stopped the replay: not a stroke. */
+    private var swallowGesture = false
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
         if (!KDisplay.isReady) return false
+        if (KLog.playing || swallowGesture) {
+            when (e.actionMasked) {
+                MotionEvent.ACTION_DOWN -> { swallowGesture = true; safe("stop replay") { onTouchWhilePlaying?.invoke() } }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> swallowGesture = false
+            }
+            return true
+        }
         val down = e.actionMasked == MotionEvent.ACTION_DOWN || e.actionMasked == MotionEvent.ACTION_POINTER_DOWN
         if (down && besideCanvas(e, e.actionIndex)) return true // its moves and up find no contact
         LatencyStats.input(System.nanoTime() - eventNanos(e))
@@ -475,6 +487,7 @@ class PaintView(context: Context, private val onCanvasSize: (Int, Int) -> Unit) 
     /** A hovering pen (or mouse) moves with no contact; leaving the canvas is pointerleave. */
     override fun onHoverEvent(e: MotionEvent): Boolean {
         if (!KDisplay.isReady) return super.onHoverEvent(e)
+        if (KLog.playing) return true // the play button's replay: no previews, no badge
         when (e.actionMasked) {
             MotionEvent.ACTION_HOVER_ENTER, MotionEvent.ACTION_HOVER_MOVE -> {
                 removeCallbacks(pendingLeave)

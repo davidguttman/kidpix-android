@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
@@ -37,6 +38,7 @@ import dev.kidpix.paint.engine.Engine
 import dev.kidpix.paint.log.Action
 import dev.kidpix.paint.log.FrameStore
 import dev.kidpix.paint.log.KLog
+import dev.kidpix.paint.log.Watch
 import dev.kidpix.paint.log.SavePoints
 import dev.kidpix.paint.engine.KTime
 import dev.kidpix.paint.key_down
@@ -65,6 +67,11 @@ class PaintActivity : Activity(), Ui {
         private set
     private lateinit var options: GridLayout
     private lateinit var current: KButton
+    /** The play button (under the palette arrows) and the replay it is playing. */
+    lateinit var playButton: KButton
+        private set
+    var watch: Watch? = null
+        private set
     private val colorButtons = ArrayList<KButton>()
     val toolButtons = LinkedHashMap<String, KButton>()
     var optionButtons = ArrayList<KButton>()
@@ -89,6 +96,7 @@ class PaintActivity : Activity(), Ui {
         pictures = Pictures(this)
 
         paintView = PaintView(this) { w, h -> startEngine(w, h) }
+        paintView.onTouchWhilePlaying = { stopWatch() }
         KTime.afterCallback = { paintView.postInvalidateOnAnimation() }
 
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; setBackgroundColor(0xffffffff.toInt()) }
@@ -186,6 +194,7 @@ class PaintActivity : Activity(), Ui {
 
     // keep the drawing if Android kills the app in the background
     override fun onPause() {
+        stopWatch() // the real picture and history are back before anything is written
         persist()
         super.onPause()
     }
@@ -317,7 +326,8 @@ class PaintActivity : Activity(), Ui {
 
     /** A toolbar press, unless a palm hit it while the pen draws (guardToolbarFromPalms). */
     private fun tap(b: KButton, what: String, f: () -> Unit) {
-        if (!KDisplay.isReady || KLog.replaying || KLog.playing) return
+        if (KLog.playing) { stopWatch(); return } // a tap anywhere stops the replay; the button itself does nothing
+        if (!KDisplay.isReady || KLog.replaying) return
         KLog.liveAdvance(appTime.wallNow()) // the palm check below reads the engine's clock
         if (KAndroid.toolbarBlocked(b.lastPointerType)) return
         val t0 = System.nanoTime()
@@ -367,6 +377,13 @@ class PaintActivity : Activity(), Ui {
         val navY = 51.0 + 25.0 * 16
         place(KButton(this).apply { text = "←"; textSp = 40f / 3; textDyDp = -0.8f; setOnClickListener { tap(this, "palette") { KLog.entry(Action.Palette(false)) } } }, 0.0, navY, 25.0, 25.0)
         place(KButton(this).apply { text = "→"; textSp = 40f / 3; textDyDp = -0.8f; setOnClickListener { tap(this, "palette") { KLog.entry(Action.Palette(true)) } } }, 25.0, navY, 25.0, 25.0)
+        // the play button: the picture draws itself again (the free space under the arrows)
+        playButton = KButton(this).apply {
+            bitmap = KAssets.loadBitmap("android/img/play.png")
+            bitmapDp = 48f
+            setOnClickListener { playPressed() }
+        }
+        place(playButton, 0.0, navY + 25.0 + PLAY_GAP, 50.0, 50.0)
         return bar
     }
 
@@ -548,6 +565,53 @@ class PaintActivity : Activity(), Ui {
         main.postDelayed({ openWhenQuiet(what, tries + 1, open) }, 50)
     }
 
+    // ------------------------------------------------------------------ the play button
+
+    /** Play: the picture draws itself from its beginning (log/Watch.kt); pressed again: stop. */
+    private fun playPressed(tries: Int = 0) {
+        if (!KDisplay.isReady || isFinishing || picker != null) return
+        watch?.let { stopWatch(); return }
+        KLog.liveAdvance(appTime.wallNow())
+        val replaySounds = liveSoundBackend?.let { ReplaySoundBackend(it) }
+        val t0 = System.nanoTime()
+        val r = runCatching {
+            Watch.start(
+                schedule = { d, f -> main.postDelayed(f, d) },
+                nowMs = { SystemClock.uptimeMillis() },
+                sounds = replaySounds?.let { b -> { SoundPoolPlayer(b) } },
+                onFrame = { paintView.postInvalidateOnAnimation() },
+                onEnd = { w -> watchEnded(w, replaySounds) },
+            )
+        }.onFailure { Log.e("KidPix", "play failed", it) }.getOrNull()
+        when (r) {
+            is Watch -> {
+                watch = r
+                r.keepEnd = intent?.getBooleanExtra("perfLog", false) == true
+                playButton.picked = true // pressed: a tap stops it
+                badge.hide()
+                Log.i("KidPixLog", "play: planned %d ms (engine %d ms), start %.1f ms".format(r.plannedMs, r.engineMs, (System.nanoTime() - t0) / 1e6))
+            }
+            Watch.Companion.No.BUSY -> if (tries < 30) main.postDelayed({ playPressed(tries + 1) }, 50) else playButton.nudge()
+            else -> playButton.nudge() // nothing drawn yet: a shake, like the Undo Guy with nothing to undo
+        }
+    }
+
+    /** Stops the replay at once: the finished picture, the app exactly as it was. */
+    fun stopWatch() { watch?.let { w -> val t0 = System.nanoTime(); w.stop(); Log.i("KidPixLog", "play: stopped in %.1f ms".format((System.nanoTime() - t0) / 1e6)) } }
+
+    private fun watchEnded(w: Watch, sounds: ReplaySoundBackend?) {
+        sounds?.stopAll()
+        watch = null
+        playButton.picked = false
+        appTime.arm()
+        resyncUi()
+        val end = w.replayEnd
+        val same = end?.let { it.sameAs(KDisplay.main_canvas.bitmap) }
+        Log.i("KidPixLog", "play: ${if (w.stopped) "stopped" else "ended"} after ${w.endedAt - w.startedAt} ms (planned ${w.plannedMs}), " +
+            "${w.recordsPlayed} records, pieces picture-only ${w.piecesPictureOnly}, cut ${w.piecesCut}, longest step %.1f ms".format(w.maxStepMs) +
+            (if (same != null) ", replay end identical to live: $same" else "") + "; ${KLog.describe()}")
+    }
+
     // Exit: keep the drawing, then close the app (back to the launcher / ES-DE).
     override fun exit() {
         persist()
@@ -568,6 +632,8 @@ class PaintActivity : Activity(), Ui {
             Executors.newSingleThreadExecutor { r -> Thread({ android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND); r.run() }, "kidpix-log") }
         }
         const val STATE_KEY = "state"
+        /** CSS px between the palette arrows and the play button. */
+        const val PLAY_GAP = 6.0
         val MAIN_ICONS = mapOf(
             "save" to "img/kp-m_27.png", "open" to "android/img/open.png", "pencil" to "img/kp-m_28.png",
             "line" to "img/kp-m_29.png", "square" to "img/kp-m_30.png", "circle" to "img/kp-m_31.png",

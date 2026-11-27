@@ -44,6 +44,7 @@ fun installSounds(context: Context): AutoCloseable {
         )
         .build()
     val backend = SoundPoolBackend(pool, context.applicationContext.assets)
+    liveSoundBackend = backend
     val player = SoundPoolPlayer(backend)
     KSounds.player = player
     backend.loadAll(soundLoadOrder())
@@ -57,6 +58,7 @@ fun installSounds(context: Context): AutoCloseable {
             closed = true
             callbacks?.let { activity?.unregisterActivityLifecycleCallbacks(it) }
             if (KSounds.player === player) KSounds.player = KSounds.silent
+            if (liveSoundBackend === backend) liveSoundBackend = null
             player.close()
         }
     }
@@ -77,6 +79,32 @@ fun installSounds(context: Context): AutoCloseable {
 }
 
 private const val MAX_STREAMS = 16
+
+/** The app's sound pool (installSounds), for the play button's replay ([ReplaySoundBackend]). */
+var liveSoundBackend: SoundBackend? = null
+    private set
+
+/**
+ * The play button's replay plays the app's sounds through the live pool, sped up: at most
+ * [MAX_BURST] new sounds in [BURST_MS] of wall time (a fast replay would pile them up), and every
+ * sound it started stops when the replay ends or is stopped ([stopAll]).
+ */
+class ReplaySoundBackend(private val b: SoundBackend, private val nowMs: () -> Long = { android.os.SystemClock.uptimeMillis() }) : SoundBackend {
+    private val starts = ArrayDeque<Long>()
+    private val streams = ArrayList<Int>()
+    override fun play(path: String): Int {
+        val now = nowMs()
+        while (starts.isNotEmpty() && now - starts.first() > BURST_MS) starts.removeFirst()
+        if (starts.size >= MAX_BURST) return 0
+        val s = b.play(path)
+        if (s != 0) { starts.addLast(now); streams.add(s); if (streams.size > 64) streams.removeAt(0) }
+        return s
+    }
+    override fun stop(stream: Int) { b.stop(stream) }
+    override fun release() { stopAll() } // the live pool stays
+    fun stopAll() { streams.forEach { b.stop(it) }; streams.clear() }
+    companion object { const val MAX_BURST = 4; const val BURST_MS = 250L }
+}
 
 /** Every file KSounds can name, the clicks every session hears first. */
 internal fun soundLoadOrder(): List<String> {
