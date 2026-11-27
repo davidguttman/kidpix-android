@@ -48,7 +48,8 @@ class RestoreTest {
 
     @Before fun setUp() {
         System.getProperty("kidpix.assets")?.let { KAssets.useDirectory(File(it)) }
-        KCanvas.trackDirty = true
+        KCanvas.trackDirty = System.getenv("KP_NODIRTY") == null
+        if (System.getenv("KP_NOMSAAINC") != null) dev.kidpix.paint.canvas.Ctx2D.msaaIncremental = false
         KLog.versionCode = 12
         KLog.checkpointActions = 1_000_000 // only the checkpoints a case forces
         KLog.checkpointCostMs = 1e12
@@ -92,8 +93,10 @@ class RestoreTest {
 
     class Obs(val label: String, val pictures: Map<String, Long>, val graph: Map<String, String>, val ui: String, val history: String, val time: Long)
 
+    private var dumpDir: File? = null
     private fun observe(label: String): Obs {
         KLog.drainIo()
+        dumpDir?.let { d -> d.mkdirs(); File(d, "%02d.png".format(d.list()!!.size)).outputStream().use { KDisplay.main_canvas.bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) } }
         val p = LinkedHashMap<String, Long>()
         p["main"] = crc(KDisplay.main_canvas.bitmap)
         for ((n, c) in listOf("tmp" to KDisplay.canvas, "preview" to KDisplay.previewCanvas, "anim" to KDisplay.animCanvas, "bnim" to KDisplay.bnimCanvas)) p[n] = crc(c.bitmap)
@@ -131,9 +134,11 @@ class RestoreTest {
         // both runs start from the same shared-object fields (a process starts them at their
         // initial values; in one test process the previous run left its own)
         val statics = EngineGraph.captureStatics()
+        if (System.getenv("KP_DUMP") != null) dumpDir = File("/tmp/kp-dump/o$n")
         val oracle = run(File(tmp, "o$n"), steps, kill = false)
+        if (System.getenv("KP_DUMP") != null) dumpDir = File("/tmp/kp-dump/k$n")
         EngineGraph.applyStatics(statics)
-        val killed = run(File(tmp, "k$n"), steps, kill = true, oracleTimes = oracle.map { it.time })
+        val killed = run(File(tmp, "k$n"), steps, kill = System.getenv("KP_NOKILL") == null, oracleTimes = oracle.map { it.time })
         assertEquals("$name: observations", oracle.size, killed.size)
         for (i in oracle.indices) same(name, oracle[i], killed[i])
         if (watch) {
@@ -273,7 +278,11 @@ class RestoreTest {
     @Test fun everyOptionOfEveryToolSurvivesAKill() {
         val all = options()
         val only = System.getenv("KP_RESTORE_ONLY")?.let { Regex(it) }
-        val cases = all.filter { only == null || only.containsMatchIn(it.second) }
+        // the GL mixers render on a GL thread that headless tests do not have: their drag never
+        // ends here (tested on the emulator and the tablet instead)
+        val gl = Regex("jumble/jumble\\[\\d+] (Swirl|Pancake Stack)( |$)")
+        val cases = all.filter { (only == null || only.containsMatchIn(it.second)) && !gl.containsMatchIn(it.second) }
+        println("RESTORE every option: ${all.count { gl.containsMatchIn(it.second) }} GL cases left to the device tests")
         var obs = 0
         val failures = ArrayList<String>()
         for ((k, c) in cases.withIndex()) {

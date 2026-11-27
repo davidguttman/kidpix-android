@@ -402,7 +402,14 @@ object EngineGraph {
                 sb.append('['); value(sb, g.st); sb.append(",["); g.stack.forEachIndexed { i, x -> if (i > 0) sb.append(','); value(sb, x) }
                 sb.append("],")
                 if (g.unstorable != null) { sb.append("[\"U\","); jstr(sb, g.unstorable); sb.append(']') } else value(sb, g.path)
-                sb.append(']')
+                // the multisampled strokes' samples: a stroke over an edge pixel uses them
+                val ms = ctx.msaaSamples()
+                sb.append(",\"")
+                if (ms.isNotEmpty()) {
+                    val raw = java.nio.ByteBuffer.allocate(ms.size * 4); raw.asIntBuffer().put(ms)
+                    sb.append(ms.size).append(':').append(android.util.Base64.encodeToString(FrameStore.deflate(raw.array()), android.util.Base64.NO_WRAP))
+                }
+                sb.append("\"]")
             }
             sb.append(']')
         }
@@ -638,6 +645,13 @@ object EngineGraph {
                 val stack = (0 until sa.length()).map { value(sa.get(it), old.stack.getOrNull(it))!! }
                 val path = value(g.get(2), null)
                 ctx.setGraphState(Ctx2D.GraphState(st, stack, path))
+                val ms = g.optString(3, "")
+                ctx.setMsaaSamples(if (ms.isEmpty()) IntArray(0) else {
+                    val n = ms.substringBefore(':').toInt()
+                    val raw = FrameStore.inflate(android.util.Base64.decode(ms.substringAfter(':'), android.util.Base64.NO_WRAP), n * 4)
+                        ?: throw IllegalStateException("samples unreadable")
+                    IntArray(n).also { java.nio.ByteBuffer.wrap(raw).asIntBuffer().get(it) }
+                })
             }
             return c
         }

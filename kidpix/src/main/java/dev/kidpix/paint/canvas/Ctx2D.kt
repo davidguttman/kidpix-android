@@ -174,6 +174,15 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
     fun graphState(): GraphState = GraphState(st, ArrayList<Any>(stack), arrayOf<Any?>(hist.copyOf(histN), pathEpoch),
         if (st.clipped || stack.any { it.clipped }) "clip" else null)
 
+    /** The multisampled strokes' samples (MsaaSurface.exportSamples), empty when there are none. */
+    fun msaaSamples(): IntArray = msaa?.exportSamples() ?: IntArray(0)
+
+    /** Puts back [msaaSamples] (the surface starts fresh with them). */
+    fun setMsaaSamples(a: IntArray) {
+        msaa = null; msaaLast = null
+        if (a.isNotEmpty()) MsaaSurface(canvas.bitmap.width, canvas.bitmap.height).also { msaa = it }.importSamples(a)
+    }
+
     /** Puts back a [graphState] (its State objects become this context's). */
     fun setGraphState(g: GraphState) {
         while (stack.isNotEmpty()) restore()

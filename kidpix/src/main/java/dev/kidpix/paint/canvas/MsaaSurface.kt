@@ -359,6 +359,42 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
         c.restore()
     }
 
+    /**
+     * The samples that say more than their pixel (not all four equal to the value written from
+     * them), as groups of six ints: pixel index, the four samples, that value. Every other pixel
+     * behaves as a fresh surface makes it (its samples become the pixel's value when next used),
+     * so this is all a checkpoint has to keep (log/EngineGraph.kt).
+     */
+    fun exportSamples(): IntArray {
+        var out = IntArray(0); var n = 0
+        for ((ti, tile) in tiles.withIndex()) {
+            if (tile == null) continue
+            val tx = (ti % tilesX) * T; val ty = (ti / tilesX) * T
+            for (p in 0 until T * T) {
+                val o = p * 5
+                val v = tile[o + 4]
+                if (tile[o] == v && tile[o + 1] == v && tile[o + 2] == v && tile[o + 3] == v) continue
+                if (n + 6 > out.size) out = out.copyOf(maxOf(64, out.size * 2))
+                out[n] = (ty + p / T) * w + tx + p % T
+                System.arraycopy(tile, o, out, n + 1, 5)
+                n += 6
+            }
+        }
+        return out.copyOf(n)
+    }
+
+    /** Puts back an [exportSamples] (into a fresh surface). */
+    fun importSamples(a: IntArray) {
+        var i = 0
+        while (i + 6 <= a.size) {
+            val q = a[i]; val x = q % w; val y = q / w
+            val ti = (y / T) * tilesX + x / T
+            val tile = tiles[ti] ?: IntArray(T * T * 5).also { tiles[ti] = it }
+            System.arraycopy(a, i + 1, tile, ((y % T) * T + x % T) * 5, 5)
+            i += 6
+        }
+    }
+
     companion object {
         private const val T = 32
         /** A box over 1/BIG_BOX of the surface takes the whole-bitmap paths. */
