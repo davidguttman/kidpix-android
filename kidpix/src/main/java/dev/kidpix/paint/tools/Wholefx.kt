@@ -34,8 +34,11 @@ object JumbleFx {
 class ToolboxWholeCanvasEffect : Tool() {
     val tool = this
     var isDown = false
+    @field:dev.kidpix.paint.engine.Scratch("a handle on the GL canvas; each drag draws a new texture into it before rendering")
     val gfx = fx.canvas() // expensive; create once (natively a handle on the shared GL canvas)
+    @field:dev.kidpix.paint.engine.Scratch("set at every mousedown (GL effects) before anything reads it")
     var textureGfx: GfxTexture? = null
+    @field:dev.kidpix.paint.engine.Scratch("set at every mousedown (CPU effects) before anything reads it")
     var mainImageData: ImageData? = null
     var initialClick: Ev? = null
     var effect: String = JumbleFx.PANCAKE
