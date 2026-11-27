@@ -153,6 +153,19 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         st = one(o.getJSONObject("st"))
     }
 
+    /**
+     * The fill and stroke styles of the state and of each save() level as objects (patterns and
+     * gradients included, which [exportState] cannot keep), to put back on a context restored with
+     * [importState] in the same process ([putStyles]; the play button's replay).
+     */
+    fun keepStyles(): List<Pair<Any, Any>> = (stack + st).map { it.fill to it.stroke }
+
+    fun putStyles(k: List<Pair<Any, Any>>) {
+        val all = stack + st
+        if (all.size != k.size) return
+        for ((x, s) in all.zip(k)) { x.fill = s.first; x.stroke = s.second }
+    }
+
     /** Called by KCanvas when its size is set: new bitmap, default state, empty path. */
     internal fun rebind() {
         c = Canvas(canvas.bitmap)

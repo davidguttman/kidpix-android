@@ -271,6 +271,31 @@ object History {
 
     fun clear() { past.clear(); future.clear(); lastStored = null }
 
+    /** The whole in-memory history as it is now (stacks, next id, frame store), to put back exactly. */
+    class Saved internal constructor(
+        internal val past: List<Any>, internal val future: List<Any>, internal val nextId: Long,
+        internal val lastStored: Any?, internal val frames: dev.kidpix.paint.log.FrameStore,
+    )
+
+    fun save(): Saved = Saved(ArrayList(past), ArrayList(future), nextId, lastStored, frames)
+
+    /** The frame [b] is as it is now (its id and copy), if [b] has not changed since it was stored. */
+    fun currentFrameOf(b: Bitmap): Pair<Long, Bitmap>? {
+        val last = lastStored ?: return null
+        return if (last.first === b && last.second == b.generationId) last.third else null
+    }
+
+    /** Back to [s] (the play button's replay used the history in between). */
+    @Suppress("UNCHECKED_CAST")
+    fun restore(s: Saved) {
+        past.clear(); future.clear()
+        past.addAll(s.past as List<Snap>); future.addAll(s.future as List<Snap>)
+        nextId = s.nextId
+        lastStored = s.lastStored as Triple<Bitmap, Int, Pair<Long, Bitmap>>?
+        frames = s.frames
+        settle()
+    }
+
     /** Back to a stored history (a checkpoint): ids oldest first; [next] the next free id. */
     fun restore(pastIds: List<Long>, futureIds: List<Long>, next: Long) {
         clear()

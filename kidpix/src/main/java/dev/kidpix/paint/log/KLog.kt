@@ -99,6 +99,8 @@ object KLog {
     /** A save point's or a segment's replay is being played (input is dropped). */
     var playing = false
         private set
+    /** The play button's replay: glfx mixers show their drag as it was drawn (tools/Wholefx.kt). */
+    @Volatile var showDrags = false
     /** The newest checkpoint taken, in memory (playing a save point comes back to it). */
     private var lastCkpt: Checkpoint? = null
     /** History refs of the last two checkpoints (kept when pruning). */
@@ -222,7 +224,7 @@ object KLog {
 
     /** The app's timer pump: run what is due by the wall clock, then see if a checkpoint can be taken. */
     fun pump(now: Long) {
-        if (replaying) return
+        if (replaying || playing) return
         liveAdvance(now)
         if (actionsSince > 0 || rollWanted) maybeCheckpoint()
     }
@@ -530,10 +532,10 @@ object KLog {
      * the KRandom state at an action's start differs from the recorded one (the replay would no
      * longer be what happened).
      */
-    fun replay(recs: List<Rec>, onRecord: ((Rec) -> Unit)? = null): String? {
+    fun replay(recs: List<Rec>, onRecord: ((Rec) -> Unit)? = null, player: SoundPlayer? = null): String? {
         val ui = KUi.ui; val snd = KSounds.player
         KUi.ui = object : Ui {}
-        KSounds.player = replaySounds()
+        KSounds.player = player ?: replaySounds()
         replaying = true
         try {
             for ((i, r) in recs.withIndex()) {
@@ -619,11 +621,15 @@ object KLog {
         var i = 0
         var t0 = 0L
         var startWall = 0L
+        var player: SoundPlayer? = null
         fun next(): Boolean {
             k++
             if (k >= pieces.size) return false
             val p = pieces[k]
             applyCheckpoint(p.zero, p.main)
+            // one sound model per piece, as a restore has (a fresh one per step would decide
+            // differently when a sound a tool waits on spans two steps)
+            player = replaySounds()
             recs = p.recs; i = 0
             t0 = recs.firstOrNull()?.time ?: clock.time
             startWall = System.nanoTime()
@@ -634,7 +640,7 @@ object KLog {
                 val target = if (speed.isInfinite()) Long.MAX_VALUE else t0 + ((System.nanoTime() - startWall) / 1e6 * speed).toLong()
                 var j = i
                 while (j < recs.size && recs[j].time <= target) j++
-                val r = replay(recs.subList(i, j))
+                val r = replay(recs.subList(i, j), null, player)
                 i = j
                 KUi.ui.invalidate()
                 if (r != null) return done(r)
@@ -682,6 +688,139 @@ object KLog {
             KUi.ui.invalidate()
             done(r, result)
         }
+    }
+
+    /** Runs the timers due up to [time] as a replay does (no UI, [player]'s sounds, input dropped). */
+    fun replayTo(time: Long, player: SoundPlayer?) {
+        val ui = KUi.ui; val snd = KSounds.player
+        KUi.ui = object : Ui {}
+        KSounds.player = player ?: replaySounds()
+        replaying = true
+        try { clock.advanceTo(maxOf(time, clock.time)) } finally {
+            replaying = false
+            KUi.ui = ui; KSounds.player = snd
+        }
+    }
+
+    // ---------------------------------------------------------------- the play button (log/Watch.kt)
+
+    /**
+     * Everything the play button's replay changes, as it was before (in memory only: watching
+     * writes nothing). [restoreLive] puts it back exactly: the picture and overlay layers, the
+     * undo history (the same objects, the same next frame id), the engine state, the clock,
+     * KRandom and the log's own recording state.
+     */
+    class Live internal constructor(
+        internal val o: JSONObject, internal val main: Bitmap, internal val layers: Map<String, Bitmap>,
+        internal val history: History.Saved, internal val mainFrame: Pair<Long, Bitmap>?,
+        internal val writer: LogWriter?, internal val coder: RecordCoder,
+        internal val actionsSince: Int, internal val costSinceNs: Long, internal val lastCkpt: Checkpoint?,
+        internal val inputs: Map<String, Bitmap>, internal val inputSeq: Int,
+        internal val styles: List<List<Pair<Any, Any>>>,
+    ) { val time: Long get() = o.getLong("time") }
+
+    /**
+     * Starts a play-button replay: needs a quiet moment (null when something is in progress or
+     * the log is not recording). The live state is kept in memory; from now on nothing reaches
+     * the disk (no log writer, frames go to an in-memory overlay) and input is dropped, until
+     * [endWatch].
+     */
+    fun beginWatch(): Live? {
+        if (!recording || playing) return null
+        if (!quiescent()) return null
+        flushBlock(true)
+        val o = JSONObject().put("time", clock.time).put("random", KRandom.state).put("w", w).put("h", h)
+            .put("engine", EngineState.capture())
+        val mainBmp = KDisplay.main_canvas.bitmap
+        val live = Live(o, mainBmp.copy(Bitmap.Config.ARGB_8888, false),
+            overlayLayers().filter { !it.second.knownBlank }.associate { it.first to it.second.bitmap.copy(Bitmap.Config.ARGB_8888, false) },
+            History.save(), History.currentFrameOf(mainBmp),
+            writer, coder, actionsSince, costSinceNs, lastCkpt, HashMap(inputs), inputSeq,
+            contexts().map { it.keepStyles() })
+        drainIo()
+        writer = null; playing = true
+        History.frames = live.history.frames.overlay()
+        return live
+    }
+
+    private fun contexts() = listOf(KDisplay.main_context, KDisplay.bnimContext, KDisplay.animContext, KDisplay.previewContext, KDisplay.context)
+
+    /** Ends a play-button replay: the app exactly as [beginWatch] found it. */
+    fun endWatch(l: Live) {
+        val o = l.o
+        val ui = KUi.ui
+        KUi.ui = object : Ui {}
+        try {
+            Engine.start(o.getInt("w"), o.getInt("h"), null)
+            kidpix_android_boot()
+            clock.time = l.time
+            EngineState.apply(o.getJSONObject("engine"))
+            clock.runDue()
+            KDisplay.main_context.replaceWith(BitmapSource(l.main))
+            for ((name, c) in overlayLayers()) {
+                c.getContext("2d").clearRect(0, 0, c.width, c.height)
+                l.layers[name]?.let { c.getContext("2d").replaceWith(BitmapSource(it)) }
+            }
+            EngineState.applyContexts(o.getJSONObject("engine"))
+            contexts().zip(l.styles).forEach { (c, k) -> c.putStyles(k) } // patterns and gradients too
+            History.restore(l.history)
+            l.mainFrame?.let { History.remember(KDisplay.main_canvas.bitmap, it.first, it.second) }
+            clock.time = l.time
+            KRandom.state = o.getInt("random")
+        } finally {
+            KUi.ui = ui
+            writer = l.writer; coder = l.coder; actionsSince = l.actionsSince; costSinceNs = l.costSinceNs
+            lastCkpt = l.lastCkpt; inputs.clear(); inputs.putAll(l.inputs); inputSeq = l.inputSeq
+            playing = false; showDrags = false
+        }
+        KUi.ui.invalidate()
+    }
+
+    /**
+     * One piece of the play button's replay: a picture that appears ([main]), then, if the piece
+     * can be replayed faithfully ([zero] != null: this versionCode, complete, readable), its
+     * records. A piece that cannot be replayed only shows its picture (the nearest stored frame).
+     */
+    class WatchPiece(val zero: Checkpoint?, val main: Bitmap, val recs: List<Rec>)
+
+    /**
+     * The pieces of [chain] for the play button, never failing: a piece whose log cannot be
+     * replayed (another versionCode, cut short, damaged) keeps only its picture; a piece whose
+     * picture is gone is left out (the next one's picture appears instead).
+     */
+    fun watchPieces(chain: List<IntArray>, frames: FrameStore = History.frames): List<WatchPiece> {
+        val out = ArrayList<WatchPiece>()
+        for (p in chain) runCatching { watchPiece(p, frames) }.getOrNull()?.let { out.add(it) }
+        return out
+    }
+
+    /**
+     * Piece [p] ((segment, blocks)): replayed from its earliest checkpoint after which every
+     * block up to `blocks` is this versionCode's, complete and readable (checkpoint zero,
+     * normally; a later one after an update in the middle of a segment). None: only the newest stored picture of the piece. Null: no picture at all.
+     */
+    private fun watchPiece(p: IntArray, frames: FrameStore): WatchPiece? {
+        val d = segFile(p[0])
+        val cps = checkpoints(d).filter { it.blocks <= p[1] && it.o.optInt("w") == w && it.o.optInt("h") == h }.sortedBy { it.seq }
+        if (cps.isEmpty()) return null
+        val decoded: Map<Int, Pair<Int, List<Rec>>>? = runCatching {
+            val parsed = LogFormat.read(File(d, "log.kpl"))
+            val header = parsed.header ?: return@runCatching null
+            val blocks = LogWriter.completeBlocks(parsed).filter { it.index < p[1] }
+            val recs = LogFormat.records(header, blocks)
+            val versions = blocks.associate { it.index to it.version }
+            recs.associate { (idx, r) -> idx to ((versions[idx] ?: -1) to r) }
+        }.getOrNull()
+        if (decoded != null) for (cp in cps) {
+            // (a checkpoint of another versionCode is a start only when everything after it is this
+            // version's: the live app went on from exactly that checkpoint after an update)
+            val idx = (cp.blocks until p[1])
+            if (idx.any { decoded[it]?.first != versionCode }) continue
+            val main = frames.get(cp.o.getLong("main")) ?: continue
+            return WatchPiece(cp, main, idx.flatMap { decoded.getValue(it).second })
+        }
+        for (cp in cps.reversed()) frames.get(cp.o.getLong("main"))?.let { return WatchPiece(null, it, emptyList()) }
+        return null
     }
 
     // ---------------------------------------------------------------- export (debug)

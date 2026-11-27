@@ -30,6 +30,7 @@ class AppTime(val clock: VirtualClock) {
 
     /** Wakes the pump for the earliest pending timer. */
     fun arm() {
+        if (KLog.playing) return // the play button's replay runs the clock itself; armed again after it
         val nd = clock.nextDue() ?: return
         if (nd >= armedFor) return
         handler.removeCallbacks(pumpNow)
