@@ -34,5 +34,8 @@ object KAssets {
         }
     }
 
+    /** The asset path [b] was loaded from (the very bitmap the cache holds), or null. */
+    fun keyOf(b: Bitmap): String? = synchronized(cache) { cache.entries.firstOrNull { it.value === b }?.key }
+
     private fun normalize(p: String) = p.removePrefix("./").removePrefix("/")
 }

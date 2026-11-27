@@ -176,6 +176,7 @@ class ToolboxFlood : Tool() {
     override fun mouseup(ev: Ev) {}
 
     /** Picture-sized int buffers kept between fills (two 3.4 MB arrays a tap were garbage). */
+    @field:dev.kidpix.paint.engine.Scratch("both buffers are filled whole (getPixels / Arrays.fill) before each fill reads them")
     private val buffers = arrayOfNulls<IntArray>(2)
     private fun buffer(k: Int, n: Int): IntArray = buffers[k]?.takeIf { it.size >= n } ?: IntArray(n).also { buffers[k] = it }
 }

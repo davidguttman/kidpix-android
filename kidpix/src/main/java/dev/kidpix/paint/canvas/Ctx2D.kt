@@ -108,7 +108,18 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         if (3 * opsN + 3 > ops.size) ops = ops.copyOf(ops.size * 2)
         ops[3 * opsN] = type; ops[3 * opsN + 1] = x; ops[3 * opsN + 2] = y; opsN++
     }
-    private fun resetOps() { opsN = 0; opsOk = true; pathEpoch++ }
+    private fun resetOps() { opsN = 0; opsOk = true; pathEpoch++; histN = 0 }
+
+    // Every op of the current path in device space since it started (type, then its points: 0 move
+    // and 1 line x,y; 2 cubic 6; 3 quad 4; 4 close), so a checkpoint can keep the path and a
+    // restore rebuild it exactly (log/EngineGraph.kt; tools may leave a path between actions).
+    private var hist = FloatArray(96)
+    private var histN = 0
+    private fun hist(n: Int): Int {
+        if (histN + n > hist.size) hist = hist.copyOf(maxOf(hist.size * 2, histN + n))
+        val at = histN; histN += n; return at
+    }
+    private fun hist2(t: Float, x: Float, y: Float) { val i = hist(3); hist[i] = t; hist[i + 1] = x; hist[i + 2] = y }
 
     /** Debug (action log checks): the drawing state as one line. */
     fun debugState(): String = "stack ${stack.size} gco ${st.gco} alpha ${st.globalAlpha} fill ${st.fill.let { if (it is Int) Integer.toHexString(it) else it.javaClass.simpleName }} " +
@@ -151,6 +162,37 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         val sa = o.getJSONArray("stack")
         for (i in 0 until sa.length()) { stack.add(one(sa.getJSONObject(i))); c.save() }
         st = one(o.getJSONObject("st"))
+    }
+
+    /**
+     * The drawing state for a checkpoint (log/EngineGraph.kt stores it generically): the state and
+     * its save() stack (styles with patterns and gradients), the current path as its device ops.
+     * [unstorable]: why it cannot be kept exactly (a clip is set: no tool leaves one between actions).
+     */
+    class GraphState(val st: Any, val stack: List<Any>, val path: Any?, val unstorable: String? = null)
+
+    fun graphState(): GraphState = GraphState(st, ArrayList<Any>(stack), arrayOf<Any?>(hist.copyOf(histN), pathEpoch),
+        if (st.clipped || stack.any { it.clipped }) "clip" else null)
+
+    /** Puts back a [graphState] (its State objects become this context's). */
+    fun setGraphState(g: GraphState) {
+        while (stack.isNotEmpty()) restore()
+        for (x in g.stack) { stack.add(x as State); c.save() }
+        st = g.st as State
+        beginPath()
+        val p = g.path as Array<*>
+        val ops = p[0] as FloatArray
+        var i = 0
+        while (i < ops.size) {
+            when (ops[i].toInt()) {
+                0 -> { devMove(ops[i + 1], ops[i + 2]); i += 3 }
+                1 -> { devLine(ops[i + 1], ops[i + 2]); i += 3 }
+                2 -> { devCubic(ops.copyOfRange(i + 1, i + 7)); i += 7 }
+                3 -> { devQuad(ops.copyOfRange(i + 1, i + 5)); i += 5 }
+                else -> { closePath(); i += 1 }
+            }
+        }
+        pathEpoch = p[1] as Int
     }
 
     /** Called by KCanvas when its size is set: new bitmap, default state, empty path. */
@@ -301,6 +343,7 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
     fun closePath() {
         if (!hasCurrent) return
         path.close(); curX = startX; curY = startY; segN = -1; opsOk = false
+        hist[hist(1)] = 4f
     }
 
     private fun map(x: Double, y: Double) {
@@ -325,7 +368,7 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
     private fun devMove(x: Float, y: Float) {
         val lazy = segN == 0 && pathReset && pathLazy == 0
         if (!lazy) path.moveTo(x, y)
-        hasCurrent = true; curX = x; curY = y; startX = x; startY = y; logOp(0f, x, y)
+        hasCurrent = true; curX = x; curY = y; startX = x; startY = y; logOp(0f, x, y); hist2(0f, x, y)
         if (segN == 0) { seg[0] = x; seg[1] = y; segN = 1 } else segN = -1
         if (lazy) pathLazy = 1
     }
@@ -333,7 +376,7 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
     private fun devLine(x: Float, y: Float) {
         val lazy = segN == 1 && pathLazy == 1
         if (!lazy) path.lineTo(x, y)
-        curX = x; curY = y; logOp(1f, x, y)
+        curX = x; curY = y; logOp(1f, x, y); hist2(1f, x, y)
         if (segN == 1) { seg[2] = x; seg[3] = y; segN = 2 } else segN = -1
         if (lazy) pathLazy = 2
     }
@@ -343,7 +386,17 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         if (p.any { !it.isFinite() }) return
         st.ctm.mapPoints(p)
         if (!hasCurrent) devMove(p[0], p[1])
+        devCubic(p)
+    }
+
+    private fun devCubic(p: FloatArray) {
         path.cubicTo(p[0], p[1], p[2], p[3], p[4], p[5]); curX = p[4]; curY = p[5]; segN = -1; opsOk = false
+        val i = hist(7); hist[i] = 2f; System.arraycopy(p, 0, hist, i + 1, 6)
+    }
+
+    private fun devQuad(p: FloatArray) {
+        devQuad(p)
+        val i = hist(5); hist[i] = 3f; System.arraycopy(p, 0, hist, i + 1, 4)
     }
 
     fun quadraticCurveTo(cpx: Number, cpy: Number, x: Number, y: Number) {
@@ -351,7 +404,7 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         if (p.any { !it.isFinite() }) return
         st.ctm.mapPoints(p)
         if (!hasCurrent) devMove(p[0], p[1])
-        path.quadTo(p[0], p[1], p[2], p[3]); curX = p[2]; curY = p[3]; segN = -1; opsOk = false
+        devQuad(p)
     }
 
     fun rect(x: Number, y: Number, w: Number, h: Number) {

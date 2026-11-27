@@ -27,7 +27,12 @@ android {
         }
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
-    kotlinOptions { jvmTarget = "17" }
+    kotlinOptions {
+        jvmTarget = "17"
+        // Lambdas as named classes (not invokedynamic): a checkpoint stores the engine's closures
+        // (a tool's texture, a stamp's sound) by class and captured fields (log/EngineGraph.kt).
+        freeCompilerArgs += listOf("-Xlambdas=class", "-Xsam-conversions=class")
+    }
     androidResources { noCompress += listOf("mp3", "png", "wav") }
     sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/kidpixAssets"))
     testOptions { unitTests { isIncludeAndroidResources = true } }

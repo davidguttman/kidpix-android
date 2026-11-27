@@ -12,6 +12,7 @@ object Engine {
 
     fun start(width: Int, height: Int, store: PictureStore?) {
         KiddoPaint.resetWorld()
+        KTime.resetHandles()
         KDisplay.store = store
         init_kiddo_paint(width, height)
         started = true

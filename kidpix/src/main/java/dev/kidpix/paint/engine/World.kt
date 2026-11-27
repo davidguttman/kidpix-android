@@ -34,21 +34,56 @@ object World {
 class WorldSlot<T>(private val init: () -> T) {
     internal var gen = -1
     internal var value: T? = null
+    /**
+     * The property this slot backs (its file or object, name and JVM signature), known from its
+     * first use: the name a checkpoint stores the slot's value under (log/EngineGraph.kt).
+     */
+    var name: String? = null
+        private set
 
     init { World.slots.add(this) }
 
     @Suppress("UNCHECKED_CAST")
     internal fun put(v: Any?) { gen = World.generation; value = v as T? }
 
+    /** Sets the value in this world (a checkpoint's value written back: log/EngineGraph.kt). */
+    fun store(v: Any?) = put(v)
+
+    /** In this world (created or set since the last reset). */
+    val live: Boolean get() = gen == World.generation
+
+    /** The value in this world, created by its initializer if it does not exist yet. */
+    fun ensure(): Any? {
+        if (gen != World.generation) { gen = World.generation; value = init() }
+        return value
+    }
+
+    private fun named(property: KProperty<*>) {
+        if (name != null) return
+        val ref = property as? kotlin.jvm.internal.CallableReference
+        val owner = (ref?.owner as? kotlin.jvm.internal.ClassBasedDeclarationContainer)?.jClass?.name ?: "?"
+        name = owner + "#" + property.name + "#" + (ref?.signature ?: "")
+    }
+
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        if (name == null) named(property)
         if (gen != World.generation) { gen = World.generation; value = init() }
         @Suppress("UNCHECKED_CAST")
         return value as T
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, v: T) {
+        if (name == null) named(property)
         gen = World.generation; value = v
     }
 }
 
 fun <T> world(init: () -> T) = WorldSlot(init)
+
+/**
+ * A field that is not engine state: a buffer every use writes before it reads, so nothing in it
+ * outlives one action. Checkpoints do not keep it (log/EngineGraph.kt); [why] says why that is safe.
+ */
+@Target(AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Scratch(val why: String)

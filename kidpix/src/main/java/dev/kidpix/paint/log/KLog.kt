@@ -105,6 +105,13 @@ object KLog {
     private var lastCkpt: Checkpoint? = null
     /** History refs of the last two checkpoints (kept when pruning). */
     private var lastRefs: List<Pair<Set<Long>, Long>> = emptyList()
+    /** The engine state of a freshly started engine (EngineGraph roots): checkpoints store what differs. */
+    private var baseline: Map<String, String>? = null
+    /** Why the last checkpoint applied did not reproduce its engine state exactly (null: it did). */
+    var lastApplyProblem: String? = null
+        private set
+    /** Main-thread cost of the engine state in checkpoints (for the report and perfLog). */
+    var graphNs = 0L; var graphCount = 0L; var graphMaxNs = 0L; var graphBytes = 0L
 
     /** Timing (for the report and perfLog): ns of main-thread logging work per record. */
     var recordNs = 0L; var records = 0L
@@ -150,8 +157,7 @@ object KLog {
         SavePoints.load(dir)
         val msg = try { restore() } catch (t: Throwable) { FrameStore.logError("restore failed", t); null }
         lastRestore = if (msg != null) msg else {
-            Engine.start(width, height, null)
-            kidpix_android_boot()
+            freshEngine(width, height)
             fresh()
             clock.runDue()
             History.clear(); History.nextId = (History.frames.ids().filter { it < FrameStore.OOB_BASE }.maxOrNull() ?: 0L) + 1
@@ -162,6 +168,13 @@ object KLog {
         lastRestore += " in %.1f ms".format((System.nanoTime() - t0) / 1e6)
         log(lastRestore)
         return lastRestore
+    }
+
+    /** A freshly started engine (as on page load), and its state noted as the checkpoints' baseline. */
+    private fun freshEngine(width: Int, height: Int) {
+        Engine.start(width, height, null)
+        kidpix_android_boot()
+        baseline = EngineGraph.encode().roots
     }
 
     private fun existingSegments(): List<Int> = (root?.list() ?: emptyArray()).mapNotNull {
@@ -178,7 +191,7 @@ object KLog {
         liveNow?.invoke()?.let { liveAdvance(it) }
         val rec = recording
         val t0 = if (rec) System.nanoTime() else 0L
-        if (rec) { coder.put(cur, a, clock.time, KRandom.state); curHasRecords = true }
+        if (rec) { coder.put(cur, a, clock.time, KRandom.state, if (a.starts) ActionPrint.now() else 0); curHasRecords = true }
         val t1 = if (rec) System.nanoTime() else 0L
         try { a.apply() } catch (t: Throwable) { FrameStore.logError("action ${a.code} failed", t) }
         if (!rec) return
@@ -244,7 +257,7 @@ object KLog {
         val o = Bytes(cur.n + 12)
         o.u(versionCode); o.u(w); o.u(h)
         o.bytes(cur.a, 0, cur.n)
-        wr.append(o.toByteArray(), complete)
+        wr.append(o.toByteArray(), complete, coder.prints)
         blocks++
         cur.clear(); curHasRecords = false
     }
@@ -316,10 +329,14 @@ object KLog {
         val layers = JSONObject()
         for ((name, c) in overlayLayers()) if (!c.knownBlank) layers.put(name, History.store(c.bitmap).first)
         History.remember(KDisplay.main_canvas.bitmap, mainId, mainCopy)
+        val g0 = System.nanoTime()
+        val graph = EngineGraph.capture(baseline)
+        val gns = System.nanoTime() - g0
+        graphNs += gns; graphCount++; if (gns > graphMaxNs) graphMaxNs = gns
         val o = JSONObject()
-            .put("v", 1).put("seg", segment).put("seq", ckptSeq).put("blocks", blocks).put("recTime", coder.lastTime)
+            .put("v", 2).put("seg", segment).put("seq", ckptSeq).put("blocks", blocks).put("recTime", coder.lastTime)
             .put("time", clock.time).put("random", KRandom.state).put("version", versionCode).put("w", w).put("h", h)
-            .put("engine", EngineState.capture())
+            .put("graph", graph)
             .put("past", JSONArray(History.pastIds)).put("future", JSONArray(History.futureIds)).put("next", History.nextId)
             .put("main", mainId).put("layers", layers).put("inputSeq", inputSeq)
             .put("chain", JSONArray().also { a -> chainPrefix.forEach { p -> a.put(JSONArray().put(p[0]).put(p[1])) } })
@@ -327,6 +344,7 @@ object KLog {
         lastCkpt = cpObj
         if (ckptSeq == 0) noteZero(segment, cpObj)
         val text = o.toString()
+        graphBytes = text.length.toLong()
         val crc = CRC32().apply { update(text.toByteArray()) }.value
         val f = File(d, "ckpt-%06d.json".format(ckptSeq))
         val seq = ckptSeq
@@ -435,17 +453,24 @@ object KLog {
                 if (cp.o.getInt("w") != w || cp.o.getInt("h") != h) continue // another canvas size: start over below
                 val main = History.frames.get(cp.o.getLong("main")) ?: continue
                 segment = seg; segDir = d
-                applyCheckpoint(cp, main)
+                val problem = applyCheckpoint(cp, main)
                 chainPrefix = cp.chain()
-                return replayAfter(cp)
+                return replayAfter(cp, problem)
             }
         }
         return null
     }
 
-    /** The engine as checkpoint [cp] left it ([main]: its picture). */
-    fun applyCheckpoint(cp: Checkpoint, main: Bitmap) {
+    /**
+     * The engine as checkpoint [cp] left it ([main]: its picture). Returns null when the engine
+     * state came back exactly (its fingerprint is the one stored), else why not: then nothing may
+     * be replayed after it (the tail would run with a wrong state). Checkpoints of 1.1.0 and of
+     * 1.2.0 before versionCode 12 kept a description of the state instead ([EngineState]): they
+     * are applied as they were then (their tails are never replayed by this app: version rule).
+     */
+    fun applyCheckpoint(cp: Checkpoint, main: Bitmap): String? {
         val o = cp.o
+        if (o.has("graph")) return applyGraph(cp, main)
         val ui = KUi.ui
         KUi.ui = object : Ui {}
         try {
@@ -467,6 +492,36 @@ object KLog {
             KRandom.state = o.getInt("random")
             inputSeq = o.optInt("inputSeq")
         } finally { KUi.ui = ui }
+        lastApplyProblem = null
+        return null
+    }
+
+    /** [applyCheckpoint] of a checkpoint that stores the engine state itself ([EngineGraph]). */
+    private fun applyGraph(cp: Checkpoint, main: Bitmap): String? {
+        val o = cp.o
+        val ui = KUi.ui
+        KUi.ui = object : Ui {}
+        val problem: String?
+        try {
+            freshEngine(o.getInt("w"), o.getInt("h"))
+            clock.runDue() // what starting the engine queued (as on a fresh start)
+            KDisplay.main_context.replaceWith(BitmapSource(main))
+            val layers = o.optJSONObject("layers")
+            for ((name, c) in overlayLayers()) {
+                c.getContext("2d").clearRect(0, 0, c.width, c.height)
+                layers?.optLong(name, -1)?.takeIf { it >= 0 }?.let { id -> History.frames.get(id)?.let { c.getContext("2d").replaceWith(BitmapSource(it)) } }
+            }
+            // everything else: the tools, the options, the layers' drawing state, the clock, KRandom
+            problem = try { EngineGraph.apply(o.getJSONObject("graph"), baseline) } catch (t: Throwable) { "engine state unreadable: $t" }
+            History.restore(cp.ids("past"), cp.ids("future"), o.getLong("next"))
+            History.remember(KDisplay.main_canvas.bitmap, o.getLong("main"), main)
+            clock.time = o.getLong("time")
+            KRandom.state = o.getInt("random")
+            inputSeq = o.optInt("inputSeq")
+        } finally { KUi.ui = ui }
+        lastApplyProblem = problem
+        if (problem != null) log("checkpoint ${cp.seg}/${cp.seq}: $problem")
+        return problem
     }
 
     /**
@@ -475,7 +530,7 @@ object KLog {
      * stays). Recording then goes on in the same segment, or in a new one when the tail could not
      * be replayed (so the log always ends in the state the app is in).
      */
-    private fun replayAfter(cp: Checkpoint): String {
+    private fun replayAfter(cp: Checkpoint, problem: String? = null): String {
         val logFile = File(cp.dir, "log.kpl")
         val parsed = LogFormat.read(logFile)
         val header = parsed.header
@@ -490,6 +545,7 @@ object KLog {
                 decoder.reset(header.t0)
                 val out = ArrayList<Pair<Int, List<Rec>>>()
                 for (b in complete) {
+                    decoder.prints = b.prints
                     val r = Reader(b.records, b.recStart)
                     val recs = ArrayList<Rec>()
                     while (r.more()) recs.add(decoder.get(r))
@@ -502,12 +558,23 @@ object KLog {
         val tailVersions = complete.filter { it.index >= cp.blocks }.map { it.version }.toSet()
         if (!forked && tailVersions.any { it != versionCode }) { forked = true; why += ", tail from versionCode $tailVersions not replayed" }
         if (!forked && cp.version != versionCode && tail.isNotEmpty()) { forked = true; why += ", checkpoint from versionCode ${cp.version}" }
+        // the engine did not come back exactly: stop at the checkpoint's picture, never draw a wrong tail
+        if (!forked && problem != null) { forked = true; why += ", engine state differs, tail not replayed ($problem)" }
         if (!forked) {
             val n = tail.sumOf { it.second.size }
             val t0 = System.nanoTime()
             val r = replay(tail.flatMap { it.second })
             why += ", replayed $n records (${tail.size} actions) in %.1f ms".format((System.nanoTime() - t0) / 1e6)
-            if (r != null) { forked = true; why += ", stopped: $r" }
+            if (r != null) {
+                forked = true; why += ", stopped: $r"
+                // a wrong state: back to the checkpoint's picture (nothing of the tail is kept)
+                if (r.contains("engine fingerprint")) {
+                    val next = History.nextId
+                    applyCheckpoint(cp, History.frames.get(cp.o.getLong("main"))!!)
+                    History.nextId = maxOf(History.nextId, next) // frames the replay stored keep their ids
+                    why += ", back to the checkpoint"
+                }
+            }
         }
         if (forked || header == null) {
             startSegment(chainPrefix + intArrayOf(segment, cp.blocks))
@@ -520,7 +587,11 @@ object KLog {
             lastRefs = listOf((cp.ids("past") + cp.ids("future") + cp.o.getLong("main")).toSet() to cp.o.getLong("next"))
             lastCkpt = cp
             actionsSince = tail.size
+            coder.prints = true
             if (tail.isNotEmpty()) { costSinceNs = (checkpointCostMs * 1e6).toLong(); maybeCheckpoint() }
+            // a checkpoint of an older build (a description of the state): a new one now, so that
+            // what follows can be replayed from a checkpoint that keeps the state itself
+            if (!cp.o.has("graph") && quiescent()) checkpoint()
         }
         return why
     }
@@ -543,6 +614,7 @@ object KLog {
                 clock.advanceTo(r.time)
                 if (a is Action.Shift) { clock.shiftTasks(a.d); continue }
                 if (r.random != null && r.random != KRandom.state) return "record $i (${a.code}): random state differs"
+                if (r.print != null && r.print != ActionPrint.now()) return "record $i (${a.code}): engine fingerprint differs".also { log("replay: $it") }
                 try { a.apply() } catch (t: Throwable) { FrameStore.logError("replayed action ${a.code} failed", t) }
                 onRecord?.invoke(r)
             }
@@ -626,11 +698,12 @@ object KLog {
             k++
             if (k >= pieces.size) return false
             val p = pieces[k]
-            applyCheckpoint(p.zero, p.main)
+            val problem = applyCheckpoint(p.zero, p.main)
             // one sound model per piece, as a restore has (a fresh one per step would decide
             // differently when a sound a tool waits on spans two steps)
             player = replaySounds()
-            recs = p.recs; i = 0
+            // an engine state that did not come back exactly: only the piece's picture
+            recs = if (problem == null) p.recs else emptyList(); i = 0
             t0 = recs.firstOrNull()?.time ?: clock.time
             startWall = System.nanoTime()
             return true

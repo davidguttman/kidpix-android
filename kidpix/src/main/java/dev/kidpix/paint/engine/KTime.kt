@@ -61,6 +61,9 @@ object KTime {
 
     fun cancelAnimationFrame(id: Int?) { if (id != null && id != 0) backend.cancel(id) }
 
+    /** A page load: handles start again at 1 (Engine.start; nothing is pending then). */
+    fun resetHandles() { nextId = 1; intervals.clear() }
+
     /** Drops every pending timer (scenario reset). */
     fun reset() {
         intervals.clear()

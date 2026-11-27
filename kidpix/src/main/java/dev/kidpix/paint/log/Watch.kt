@@ -85,14 +85,15 @@ class Watch private constructor(
         if (k >= pieces.size) return false
         val p = pieces[k]
         if (k > 0) beatLeft = BEAT_MS
-        if (p.zero != null) KLog.applyCheckpoint(p.zero, p.main)
-        else {
+        // a checkpoint whose engine state did not come back exactly: only its picture is shown
+        val exact = p.zero != null && KLog.applyCheckpoint(p.zero, p.main) == null
+        if (p.zero == null) {
             // only the stored picture: it appears
             KDisplay.main_context.replaceWith(dev.kidpix.paint.canvas.BitmapSource(p.main))
             KDisplay.clearTmp(); KDisplay.clearPreview(); KDisplay.clearAnim(); KDisplay.clearBnim()
         }
         player = sounds?.invoke() ?: KLog.replaySounds()
-        recs = if (p.zero != null) p.recs else emptyList()
+        recs = if (exact) p.recs else emptyList()
         i = 0
         e = KLog.clock.time
         lastActive = e

@@ -14,7 +14,8 @@ import java.util.zip.CRC32
  *
  *     header: "KPXL" format(1) versionCode w h segment t0(8) crc32
  *     block:  0xB7 len(varint) flags payload crc32(flags+payload)
- *             flags: 1 = complete, 2 = deflated (payload = rawLen(varint) + deflate data)
+ *             flags: 1 = complete, 2 = deflated (payload = rawLen(varint) + deflate data),
+ *                    4 = action starts carry the engine's fingerprint (ActionPrint; 1.2.0 versionCode 12 on)
  *             raw payload: versionCode w h (varints), then records (RecordCoder)
  *
  * Every block carries a CRC32 over its bytes: a torn or damaged tail is cut off at the first
@@ -28,7 +29,8 @@ object LogFormat {
 
     class Header(val version: Int, val w: Int, val h: Int, val segment: Int, val t0: Long)
 
-    class Block(val index: Int, val complete: Boolean, val version: Int, val w: Int, val h: Int, val records: ByteArray, val recStart: Int)
+    class Block(val index: Int, val complete: Boolean, val version: Int, val w: Int, val h: Int, val records: ByteArray, val recStart: Int,
+                val prints: Boolean = false)
 
     class Parsed(val header: Header?, val blocks: List<Block>, val goodLength: Long, val damaged: Boolean)
 
@@ -42,8 +44,8 @@ object LogFormat {
     }
 
     /** One block's bytes from a raw payload (versionCode w h + records). Runs on the writer thread. */
-    fun block(raw: ByteArray, complete: Boolean): ByteArray {
-        var flags = if (complete) 1 else 0
+    fun block(raw: ByteArray, complete: Boolean, prints: Boolean = false): ByteArray {
+        var flags = (if (complete) 1 else 0) or (if (prints) 4 else 0)
         val body = Bytes(raw.size + 16)
         if (raw.size > DEFLATE_OVER) {
             val z = FrameStore.deflate(raw)
@@ -89,7 +91,7 @@ object LogFormat {
                 if (raw == null) break
                 val pr = Reader(raw)
                 val v = pr.ui(); val w = pr.ui(); val h = pr.ui()
-                blocks.add(Block(blocks.size, flags and 1 != 0, v, w, h, raw, pr.p))
+                blocks.add(Block(blocks.size, flags and 1 != 0, v, w, h, raw, pr.p, flags and 4 != 0))
                 good = r.p.toLong()
             } catch (e: Reader.Bad) { damaged = true; break }
         }
@@ -104,6 +106,7 @@ object LogFormat {
         coder.reset(header.t0)
         val out = ArrayList<Pair<Int, List<Rec>>>()
         for (b in blocks) {
+            coder.prints = b.prints
             val r = Reader(b.records, b.recStart)
             val recs = ArrayList<Rec>()
             while (r.more()) recs.add(coder.get(r))
@@ -146,10 +149,10 @@ class LogWriter(val file: File, private val io: Executor?, header: LogFormat.Hea
 
     private fun run(f: () -> Unit) { if (io != null) io.execute(f) else f() }
 
-    fun append(raw: ByteArray, complete: Boolean) = run {
+    fun append(raw: ByteArray, complete: Boolean, prints: Boolean = false) = run {
         if (broken) return@run
         try {
-            val b = LogFormat.block(raw, complete)
+            val b = LogFormat.block(raw, complete, prints)
             out!!.write(b)
             length += b.size
         } catch (t: Throwable) { broken = true; FrameStore.logError("log write failed", t) }

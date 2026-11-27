@@ -88,22 +88,23 @@ class LogSession(val dir: File, val w: Int = 1074, val h: Int = 798, private val
             "stroke", "tap" -> {
                 val pts = if (op == "tap" && st.has("point")) listOf(st.getJSONArray("point").let { doubleArrayOf(it.getDouble(0), it.getDouble(1)) })
                 else points(st.getJSONArray("points")).let { if (op == "tap") it.take(1) else it }
-                val t = type()
+                val t = st.optString("type", "").ifEmpty { type() }
+                val btn = st.optInt("buttons", 1) // a pen's eraser end: 32
                 val id = nextId++
                 fun pe(p: DoubleArray, buttons: Int, coalesced: List<PEvent>? = null): PEvent {
                     val pressure = if (t == "pen") RecordCoder.quantPressure(0.1 + rnd.nextDouble() * 0.8) else if (t == "touch") RecordCoder.quantPressure(rnd.nextDouble()) else 0.0
                     return PEvent(id, t, p[0] + 1, p[1] + 1, if (buttons == 0 && t == "pen") 0.0 else pressure, buttons, true, 0,
                         (clock.time - VirtualClock.T0).toDouble(), coalesced)
                 }
-                clock.advance(dt); entry(Action.Pointer(Action.DOWN, pe(pts[0], 1)))
+                clock.advance(dt); entry(Action.Pointer(Action.DOWN, pe(pts[0], btn)))
                 for (p in pts.drop(1)) {
                     clock.advance(dt)
                     // pens: sometimes a coalesced sample half way (as Android batches them)
                     val c = if (t == "pen" && rnd.nextInt(3) == 0) {
-                        val mid = pe(doubleArrayOf(RecordCoder.quantXY(p[0] - 0.5), RecordCoder.quantXY(p[1] + 0.25)), 1)
-                        listOf(mid, pe(p, 1))
+                        val mid = pe(doubleArrayOf(RecordCoder.quantXY(p[0] - 0.5), RecordCoder.quantXY(p[1] + 0.25)), btn)
+                        listOf(mid, pe(p, btn))
                     } else null
-                    entry(Action.Pointer(Action.MOVE, if (c != null) pe(p, 1, c).let { m -> PEvent(m.pointerId, m.pointerType, c[1].clientX, c[1].clientY, c[1].pressure, 1, true, 0, c[1].timeStamp, c) } else pe(p, 1)))
+                    entry(Action.Pointer(Action.MOVE, if (c != null) pe(p, btn, c).let { m -> PEvent(m.pointerId, m.pointerType, c[1].clientX, c[1].clientY, c[1].pressure, btn, true, 0, c[1].timeStamp, c) } else pe(p, btn)))
                 }
                 if (st.optBoolean("up", true)) { clock.advance(dt); entry(Action.Pointer(Action.UP, pe(pts.last(), 0))) }
             }

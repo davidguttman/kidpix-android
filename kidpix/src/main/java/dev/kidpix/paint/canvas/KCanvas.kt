@@ -133,6 +133,12 @@ class KCanvas(width: Int = 300, height: Int = 150) : CanvasImageSource {
 
     override fun sourceBitmap(): Bitmap? { ctx?.flushBatch(); return if (w == 0 || h == 0) null else bitmap }
 
+    /** The context if one was made (log/EngineGraph.kt stores its state with the canvas). */
+    fun contextOrNull(): Ctx2D? = ctx
+
+    /** The pixels as they are (pending batched draws flushed), not copied. */
+    fun snapshotForGraph(): Bitmap { ctx?.flushBatch(); return bitmap }
+
     /** A detached copy of the pixels (what toDataURL+Image round trip gives in the JS). */
     fun snapshot(): Bitmap { ctx?.flushBatch(); return bitmap.copy(Bitmap.Config.ARGB_8888, true) }
 

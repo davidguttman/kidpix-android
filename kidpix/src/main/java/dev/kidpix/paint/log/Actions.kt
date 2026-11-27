@@ -74,8 +74,11 @@ sealed class Action {
     }
 }
 
-/** A decoded record: the action, its engine time, and (for action starts) the KRandom state. */
-class Rec(val action: Action, val time: Long, val random: Int?)
+/**
+ * A decoded record: the action, its engine time, and (for action starts) the KRandom state and,
+ * in blocks that carry them, the engine's fingerprint (ActionPrint) before the action ran.
+ */
+class Rec(val action: Action, val time: Long, val random: Int?, val print: Int? = null)
 
 /** Growable byte buffer with LEB128 varints. */
 class Bytes(cap: Int = 256) {
@@ -132,6 +135,8 @@ class RecordCoder {
     private var pid = 0
     private var qx = 0L; private var qy = 0L; private var qp = 0L; private var qt = 0L
     private var buttons = 0
+    /** Action starts carry an engine fingerprint (blocks with flag 4). */
+    var prints = true
 
     fun reset(time: Long) { lastTime = time; pid = 0; qx = 0; qy = 0; qp = 0; qt = 0; buttons = 0 }
 
@@ -196,10 +201,10 @@ class RecordCoder {
         a.pressure.toRawBits() == b.pressure.toRawBits() && a.buttons == b.buttons && a.isPrimary == b.isPrimary &&
         a.button == b.button && a.timeStamp.toRawBits() == b.timeStamp.toRawBits()
 
-    fun put(o: Bytes, a: Action, time: Long, random: Int) {
+    fun put(o: Bytes, a: Action, time: Long, random: Int, print: Int = 0) {
         o.byte(a.code)
         o.u(time - lastTime); lastTime = time
-        if (a.starts) o.i32(random)
+        if (a.starts) { o.i32(random); if (prints) o.i32(print) }
         when (a) {
             is Action.Pointer -> {
                 val c = a.e.coalescedOrNull
@@ -230,6 +235,7 @@ class RecordCoder {
         val time = lastTime + r.u(); lastTime = time
         val starts = code != Action.MOVE && code != Action.SHIFT
         val random = if (starts) r.i32() else null
+        val print = if (starts && prints) r.i32() else null
         val a: Action = when (code) {
             Action.DOWN, Action.MOVE, Action.UP, Action.CANCEL, Action.LEAVE -> {
                 val n = r.ui()
@@ -255,7 +261,7 @@ class RecordCoder {
             Action.SHIFT -> Action.Shift(r.u())
             else -> throw Reader.Bad()
         }
-        return Rec(a, time, random)
+        return Rec(a, time, random, print)
     }
 
     companion object {
