@@ -160,7 +160,7 @@ object SavePoints {
             val frameId = nextOob++
             History.frames.put(frameId, copy)
             sp = SavePoint(nextId++, kind, -1, "", KLog.versionCode, b.width, b.height, frameId,
-                History.pastIds, History.futureIds, KLog.chainNow(), KLog.clock.time, runCatching { EngineState.capture() }.getOrNull())
+                History.pastIds, History.futureIds, KLog.chainNow(), KLog.clock.time, runCatching { KLog.engineNow() }.getOrNull())
             all[sp.id] = sp
         }
         return sp

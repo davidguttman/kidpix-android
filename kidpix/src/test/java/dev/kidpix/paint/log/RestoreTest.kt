@@ -55,6 +55,7 @@ class RestoreTest {
         KLog.frameCapBytes = 48L shl 20
         SavePoints.capBytes = 512L shl 20
         EngineGraph.keepLastCapture = true
+        FrameStore.logError = { m, t -> System.err.println("$m: $t"); if (System.getenv("KP_STACKS") != null) t.printStackTrace() }
     }
 
     @After fun tearDown() { KLog.close(); tmp.deleteRecursively() }
@@ -116,7 +117,7 @@ class RestoreTest {
             val i = x.indices.firstOrNull { it >= y.length || x[it] != y[it] } ?: x.length
             sb.append("\n  engine $k:\n    without kill ..${x.substring(maxOf(0, i - 100), minOf(x.length, i + 100))}\n    killed       ..${y.substring(maxOf(0, i - 100), minOf(y.length, i + 100))}")
         }
-        if (sb.isNotEmpty()) throw AssertionError("$what at ${a.label}:$sb")
+        if (sb.isNotEmpty()) throw AssertionError("$what at ${b.label}:$sb")
     }
 
     private var caseNo = 0
@@ -127,7 +128,11 @@ class RestoreTest {
      */
     private fun runCase(name: String, steps: List<JSONObject>, watch: Boolean = true): Pair<Int, Int> {
         val n = caseNo++
+        // both runs start from the same shared-object fields (a process starts them at their
+        // initial values; in one test process the previous run left its own)
+        val statics = EngineGraph.captureStatics()
         val oracle = run(File(tmp, "o$n"), steps, kill = false)
+        EngineGraph.applyStatics(statics)
         val killed = run(File(tmp, "k$n"), steps, kill = true, oracleTimes = oracle.map { it.time })
         assertEquals("$name: observations", oracle.size, killed.size)
         for (i in oracle.indices) same(name, oracle[i], killed[i])
@@ -162,7 +167,7 @@ class RestoreTest {
                         oracleTimes?.getOrNull(out.size)?.let { t -> if (t > KLog.clock.time) KLog.clock.advanceTo(t) }
                         assertEquals("restore: the engine state came back exactly (${KLog.lastRestore})", null, KLog.lastApplyProblem)
                     }
-                    out.add(observe("kill ${out.size}"))
+                    out.add(observe("kill ${out.size}" + if (kill) " (restore: ${KLog.lastRestore})" else ""))
                     after = true
                 }
                 "~save" -> { s.step(tool("save"), 16); s.settle() }
@@ -170,6 +175,7 @@ class RestoreTest {
                 "~openDraft" -> SavePoints.drafts().firstOrNull()?.let { sp -> s.settle(); SavePoints.open(sp, SavePoints.picture(sp)!!); s.settle() }
                 else -> s.step(st, 16)
             }
+            if (System.getenv("KP_TRACE") != null) println("TRACE ${if (kill) "K" else "O"} ${st} letters=${KUi.alphabetLetters.size} sub=${KUi.currentSubmenu} tool=${dev.kidpix.paint.KAndroid.toolName(dev.kidpix.paint.KCurrent.tool)}")
             if (after && !st.optString("op").startsWith("~")) {
                 s.settle()
                 oracleTimes?.getOrNull(out.size)?.let { t -> if (t > KLog.clock.time) KLog.clock.advanceTo(t) }
@@ -275,8 +281,33 @@ class RestoreTest {
             catch (e: AssertionError) { failures.add(c.second + ": " + (e.message ?: "").take(700)); KLog.close() }
         }
         println("RESTORE every option: ${cases.size} cases, $obs observations, ${failures.size} failures")
+        File(System.getProperty("java.io.tmpdir"), "kp-restore-failures.txt").writeText(failures.joinToString("\n---\n"))
         failures.take(10).forEach { println("FAIL $it") }
         assertTrue("${failures.size} of ${cases.size} options change after a kill:\n" + failures.take(5).joinToString("\n"), failures.isEmpty())
+    }
+
+    /**
+     * The option bar frames the engine's options: after every press of every option (plain, ctrl,
+     * long; the spray sizes; letters) what the views last painted is what the engine has selected.
+     */
+    @Test fun theOptionBarAlwaysFramesTheEnginesSelection() {
+        val all = options()
+        val s = LogSession(File(tmp, "bar")); s.start()
+        var painted = ""
+        fun engine() = "${KUi.currentSubmenu} ${KAndroid.selectedOptions().sorted()} ${KAndroid.selectedLetter()} ${KAndroid.currentToolId}"
+        KUi.ui = object : Ui { override fun selectionChanged() { painted = engine() } }
+        val bad = ArrayList<String>()
+        for ((steps, name) in all) {
+            for (st in steps) {
+                s.step(st, 16)
+                if (painted != engine()) { bad.add("$name: shows $painted, engine has ${engine()}"); painted = engine() }
+            }
+            s.step(stroke(1), 16); s.settle()
+        }
+        KLog.close()
+        println("RESTORE highlights: ${all.size} cases, ${bad.size} stale")
+        bad.take(10).forEach { println("STALE $it") }
+        assertTrue("${bad.size} presses leave a stale highlight:\n" + bad.take(5).joinToString("\n"), bad.isEmpty())
     }
 
     @Test fun stampAndSpritePagesPalettesKeysAndThePensEraser() {
@@ -314,8 +345,10 @@ class RestoreTest {
     /** Random sequences of everything, with checkpoints and kills anywhere quiet, save points, opens and drafts. */
     @Test fun randomSequencesSurviveKills() {
         val rounds = System.getenv("KP_RESTORE_ROUNDS")?.toIntOrNull() ?: 24
+        val onlyRound = System.getenv("KP_RESTORE_ROUND")?.toIntOrNull()
         var obs = 0; var kills = 0
         for (round in 0 until rounds) {
+            if (onlyRound != null && round != onlyRound) continue
             val r = java.util.Random(1000L + round)
             val steps = ArrayList<JSONObject>()
             var subN = 30
@@ -338,6 +371,7 @@ class RestoreTest {
             }
             // a sub index past the end of the bar does nothing; the alphabet bar ignores sub presses
             steps.add(special("checkpoint")); steps.add(stroke(3)); steps.add(special("kill")); steps.add(stroke(4))
+            if (System.getenv("KP_PRINT_STEPS") != null) steps.forEachIndexed { i, st -> println("STEP $i $st") }
             val (o, kk) = runCase("random round $round", steps, watch = round % 3 == 0)
             obs += o; kills += kk
         }

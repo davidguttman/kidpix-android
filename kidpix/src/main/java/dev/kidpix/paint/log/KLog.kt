@@ -177,6 +177,9 @@ object KLog {
         baseline = EngineGraph.encode().roots
     }
 
+    /** The engine state as a checkpoint keeps it (save points keep it too; reading it changes nothing). */
+    fun engineNow(): JSONObject = EngineGraph.capture(baseline)
+
     private fun existingSegments(): List<Int> = (root?.list() ?: emptyArray()).mapNotNull {
         if (it.startsWith("seg-")) it.removePrefix("seg-").toIntOrNull() else null
     }.sorted()
@@ -194,6 +197,9 @@ object KLog {
         if (rec) { coder.put(cur, a, clock.time, KRandom.state, if (a.starts) ActionPrint.now() else 0); curHasRecords = true }
         val t1 = if (rec) System.nanoTime() else 0L
         try { a.apply() } catch (t: Throwable) { FrameStore.logError("action ${a.code} failed", t) }
+        // the views show the engine's selection after every action (not only where a handler
+        // remembered to say so: Brush > Spray Paint clears the brush options and said nothing)
+        if (a !is Action.Pointer || a.kind != Action.MOVE) KUi.ui.selectionChanged()
         if (!rec) return
         val t2 = System.nanoTime()
         costSinceNs += t2 - t1

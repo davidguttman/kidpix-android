@@ -152,6 +152,14 @@ object EngineGraph {
         return JSONObject().put("v", FORMAT).put("fp", enc.fingerprint).put("roots", stored).put("gone", gone)
     }
 
+    /** The shared objects' fields as they are (tests: two runs in one process start from the same). */
+    fun captureStatics(): Map<String, String> = encode().roots.filterKeys { it.startsWith("2") }
+
+    /** Writes [statics] (a [captureStatics]) back. */
+    fun applyStatics(statics: Map<String, String>) {
+        apply(JSONObject().put("roots", JSONObject(statics)).put("gone", JSONArray()).put("fp", ""))
+    }
+
     /**
      * Writes [graph] (a [capture]) into the engine, which has just been started fresh. Returns
      * null when the engine's fingerprint afterwards is the stored one, else why not.
@@ -245,6 +253,14 @@ object EngineGraph {
     /** Fields of plain objects that are derived caches: not stored, cleared when written back. */
     private val DERIVED = setOf("dev.kidpix.paint.canvas.CanvasGradient.cached")
 
+    /**
+     * A root's object that other roots refer to by the root's name: an object a restore writes
+     * into where it is (a tool, a canvas), so the reference holds whichever root is written first.
+     * Collections and arrays may be made anew by a restore: they are referred to where first seen.
+     */
+    private fun ownable(v: Any): Boolean = !isScalar(v) && v !is Collection<*> && v !is Map<*, *> && !v.javaClass.isArray &&
+        !v.javaClass.name.startsWith("java.") && !v.javaClass.name.startsWith("kotlin.")
+
     private fun isScalar(v: Any?) = v == null || v is String || v is Boolean || v is Number || v is Char || v is Enum<*>
 
     private fun jstr(sb: StringBuilder, s: String) { sb.append(JSONObject.quote(s)) }
@@ -261,7 +277,7 @@ object EngineGraph {
         init {
             for (r in roots) {
                 val v = runCatching { r.get() }.getOrNull() ?: continue
-                if (!isScalar(v) && v !in owners) owners[v] = r.key
+                if (ownable(v) && v !in owners) owners[v] = r.key
             }
         }
 
@@ -449,7 +465,7 @@ object EngineGraph {
             val v = value(j, before)
             if (v !== before) {
                 if (r.set != null) r.set.invoke(v) else throw IllegalStateException("final root ${r.key} would change object")
-                if (v != null && !isScalar(v) && v !in enc.owners) enc.owners[v] = r.key
+                if (v != null && ownable(v) && v !in enc.owners) enc.owners[v] = r.key
             }
         }
 
@@ -534,13 +550,6 @@ object EngineGraph {
                 mutable.clear()
                 for (i in 0 until x.length()) mutable.add(value(x.get(i), old.getOrNull(i)))
                 return mutable
-            }
-            // a fixed-size list of the same size (Arrays.asList: constants): its elements in place
-            if (cur != null && cur.javaClass.name == cn && cur is MutableList<*> && cur.size == x.length() && cn == "java.util.Arrays\$ArrayList") {
-                @Suppress("UNCHECKED_CAST") val ml = cur as MutableList<Any?>
-                reg(ml)
-                for (i in 0 until x.length()) { val nv = value(x.get(i), ml[i]); if (nv !== ml[i]) ml[i] = nv }
-                return ml
             }
             // a placeholder keeps the preorder index while the elements are decoded
             val l = enc.lists.getOrPut(this.cur) { ArrayList() }

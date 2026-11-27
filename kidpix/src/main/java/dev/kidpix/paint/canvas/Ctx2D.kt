@@ -343,7 +343,7 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
     fun closePath() {
         if (!hasCurrent) return
         path.close(); curX = startX; curY = startY; segN = -1; opsOk = false
-        hist[hist(1)] = 4f
+        val hi = hist(1); hist[hi] = 4f
     }
 
     private fun map(x: Double, y: Double) {
