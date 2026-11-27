@@ -210,6 +210,8 @@ class RestoreTest {
         junk.settle()
         KLog.close()
         File(tmp, "junk").deleteRecursively()
+        // a new process: no slot knows its property's name until it is used
+        dev.kidpix.paint.engine.World.forgetNames()
     }
 
     /** The play button's replay to its end (instant fake clock); the picture it ended in, null if it could not start. */

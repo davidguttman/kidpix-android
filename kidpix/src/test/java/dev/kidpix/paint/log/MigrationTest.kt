@@ -81,6 +81,7 @@ class MigrationTest {
             stroke(s, 20); stroke(s, 21); s.settle()
             val live = crc(KDisplay.main_canvas.bitmap); val hist = History.pastIds.size
             KLog.drainIo()
+            dev.kidpix.paint.engine.World.forgetNames()
             s.restart(); s.settle()
             assertEquals("$what: after drawing on, a kill changes nothing", live, crc(KDisplay.main_canvas.bitmap))
             assertEquals("$what: nor the undo depth", hist, History.pastIds.size)

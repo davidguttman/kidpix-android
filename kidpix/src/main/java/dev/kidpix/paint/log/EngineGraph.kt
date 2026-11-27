@@ -175,7 +175,8 @@ object EngineGraph {
         val problems = ArrayList<String>()
         for (k in keys) {
             if (k in gone) continue
-            val r = byKey[k] ?: run { problems.add("no root $k"); null } ?: continue
+            val r = byKey[k] ?: (if (k.startsWith("1")) World.slotNamed(k.substring(1))?.let { slotRoot(it) } else null)
+                ?: run { problems.add("no root $k"); null } ?: continue
             val curV = runCatching { r.get() }.getOrNull()
             if (stored.has(k) && r.set == null && curV != null && !inPlace(curV)) {
                 // a constant that cannot be written (an immutable collection in a final field): it must already be the same
@@ -531,7 +532,8 @@ object EngineGraph {
                 "b" -> a.getInt(1).toByte()
                 "c" -> a.getInt(1).toChar()
                 "E" -> enumValue(a.getString(1), a.getString(2))
-                "W" -> (byKey[a.getString(1)] ?: throw IllegalStateException("no root ${a.getString(1)}")).ensure()
+                "W" -> (byKey[a.getString(1)] ?: a.getString(1).takeIf { it.startsWith("1") }?.let { k -> World.slotNamed(k.substring(1))?.let { slotRoot(it) } }
+                    ?: throw IllegalStateException("no root ${a.getString(1)}")).ensure()
                 "R" -> resolve(a.getString(1), a.getInt(2))
                 "S" -> singleton(a.getString(1))
                 "U" -> throw IllegalStateException("not storable: ${a.opt(1)}")

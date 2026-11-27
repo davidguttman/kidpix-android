@@ -19,6 +19,28 @@ object World {
     /** Every `by world { }` slot (they are created once, when their file's class loads). */
     internal val slots = java.util.Collections.synchronizedList(ArrayList<WorldSlot<*>>())
 
+    /**
+     * The slot of the property named [n] (a [WorldSlot.name]: owner class # property # signature),
+     * also when that property was never used in this process: its `<property>$delegate` field.
+     */
+    /** Tests: as after a process start, no slot knows its name until its property is used. */
+    fun forgetNames() = synchronized(slots) { slots.forEach { it.forgetName() } }
+
+    fun slotNamed(n: String): WorldSlot<*>? {
+        synchronized(slots) { slots.firstOrNull { it.name == n } }?.let { return it }
+        val parts = n.split("#")
+        if (parts.size < 2) return null
+        val owner = runCatching { Class.forName(parts[0], true, World::class.java.classLoader) }.getOrNull() ?: return null
+        for (f in owner.declaredFields) {
+            if (!java.lang.reflect.Modifier.isStatic(f.modifiers) || !f.name.startsWith(parts[1] + "\$delegate")) continue
+            val s = runCatching { f.isAccessible = true; f.get(null) as? WorldSlot<*> }.getOrNull() ?: continue
+            if (s.name != null && s.name != n) continue
+            s.nameAs(n)
+            return s
+        }
+        return null
+    }
+
     /** The values of this world's slots (to come back to this world after a replay ran in another). */
     class Saved internal constructor(internal val values: List<Pair<WorldSlot<*>, Any?>>)
 
@@ -57,6 +79,10 @@ class WorldSlot<T>(private val init: () -> T) {
         if (gen != World.generation) { gen = World.generation; value = init() }
         return value
     }
+
+    /** Names a slot found by [World.slotNamed] (its property not used yet in this process). */
+    internal fun nameAs(n: String) { if (name == null) name = n }
+    internal fun forgetName() { name = null }
 
     private fun named(property: KProperty<*>) {
         if (name != null) return
