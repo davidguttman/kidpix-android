@@ -279,12 +279,6 @@ object History {
 
     fun save(): Saved = Saved(ArrayList(past), ArrayList(future), nextId, lastStored, frames)
 
-    /** The frame [b] is as it is now (its id and copy), if [b] has not changed since it was stored. */
-    fun currentFrameOf(b: Bitmap): Pair<Long, Bitmap>? {
-        val last = lastStored ?: return null
-        return if (last.first === b && last.second == b.generationId) last.third else null
-    }
-
     /** Back to [s] (the play button's replay used the history in between). */
     @Suppress("UNCHECKED_CAST")
     fun restore(s: Saved) {

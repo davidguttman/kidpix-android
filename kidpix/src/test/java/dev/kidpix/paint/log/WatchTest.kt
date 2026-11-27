@@ -105,6 +105,10 @@ class WatchTest {
             m[n] = crc(c.bitmap).toString()
         m["past"] = History.pastIds.toString(); m["future"] = History.futureIds.toString(); m["next"] = History.nextId.toString()
         m["engine"] = EngineState.capture().toString()
+        // the very objects come back (not rebuilt copies): canvases, contexts, the current tool
+        m["objects"] = listOf(KDisplay.main_canvas, KDisplay.main_context, KDisplay.canvas, KDisplay.context, dev.kidpix.paint.KCurrent.tool,
+            KAndroid.state, KAndroid.subSelection).joinToString { System.identityHashCode(it).toString() }
+        m["ui"] = "${KUi.currentSubmenu} ${KAndroid.selectedOptions().sorted()} ${KAndroid.selectedLetter()} ${KAndroid.currentToolId}"
         m["random"] = KRandom.state.toString()
         m["clock"] = KLog.clock.time.toString()
         m["active"] = KLog.clock.active.toString()
@@ -202,6 +206,15 @@ class WatchTest {
         s.settle()
         watchAndCheck(s, "tools")
         continuesAndRestores(s, 60)
+    }
+
+    @Test fun optionHighlightsComeBack() {
+        val s = session("options")
+        for ((t, opts) in listOf("brush" to listOf(4, 9), "pencil" to listOf(1, 5), "brush" to listOf(9), "circle" to listOf(0, 3), "brush" to listOf(2, 9, 13))) {
+            tool(s, t); for (o in opts) { sub(s, o); stroke(s, o) }
+            s.settle()
+            watchAndCheck(s, "options $t $opts")
+        }
     }
 
     @Test fun firecrackerSegments() {

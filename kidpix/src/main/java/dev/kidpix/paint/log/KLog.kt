@@ -706,18 +706,19 @@ object KLog {
 
     /**
      * Everything the play button's replay changes, as it was before (in memory only: watching
-     * writes nothing). [restoreLive] puts it back exactly: the picture and overlay layers, the
-     * undo history (the same objects, the same next frame id), the engine state, the clock,
-     * KRandom and the log's own recording state.
+     * writes nothing). The replay runs in a fresh engine world on new objects; [endWatch] puts
+     * the live ones back: the `by world` objects (tools with all their fields), the shared
+     * objects' fields (current tool and colours, the layer canvases with their pictures and
+     * drawing state, the clock), the undo history (the same objects, the same next frame id),
+     * KRandom and the log's own recording state. Nothing is rebuilt from a description.
      */
     class Live internal constructor(
-        internal val o: JSONObject, internal val main: Bitmap, internal val layers: Map<String, Bitmap>,
-        internal val history: History.Saved, internal val mainFrame: Pair<Long, Bitmap>?,
+        internal val world: dev.kidpix.paint.engine.World.Saved, internal val objects: EngineObjects,
+        internal val history: History.Saved, internal val random: Int, internal val time: Long,
         internal val writer: LogWriter?, internal val coder: RecordCoder,
         internal val actionsSince: Int, internal val costSinceNs: Long, internal val lastCkpt: Checkpoint?,
         internal val inputs: Map<String, Bitmap>, internal val inputSeq: Int,
-        internal val styles: List<List<Pair<Any, Any>>>,
-    ) { val time: Long get() = o.getLong("time") }
+    )
 
     /**
      * Starts a play-button replay: needs a quiet moment (null when something is in progress or
@@ -729,46 +730,28 @@ object KLog {
         if (!recording || playing) return null
         if (!quiescent()) return null
         flushBlock(true)
-        val o = JSONObject().put("time", clock.time).put("random", KRandom.state).put("w", w).put("h", h)
-            .put("engine", EngineState.capture())
-        val mainBmp = KDisplay.main_canvas.bitmap
-        val live = Live(o, mainBmp.copy(Bitmap.Config.ARGB_8888, false),
-            overlayLayers().filter { !it.second.knownBlank }.associate { it.first to it.second.bitmap.copy(Bitmap.Config.ARGB_8888, false) },
-            History.save(), History.currentFrameOf(mainBmp),
-            writer, coder, actionsSince, costSinceNs, lastCkpt, HashMap(inputs), inputSeq,
-            contexts().map { it.keepStyles() })
+        val live = Live(dev.kidpix.paint.engine.World.save(), EngineObjects.take(), History.save(), KRandom.state, clock.time,
+            writer, coder, actionsSince, costSinceNs, lastCkpt, HashMap(inputs), inputSeq)
         drainIo()
         writer = null; playing = true
         History.frames = live.history.frames.overlay()
+        // from here on the replay works in a fresh world on new objects; the live ones wait untouched
+        val ui = KUi.ui
+        KUi.ui = object : Ui {}
+        try { Engine.start(w, h, null); kidpix_android_boot(); History.clear() } finally { KUi.ui = ui }
         return live
     }
 
-    private fun contexts() = listOf(KDisplay.main_context, KDisplay.bnimContext, KDisplay.animContext, KDisplay.previewContext, KDisplay.context)
-
     /** Ends a play-button replay: the app exactly as [beginWatch] found it. */
     fun endWatch(l: Live) {
-        val o = l.o
-        val ui = KUi.ui
-        KUi.ui = object : Ui {}
         try {
-            Engine.start(o.getInt("w"), o.getInt("h"), null)
-            kidpix_android_boot()
-            clock.time = l.time
-            EngineState.apply(o.getJSONObject("engine"))
-            clock.runDue()
-            KDisplay.main_context.replaceWith(BitmapSource(l.main))
-            for ((name, c) in overlayLayers()) {
-                c.getContext("2d").clearRect(0, 0, c.width, c.height)
-                l.layers[name]?.let { c.getContext("2d").replaceWith(BitmapSource(it)) }
-            }
-            EngineState.applyContexts(o.getJSONObject("engine"))
-            contexts().zip(l.styles).forEach { (c, k) -> c.putStyles(k) } // patterns and gradients too
+            KTime.reset() // the replay's timers
+            dev.kidpix.paint.engine.World.restore(l.world)
+            l.objects.restore()
             History.restore(l.history)
-            l.mainFrame?.let { History.remember(KDisplay.main_canvas.bitmap, it.first, it.second) }
+            KRandom.state = l.random
             clock.time = l.time
-            KRandom.state = o.getInt("random")
         } finally {
-            KUi.ui = ui
             writer = l.writer; coder = l.coder; actionsSince = l.actionsSince; costSinceNs = l.costSinceNs
             lastCkpt = l.lastCkpt; inputs.clear(); inputs.putAll(l.inputs); inputSeq = l.inputSeq
             playing = false; showDrags = false
