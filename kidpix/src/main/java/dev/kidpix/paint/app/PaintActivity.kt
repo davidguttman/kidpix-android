@@ -591,8 +591,8 @@ class PaintActivity : Activity(), Ui {
                 badge.hide()
                 Log.i("KidPixLog", "play: planned %d ms (engine %d ms), start %.1f ms".format(r.plannedMs, r.engineMs, (System.nanoTime() - t0) / 1e6))
             }
-            Watch.Companion.No.BUSY -> if (tries < 30) main.postDelayed({ playPressed(tries + 1) }, 50) else playButton.nudge()
-            else -> playButton.nudge() // nothing drawn yet: a shake, like the Undo Guy with nothing to undo
+            Watch.Companion.No.BUSY -> if (tries < 30) main.postDelayed({ playPressed(tries + 1) }, 50) else { Log.i("KidPixLog", "play: busy, nudge"); playButton.nudge() }
+            else -> { Log.i("KidPixLog", "play: nothing to replay, nudge"); playButton.nudge() } // a shake, like the Undo Guy with nothing to undo
         }
     }
 

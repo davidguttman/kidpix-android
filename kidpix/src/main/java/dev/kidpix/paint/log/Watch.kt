@@ -198,9 +198,10 @@ class Watch private constructor(
             else -> (6000 + 14000 * (1 - exp(-(engineMs - 6000) / 60000.0))).toLong()
         }
 
+        /** A record that is not drawing (hovering, the app pausing, a clock shift): idle time around it is skipped. */
         fun isHover(r: Rec): Boolean {
             val a = r.action
-            return a is Action.Pointer && a.kind == Action.MOVE && a.e.buttons == 0
+            return (a is Action.Pointer && a.kind == Action.MOVE && a.e.buttons == 0) || a is Action.Pause || a is Action.Shift
         }
 
         /** A record that changes the picture (what makes a replay worth watching). */
