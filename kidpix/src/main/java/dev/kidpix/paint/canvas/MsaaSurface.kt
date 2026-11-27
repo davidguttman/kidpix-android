@@ -365,15 +365,14 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
         private set
 
     /**
-     * The samples that say more than their pixel, as groups of six ints: pixel index, the four
-     * samples, the value written from them. Only where that value is still the pixel's (trusted)
-     * and the four are not all equal to it: every other pixel behaves as on a fresh surface (its
-     * samples become the pixel's value when next used), so this is all a checkpoint has to keep
-     * (log/EngineGraph.kt).
+     * The samples that say more than the value written from them (not all four equal to it), as
+     * groups of six ints: pixel index, the four samples, that value. Every other pixel behaves as
+     * on a fresh surface (its samples become the pixel's value when next used), so this is all a
+     * checkpoint has to keep (log/EngineGraph.kt). Samples whose pixel has changed since are kept
+     * too: an undo can bring that very pixel back, and they count again.
      */
-    fun exportSamples(bitmap: Bitmap): IntArray {
-        if (bitmap.width != w || bitmap.height != h || tiles.all { it == null }) return IntArray(0)
-        val cur = premul(bitmap, IntArray(w * h))
+    fun exportSamples(): IntArray {
+        if (tiles.all { it == null }) return IntArray(0)
         var out = IntArray(0); var n = 0
         for ((ti, tile) in tiles.withIndex()) {
             if (tile == null) continue
@@ -383,7 +382,7 @@ internal class MsaaSurface(private val w: Int, private val h: Int) {
                 val v = tile[o + 4]
                 if (tile[o] == v && tile[o + 1] == v && tile[o + 2] == v && tile[o + 3] == v) continue
                 val x = tx + p % T; val y = ty + p / T
-                if (x >= w || y >= h || cur[y * w + x] != v) continue
+                if (x >= w || y >= h) continue
                 if (n + 6 > out.size) out = out.copyOf(maxOf(64, out.size * 2))
                 out[n] = y * w + x
                 System.arraycopy(tile, o, out, n + 1, 5)

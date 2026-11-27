@@ -175,10 +175,10 @@ class Ctx2D internal constructor(val canvas: KCanvas) {
         if (st.clipped || stack.any { it.clipped }) "clip" else null)
 
     /** The multisampled strokes' samples (MsaaSurface.exportSamples), empty when there are none. */
-    fun msaaSamples(): IntArray { flushBatch(); return msaa?.exportSamples(canvas.bitmap) ?: IntArray(0) }
+    fun msaaSamples(): IntArray { flushBatch(); return msaa?.exportSamples() ?: IntArray(0) }
 
-    /** Equal while [msaaSamples] cannot have changed (the surface, its strokes, the bitmap's pixels). */
-    fun msaaKey(): List<Any?> = listOf(msaa, msaa?.version, canvas.bitmap, canvas.bitmap.generationId)
+    /** Equal while [msaaSamples] cannot have changed (the surface and its strokes). */
+    fun msaaKey(): List<Any?> = listOf(msaa, msaa?.version)
 
     /** Puts back [msaaSamples] (the surface starts fresh with them). */
     fun setMsaaSamples(a: IntArray) {

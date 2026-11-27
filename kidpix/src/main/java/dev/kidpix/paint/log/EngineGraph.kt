@@ -414,7 +414,12 @@ object EngineGraph {
             synchronized(sampleCache) { sampleCache[ctx]?.let { (k, v) -> if (k == key) return v } }
             val ms = ctx.msaaSamples()
             val txt = if (ms.isEmpty()) "" else {
-                val raw = java.nio.ByteBuffer.allocate(ms.size * 4); raw.asIntBuffer().put(ms)
+                // column by column (index steps, then each sample, then the values): deflates far better
+                val n = ms.size / 6
+                val cols = IntArray(ms.size)
+                var prev = 0
+                for (i in 0 until n) { cols[i] = ms[6 * i] - prev; prev = ms[6 * i]; for (k in 1 until 6) cols[k * n + i] = ms[6 * i + k] }
+                val raw = java.nio.ByteBuffer.allocate(cols.size * 4); raw.asIntBuffer().put(cols)
                 ms.size.toString() + ":" + android.util.Base64.encodeToString(FrameStore.deflate(raw.array()), android.util.Base64.NO_WRAP)
             }
             synchronized(sampleCache) { sampleCache[ctx] = key to txt }
@@ -669,7 +674,12 @@ object EngineGraph {
                     val n = ms.substringBefore(':').toInt()
                     val raw = FrameStore.inflate(android.util.Base64.decode(ms.substringAfter(':'), android.util.Base64.NO_WRAP), n * 4)
                         ?: throw IllegalStateException("samples unreadable")
-                    IntArray(n).also { java.nio.ByteBuffer.wrap(raw).asIntBuffer().get(it) }
+                    val cols = IntArray(n).also { java.nio.ByteBuffer.wrap(raw).asIntBuffer().get(it) }
+                    val m = n / 6
+                    val out = IntArray(n)
+                    var prev = 0
+                    for (i in 0 until m) { prev += cols[i]; out[6 * i] = prev; for (k in 1 until 6) out[6 * i + k] = cols[k * m + i] }
+                    out
                 })
             }
             return c
