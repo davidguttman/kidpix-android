@@ -40,6 +40,7 @@ class EngineGraphTest {
         "dev.kidpix.paint.canvas.Ctx2D.msaaIncremental" to "configuration of a drawing speed-up that gives the same pixels",
         "dev.kidpix.paint.canvas.Ctx2D.fonts" to "registered typefaces (configuration)",
         "dev.kidpix.paint.canvas.Ctx2D.fontCache" to "parsed font strings (derived from the font string)",
+        "dev.kidpix.paint.canvas.Ctx2D.sansFaces" to "typefaces registered as sans-serif (configuration)",
         "dev.kidpix.paint.canvas.Ctx2D.chromeStrokes" to "configuration: Chrome-like stroke rasterising",
         "dev.kidpix.paint.canvas.EmojiFallback.cache" to "rendered emoji glyphs (derived from the text)",
         "dev.kidpix.paint.engine.World.slots" to "the list of slots itself (their values are the roots)",
